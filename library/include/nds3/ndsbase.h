@@ -62,9 +62,13 @@ public:
 
     void setParent(Node* pParent);
 
+
 protected:
 
+#ifndef SWIG
     std::unique_ptr<BaseImpl> m_pImplementation;
+#endif
+
 };
 
 }

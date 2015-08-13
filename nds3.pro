@@ -2,12 +2,12 @@ TEMPLATE = app
 QT -= qt
 QT += console
 
-QMAKE_CXXFLAGS += -std=c++0x -O0
+QMAKE_CXXFLAGS += -std=c++0x -O0 -rdynamic
 
 LIBS += -L/opt/codac-5.0/epics/base/lib/linux-x86_64 \
     -L/opt/codac-5.0/epics/modules/asyn/lib/linux-x86_64 \
     -ldbCore -ldbRecStd -lgdd -lasyn \
-    -lca -lcas
+    -lca -lcas -ldl
 
 
 INCLUDEPATH += /opt/codac-5.0/epics/base/include \
@@ -33,7 +33,8 @@ SOURCES += main.cpp \
     library/implementation/ndsportimpl.cpp \
     library/implementation/ndsinterfaceimpl.cpp \
     library/implementation/ndspvbaseimpl.cpp \
-    library/implementation/ndspvbase.cpp
+    library/implementation/ndspvbase.cpp \
+    library/implementation/ndsfactoryimpl.cpp
 
 HEADERS += \
     library/implementation/ndsbaseimpl.h \
@@ -47,5 +48,6 @@ HEADERS += \
     library/include/nds3/ndsnode.h \
     library/include/nds3/ndsport.h \
     library/include/nds3/ndspvbase.h \
-    library/include/nds3/ndspvdelegate.h
+    library/include/nds3/ndspvdelegate.h \
+    library/implementation/ndsfactoryimpl.h
 
