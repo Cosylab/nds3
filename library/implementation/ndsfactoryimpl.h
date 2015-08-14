@@ -30,12 +30,11 @@ public:
 
 private:
     std::string m_commandName;   // Keep the name of the registered command
-    const iocshArg m_commandArgument;
     iocshFuncDef m_commandDefinition;
 
-    std::vector<recordTypeLocation> recordTypeFunctions;
-    std::list<std::string> recordTypeNames;
-    std::vector<const char*> recordTypeNamesCstr;
+    std::vector<recordTypeLocation> m_recordTypeFunctions;
+    std::list<std::string> m_recordTypeNames;
+    std::vector<const char*> m_recordTypeNamesCstr;
 
 
 };
