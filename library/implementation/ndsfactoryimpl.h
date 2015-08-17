@@ -1,14 +1,14 @@
 #ifndef NDSFACTORYIMPL_CPP
 #define NDSFACTORYIMPL_CPP
 
-#include <dbStaticLib.h>
+#include <base/include/dbStaticLib.h>
 #include <vector>
 #include <list>
 #include <string>
 
-#include <iocsh.h>
+#include <base/include/iocsh.h>
 
-#include "registryCommon.h"
+#include <base/include/registryCommon.h>
 
 namespace nds
 {
@@ -56,7 +56,8 @@ public:
     ~DynamicModule();
     void* getAddress(const std::string& name);
 
-private:
+
+public:
     void* m_moduleHandle;
 };
 
