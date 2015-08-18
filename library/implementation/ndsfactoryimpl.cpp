@@ -1,18 +1,19 @@
-#include <base/include/epicsStdlib.h>
-#include <base/include/iocshRegisterCommon.h>
-#include <base/include/registryCommon.h>
-#include <base/include/dbStaticPvt.h>
+#include <epicsStdlib.h>
+#include <iocshRegisterCommon.h>
+#include <registryCommon.h>
+#include <dbStaticPvt.h>
 
 #include "ndsfactoryimpl.h"
 #include "../include/nds3/ndsbase.h"
 
 #include <iostream>
-#include <link.h>
+#include "/usr/include/link.h"
 #include <elf.h>
 #include <dlfcn.h>
 
-#include <list>
-
+#include <set>
+#include <string>
+#include "scansymbols.h"
 
 namespace nds
 {
@@ -37,181 +38,6 @@ FactoryImpl::FactoryImpl()
 {
 }
 
-int retrieveSymbolNames(struct dl_phdr_info* info, size_t info_size, void* symbol_names_vector)
-{
-
-    /* ElfW is a macro that creates proper typenames for the used system architecture
-     * (e.g. on a 32 bit system, ElfW(Dyn*) becomes "Elf32_Dyn*") */
-    ElfW(Dyn*) dyn;
-    ElfW(Sym*) sym;
-    ElfW(Word*) hash;
-
-    char* strtab;
-    char* sym_name;
-    ElfW(Word) sym_cnt;
-
-    /* the void pointer (3rd argument) should be a pointer to a vector<string>
-     * in this example -> cast it to make it usable */
-    std::list<std::string>* symbol_names = reinterpret_cast<std::list<std::string>*>(symbol_names_vector);
-
-    /* Iterate over all headers of the current shared lib
-     * (first call is for the executable itself) */
-    for (size_t header_index = 0; header_index < info->dlpi_phnum; header_index++)
-    {
-
-        /* Further processing is only needed if the dynamic section is reached */
-        if (info->dlpi_phdr[header_index].p_type == PT_DYNAMIC)
-        {
-
-            /* Get a pointer to the first entry of the dynamic section.
-             * It's address is the shared lib's address + the virtual address */
-            dyn = (ElfW(Dyn)*)(info->dlpi_addr +  info->dlpi_phdr[header_index].p_vaddr);
-
-            sym_cnt = 0;
-
-            /* Iterate over all entries of the dynamic section until the
-             * end of the symbol table is reached. This is indicated by
-             * an entry with d_tag == DT_NULL.
-             *
-             * Only the following entries need to be processed to find the
-             * symbol names:
-             *  - DT_HASH   -> second word of the hash is the number of symbols
-             *  - DT_STRTAB -> pointer to the beginning of a string table that
-             *                 contains the symbol names
-             *  - DT_SYMTAB -> pointer to the beginning of the symbols table
-             */
-            while(dyn->d_tag != DT_NULL)
-            {
-                if (dyn->d_tag == DT_HASH)
-                {
-                    /* Get a pointer to the hash */
-                    hash = (ElfW(Word*))dyn->d_un.d_ptr;
-
-                    /* The 2nd word is the number of symbols */
-                    sym_cnt = hash[1];
-
-                }
-                else if (dyn->d_tag == DT_STRTAB)
-                {
-                    /* Get the pointer to the string table */
-                    strtab = (char*)dyn->d_un.d_ptr;
-                }
-                else if (dyn->d_tag == DT_SYMTAB)
-                {
-                    /* Get the pointer to the first entry of the symbol table */
-                    sym = (ElfW(Sym*))dyn->d_un.d_ptr;
-
-
-                }
-
-                /* move pointer to the next entry */
-                dyn++;
-            }
-            /* Iterate over the symbol table */
-            for (ElfW(Word) sym_index = 0; sym_index < sym_cnt; sym_index++)
-            {
-                /* get the name of the i-th symbol.
-                 * This is located at the address of st_name
-                 * relative to the beginning of the string table. */
-                sym_name = &strtab[sym[sym_index].st_name];
-
-                std::string name(sym_name);
-                if(name.find("pvar_") == 0)
-                {
-                    symbol_names->push_back(std::string(sym_name));
-                }
-            }
-
-        }
-    }
-
-    /* Returning something != 0 stops further iterations,
-     * since only the first entry, which is the executable itself, is needed
-     * 1 is returned after processing the first entry.
-     *
-     * If the symbols of all loaded dynamic libs shall be found,
-     * the return value has to be changed to 0.
-     */
-    return 1;
-
-}
-
-void fillSymbols(ElfW(Dyn*) dyn, ElfW(Addr) pBase, std::list<std::string>* pList)
-{
-    //Dl_info info;
-    //Elf64_Sym* extraInfo;
-    //dladdr1((void*)pBase, &info, (void**)&extraInfo, RTLD_DL_SYMENT);
-    ElfW(Sym*) sym;
-    ElfW(Word*) hash;
-
-    char* strtab;
-    char* sym_name;
-    ElfW(Word) sym_cnt;
-    sym_cnt = 0;
-
-    /* Iterate over all entries of the dynamic section until the
-     * end of the symbol table is reached. This is indicated by
-     * an entry with d_tag == DT_NULL.
-     *
-     * Only the following entries need to be processed to find the
-     * symbol names:
-     *  - DT_HASH   -> second word of the hash is the number of symbols
-     *  - DT_STRTAB -> pointer to the beginning of a string table that
-     *                 contains the symbol names
-     *  - DT_SYMTAB -> pointer to the beginning of the symbols table
-     */
-    while(dyn->d_tag != DT_NULL)
-    {
-        if (dyn->d_tag == DT_HASH)
-        {
-            /* Get a pointer to the hash */
-            hash = (ElfW(Word*))(dyn->d_un.d_ptr + pBase);
-
-            /* The 2nd word is the number of symbols */
-            sym_cnt = hash[1];
-
-        }
-        else if(dyn->d_tag == DT_GNU_HASH)
-        {
-            /* Get a pointer to the hash */
-            hash = (ElfW(Word*))(dyn->d_un.d_ptr + pBase);
-
-            /* The 2nd word is the number of symbols */
-            sym_cnt = hash[1];
-
-        }
-        else if (dyn->d_tag == DT_STRTAB)
-        {
-            /* Get the pointer to the string table */
-            strtab = (char*)(dyn->d_un.d_ptr + pBase);
-        }
-        else if (dyn->d_tag == DT_SYMTAB)
-        {
-            /* Get the pointer to the first entry of the symbol table */
-            sym = (ElfW(Sym*))(dyn->d_un.d_ptr + pBase);
-
-
-        }
-
-        /* move pointer to the next entry */
-        dyn++;
-    }
-    /* Iterate over the symbol table */
-    for (ElfW(Word) sym_index = 0; sym_index < sym_cnt; sym_index++)
-    {
-        /* get the name of the i-th symbol.
-         * This is located at the address of st_name
-         * relative to the beginning of the string table. */
-        sym_name = &strtab[sym[sym_index].st_name];
-
-        std::string name(sym_name);
-        if(name.find("pvar_") == 0)
-        {
-            pList->push_back(std::string(sym_name));
-        }
-    }
-
-}
 
 void FactoryImpl::registrationCommand(const std::string& registrationCommandName)
 {
@@ -235,68 +61,144 @@ void FactoryImpl::registerRecordTypes(DBBASE* pDatabase)
 
     DynamicModule thisModule;
 
-    std::list<std::string> symbolNames;
+    symbolsList_t symbols = getSymbols();
 
-    //dl_iterate_phdr(retrieveSymbolNames, &symbolNames);
+    // Find all the recordTypes, devices, variables
+    std::set<std::string> recordTypes;
+    std::set<std::string> devices;
+    std::set<std::string> drivers;
+    std::set<std::string> intVariables;
+    std::set<std::string> doubleVariables;
+    std::set<std::string> stringVariables;
 
+    static const std::string epicsFuncPrefix("pvar_func_");
+    static const std::string epicsDsetPrefix("pvar_dset_");
+    static const std::string epicsDrvetPrefix("pvar_drvet_");
+    static const std::string epicsRsetPostfix("RSET");
+    static const std::string epicsSizeOffsetPostfix("RecordSizeOffset");
 
-    ::link_map* pMap = 0;
-    for(dlinfo(thisModule.m_moduleHandle, RTLD_DI_LINKMAP, &pMap); pMap != 0; pMap = pMap->l_next)
+    static const std::string epicsIntPrefix("pvar_int_");
+    static const std::string epicsDoublePrefix("pvar_double_");
+    static const std::string epicsStringPrefix("pvar_string_");
+
+    struct variablesHelpStruct
     {
-        std::string libName(pMap->l_name);
-        if(libName.find("/lib64") == 0)
+        iocshArgType type;
+        std::string prefix;
+        std::set<std::string>* list;
+    };
+
+    variablesHelpStruct variablesHelp[] =
+    {
+        {iocshArgInt, epicsIntPrefix, &intVariables},
+        {iocshArgDouble, epicsDoublePrefix, &doubleVariables},
+        {iocshArgString, epicsStringPrefix, &stringVariables}
+    };
+
+    for(symbolsList_t::const_iterator scanSymbols(symbols.begin()), endSymbols(symbols.end()); scanSymbols != endSymbols; ++scanSymbols)
+    {
+        addToSet(scanSymbols->first, &recordTypes, epicsFuncPrefix, epicsSizeOffsetPostfix);
+        addToSet(scanSymbols->first, &devices, epicsDsetPrefix, "");
+        addToSet(scanSymbols->first, &drivers, epicsDrvetPrefix, "");
+        addToSet(scanSymbols->first, &intVariables, epicsIntPrefix, "");
+        addToSet(scanSymbols->first, &doubleVariables, epicsDoublePrefix, "");
+        addToSet(scanSymbols->first, &stringVariables, epicsStringPrefix, "");
+    }
+
+    // Register all the record types
+    ////////////////////////////////
+    for(std::set<std::string>::const_iterator scanTypes(recordTypes.begin()), endTypes(recordTypes.end()); scanTypes != endTypes; ++scanTypes)
+    {
+        symbolsList_t::iterator findRset = symbols.find(*scanTypes + epicsRsetPostfix);
+        if(findRset == symbols.end())
         {
             continue;
         }
-        std::cout << pMap->l_name;
-        fillSymbols(pMap->l_ld, pMap->l_addr, &symbolNames);
-
-    }
-
-
-    for(long scanRecords(dbFirstField(dbEntry.m_pDBEntry, 1)); scanRecords == 0; scanRecords = dbNextField(dbEntry.m_pDBEntry, 1))
-    {
-        std::cout << dbGetFieldName(dbEntry.m_pDBEntry) << "\n";
-    }
-
-    for(long scanTypes(dbFirstRecordType(dbEntry.m_pDBEntry)); scanTypes == 0; scanTypes = dbNextRecordType(dbEntry.m_pDBEntry))
-    {
-        std::string recordName(dbGetRecordTypeName(dbEntry.m_pDBEntry));
-
-        void* resetFunction = thisModule.getAddress(recordName + "RSET");
-        void* sizeOffset = thisModule.getAddress("pvar_func_" + recordName + "RecordSizeOffset");
+        // Collect both the rset and the sizeoffset functions
+        const void* sizeOffset = symbols[epicsFuncPrefix + *scanTypes + epicsSizeOffsetPostfix].m_pAddress;
+        const void* resetFunction = findRset->second.m_pAddress;
 
         m_recordTypeFunctions.emplace_back(recordTypeLocation());
         m_recordTypeFunctions.back().prset = (rset*)resetFunction;
         m_recordTypeFunctions.back().sizeOffset = *((computeSizeOffset*)sizeOffset);
 
-        m_recordTypeNames.push_back(recordName);
-        m_recordTypeNamesCstr.emplace_back(recordName.c_str());
-
-        for(int scanFields = dbFirstField(dbEntry.m_pDBEntry, 0); scanFields == 0; scanFields = dbNextField(dbEntry.m_pDBEntry, 0))
-        {
-            if(dbGetFieldType(dbEntry.m_pDBEntry) == DCT_MENUFORM)
-            {
-                std::cout << " -----" << dbGetFieldName(dbEntry.m_pDBEntry) << "\n";
-            }
-        }
-
-        for(int scanLinks= 0; scanLinks < dbGetNLinks(dbEntry.m_pDBEntry); ++scanLinks)
-        {
-            dbGetLinkField(dbEntry.m_pDBEntry, scanLinks);
-            std::string linkName(dbGetFieldName(dbEntry.m_pDBEntry));
-            //std::cout << dbGetFieldName(dbEntry.m_pDBEntry);
-        }
-        for(long scanRecords(dbFirstInfo(dbEntry.m_pDBEntry)); scanRecords == 0; scanRecords = dbNextInfo(dbEntry.m_pDBEntry))
-        {
-            std::cout << dbGetInfoName(dbEntry.m_pDBEntry) << "\n";
-        }
-        //dbFirs
-
+        m_recordTypeNames.push_back(*scanTypes);
+        m_recordTypeNamesCstr.emplace_back(m_recordTypeNames.back().c_str());
     }
+
+    // Register all the devices
+    ///////////////////////////
+    for(std::set<std::string>::const_iterator scanDevices(devices.begin()), endDevices(devices.end()); scanDevices != endDevices; ++scanDevices)
+    {
+        const void* deviceFunction = symbols[epicsDsetPrefix + *scanDevices].m_pAddress;
+        m_deviceFunctions.push_back((dset*)deviceFunction);
+        m_deviceNames.push_back(*scanDevices);
+        m_deviceNamesCstr.emplace_back(m_deviceNames.back().c_str());
+    }
+
+    // Register all the drivers
+    ///////////////////////////
+    for(std::set<std::string>::const_iterator scanDrivers(drivers.begin()), endDrivers(drivers.end()); scanDrivers != endDrivers; ++scanDrivers)
+    {
+        const void* driverFunction = symbols[epicsDrvetPrefix + *scanDrivers].m_pAddress;
+        m_driverFunctions.push_back((drvet*)driverFunction);
+        m_driverNames.push_back(*scanDrivers);
+        m_driverNamesCstr.emplace_back(m_driverNames.back().c_str());
+    }
+
+    // Register all the variables
+    /////////////////////////////
+    for(int scanVariablesHelp(0); scanVariablesHelp != sizeof(variablesHelp) / sizeof(variablesHelp[0]); ++scanVariablesHelp)
+    {
+        std::set<std::string>* pList = variablesHelp[scanVariablesHelp].list;
+        for(std::set<std::string>::const_iterator scanVariables(pList->begin()), endVariables(pList->end()); scanVariables != endVariables; ++scanVariables)
+        {
+            const void* variableFunction = symbols[variablesHelp[scanVariablesHelp].prefix + *scanVariables].m_pAddress;
+            m_variableNames.push_back(*scanVariables);
+            m_variableFunctions.emplace_back(iocshVarDef());
+            m_variableFunctions.back().name = m_variableNames.back().c_str();
+            m_variableFunctions.back().type = variablesHelp[scanVariablesHelp].type;
+            m_variableFunctions.back().pval = (void*)variableFunction;
+        }
+    }
+
+    m_variableFunctions.emplace_back(iocshVarDef());
+    m_variableFunctions.back().name = 0;
+    m_variableFunctions.back().type = iocshArgInt;
+    m_variableFunctions.back().pval = 0;
 
     ::registerRecordTypes(pDatabase, m_recordTypeNames.size(), m_recordTypeNamesCstr.data(), m_recordTypeFunctions.data());
 
+    ::registerDevices(pDatabase, m_deviceNames.size(), m_deviceNamesCstr.data(), m_deviceFunctions.data());
+
+    ::registerDrivers(pDatabase, m_driverNames.size(), m_driverNamesCstr.data(), m_driverFunctions.data());
+
+    ::iocshRegisterVariable(m_variableFunctions.data());
+
+}
+
+void FactoryImpl::addToSet(const std::string symbolName, std::set<std::string>* pSet, const std::string& prefix, const std::string& postfix)
+{
+    std::string name = compareString(symbolName, prefix, postfix);
+    if(!name.empty())
+    {
+        pSet->insert(name);
+    }
+}
+
+std::string FactoryImpl::compareString(const std::string& string, const std::string& prefix, const std::string& postfix)
+{
+    if(string.size() < prefix.size() || string.size() < postfix.size())
+    {
+        return "";
+    }
+
+    if(string.substr(0, prefix.size()) == prefix && string.substr(string.size() - postfix.size()) == postfix)
+    {
+        return string.substr(prefix.size(), string.size() - prefix.size() - postfix.size());
+    }
+
+    return "";
 }
 
 DBEntry::DBEntry(DBBASE* pDatabase)

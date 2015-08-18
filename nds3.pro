@@ -7,22 +7,25 @@ QMAKE_CXXFLAGS += -std=c++0x -O0 -rdynamic
 LIBS += -L/opt/codac-5.0/epics/base/lib/linux-x86_64 \
     -L/opt/codac-5.0/epics/modules/asyn/lib/linux-x86_64 \
     -ldbCore -ldbRecStd -lgdd -lasyn \
-    -lca -lcas -ldl
+    -lca -lcas -ldl -pthread
 
+LIBS += -L/opt/codac-5.0/epics/base/lib/linux-x86_64 \
+    -L/opt/codac-5.0/epics/modules/asyn/lib/linux-x86_64 \
+    -lca -lcas -lCom -ldbCore -ldbRecStd -lgdd -lasyn -lxml2 -lcurl \
+    -lboost_system -lboost_filesystem \
+    -L/opt/codac-5.0/epics/modules/nds/lib/linux-x86_64 \
+    -lnisync -L/opt/codac-5.0/lib
 
 INCLUDEPATH += /opt/codac-5.0/epics/base/include \
-    #/opt/codac-5.0/epics/modules/nds/include \
     /opt/codac-5.0/epics/base/include/compiler/gcc \
     /opt/codac-5.0/epics/base/include/os/Linux/ \
     /opt/codac-5.0/epics/modules/asyn/include \
-    /usr/include/libxml2 \
-    /opt/codac-5.0/include \
-    /opt/codac-5.0/epics/base/src/ca/legacy/pcas/generic \
-    /opt/codac-5.0/epics/base/src/ca/legacy/pcas/io/bsdSocket \
-    /opt/codac-5.0/epics/base/src/ca/legacy/pcas/generic/st \
-    /home/codac-dev/Documents/local_ca_source_code \
-    /opt/codac-5.0/common/gtest/include \
-    /opt/codac-5.0/common/gtest/
+
+
+#INCLUDEPATH += /opt/codac-5.0/epics/base/include \
+#    /opt/codac-5.0/epics/base/include/compiler/gcc \
+#    /opt/codac-5.0/epics/base/include/os/Linux/ \
+#    /opt/codac-5.0/epics/modules/asyn/include \
 
 SOURCES += main.cpp \
     library/implementation/ndsbaseimpl.cpp \
@@ -34,7 +37,8 @@ SOURCES += main.cpp \
     library/implementation/ndsinterfaceimpl.cpp \
     library/implementation/ndspvbaseimpl.cpp \
     library/implementation/ndspvbase.cpp \
-    library/implementation/ndsfactoryimpl.cpp
+    library/implementation/ndsfactoryimpl.cpp \
+    library/implementation/scansymbols.cpp
 
 HEADERS += \
     library/implementation/ndsbaseimpl.h \
@@ -49,5 +53,6 @@ HEADERS += \
     library/include/nds3/ndsport.h \
     library/include/nds3/ndspvbase.h \
     library/include/nds3/ndspvdelegate.h \
-    library/implementation/ndsfactoryimpl.h
+    library/implementation/ndsfactoryimpl.h \
+    library/implementation/scansymbols.h
 
