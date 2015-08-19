@@ -1,33 +1,23 @@
 #include "ndsnodeimpl.h"
-#include "../include/nds3/ndsbase.h"
-#include "../include/nds3/ndsnode.h"
+#include <memory>
 
 namespace nds
 {
 
-NodeImpl::NodeImpl(const std::string &name, Node *pInterface): BaseImpl(name, (Base*)pInterface)
+NodeImpl::NodeImpl(const std::string &name): BaseImpl(name)
 {}
 
-NodeImpl::~NodeImpl()
-{
-    for(tChildren::iterator scanChildren(m_children.begin()), end(m_children.end()); scanChildren != end; ++scanChildren)
-    {
-        delete scanChildren->second;
-    }
-}
 
-void NodeImpl::addChild(Base* pChild)
+void NodeImpl::addChild(std::shared_ptr<BaseImpl> pChild)
 {
-    std::unique_ptr<Base> pChildPtr(pChild);
-
-    std::string name(pChildPtr->getComponentName());
+    std::string name(pChild->getComponentName());
 
     if(m_children.find(name) != m_children.end())
     {
         throw;
     }
-    pChildPtr->setParent(static_cast<Node*>(m_pInterfaceObject));
-    m_children.insert(std::make_pair(name, pChildPtr.release()));
+    pChild->setParent(std::static_pointer_cast<NodeImpl>(shared_from_this()) );
+    m_children[name] = pChild;
 }
 
 void NodeImpl::initialize()

@@ -7,6 +7,7 @@ namespace nds
 {
 
 class PVBase;
+class PortImpl;
 
 
 class Port: public Node
@@ -15,6 +16,10 @@ protected:
     Port() = delete;
 
 public:
+#ifndef SWIG
+    Port(std::shared_ptr<PortImpl> portImpl);
+#endif
+
     /**
      * @brief Construct an AsynPort.
      *
@@ -22,14 +27,6 @@ public:
      *        the identifier used to register the AsynPort.
      */
     Port(const std::string& name);
-
-    /**
-     * @brief Register a PV on the AsynPort. This method is called automatically by
-     *        the PVs during the initialization.
-     *
-     * @param pv   reference to the PV to be registered
-     */
-    void registerPV(PVBase& pv);
 
 };
 

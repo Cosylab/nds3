@@ -1,19 +1,23 @@
 #include "ndsportImpl.h"
 #include "ndsinterfaceimpl.h"
 #include "ndspvbaseimpl.h"
-#include "../include/nds3/ndsbase.h"
-#include "../include/nds3/ndsport.h"
 
 namespace nds
 {
 
-PortImpl::PortImpl(const std::string& name, Port* pInterface): NodeImpl(name, (Node*)pInterface)
+PortImpl::PortImpl(const std::string& name): NodeImpl(name)
 {
 }
 
-Port& PortImpl::getPort()
+PortImpl::~PortImpl()
 {
-    return *(dynamic_cast<Port*>(m_pInterfaceObject));
+}
+
+
+
+std::shared_ptr<PortImpl> PortImpl::getPort()
+{
+    return std::static_pointer_cast<PortImpl>(shared_from_this());
 }
 
 std::string PortImpl::getFullNameFromPort() const
@@ -27,7 +31,7 @@ void PortImpl::initialize()
     NodeImpl::initialize();
 }
 
-void PortImpl::registerPV(PVBase& pv)
+void PortImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
 {
     m_pAsynInterface->registerPV(pv);
 }

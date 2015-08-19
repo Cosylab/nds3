@@ -1,18 +1,16 @@
 #include "../include/nds3/ndsport.h"
+#include "../include/nds3/ndspvbase.h"
 #include "ndsportImpl.h"
 
 namespace nds
 {
 
-Port::Port(const std::string &name)
+Port::Port(std::shared_ptr<PortImpl> portImpl): Node(std::static_pointer_cast<NodeImpl>(portImpl))
 {
-    m_pImplementation.reset(new PortImpl(name, this));
 }
 
-void Port::registerPV(PVBase &pv)
+Port::Port(const std::string &name): Node(std::shared_ptr<NodeImpl>(new PortImpl(name)))
 {
-    static_cast<PortImpl*>(m_pImplementation.get())->registerPV(pv);
 }
-
 
 }

@@ -2,6 +2,7 @@
 #define NDSBASE_H
 
 #include <memory>
+#include <string>
 
 namespace nds
 {
@@ -12,10 +13,15 @@ class Node;
 
 class Base
 {
+    friend class Node;
 protected:
     Base();
 
 public:
+#ifndef SWIG
+    Base(std::shared_ptr<BaseImpl> impl);
+#endif
+
     ~Base();
 
     /**
@@ -24,7 +30,7 @@ public:
      * @return a reference to the parent AsynNode, which can be used to communicate directly with
      *         the AsynDriver
      */
-    virtual Port& getPort();
+    virtual Port getPort();
 
 
     /**
@@ -60,13 +66,9 @@ public:
      */
     void initialize();
 
-    void setParent(Node* pParent);
-
-
-protected:
-
 #ifndef SWIG
-    std::unique_ptr<BaseImpl> m_pImplementation;
+protected:
+    std::shared_ptr<BaseImpl> m_pImplementation;
 #endif
 
 };

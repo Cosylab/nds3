@@ -14,7 +14,7 @@ class PVBase;
 class PVBaseImpl: public BaseImpl
 {
 public:
-    PVBaseImpl(const std::string& name, PVBase* pInterface);
+    PVBaseImpl(const std::string& name);
 
     // For now only int32. All the base versions throw.
     // Only the overwritten ones in the AsynPV or AsynDelegatePV

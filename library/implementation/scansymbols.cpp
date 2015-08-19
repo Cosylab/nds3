@@ -7,6 +7,7 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include "/usr/include/link.h"
+#include <iostream>
 
 
 #include "scansymbols.h"
@@ -19,9 +20,17 @@ static ElfW(Word) gnu_hashtab_symbol_count(const unsigned int *const table)
     unsigned int              b = table[0];
     unsigned int              max = 0U;
 
-    while (b-->0U)
+    while (b-- > 0U)
         if (bucket[b] > max)
             max = bucket[b];
+
+    unsigned int chain_index = max - table[1];
+    const unsigned int* chains = bucket + table[1];
+    ++max;
+    while(!(chains[max] & 1))
+    {
+        ++max;
+    }
 
     return (ElfW(Word))max;
 }
@@ -115,7 +124,11 @@ int iterate_phdr(struct dl_phdr_info *info, size_t size, void *dataref)
                 case DT_HASH:
                     hashtab = (ElfW(Word) *) dynamic_pointer(entry->d_un.d_ptr, base, header, (ElfW(Half)) headers);
                     if (hashtab)
-                        symbol_count = hashtab[1];
+                    {
+                        ElfW(Word) count = hashtab[1];
+                        if(count > symbol_count)
+                            symbol_count = count;
+                    }
                     break;
                 case DT_GNU_HASH:
                     hashtab = (ElfW(Word) *) dynamic_pointer(entry->d_un.d_ptr, base, header, (ElfW(Half))headers);

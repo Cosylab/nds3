@@ -6,7 +6,7 @@
 namespace nds
 {
 
-PVBaseImpl::PVBaseImpl(const std::string& name, PVBase* pInterface): BaseImpl(name, (Base*)pInterface)
+PVBaseImpl::PVBaseImpl(const std::string& name): BaseImpl(name)
 {
 
 }
@@ -23,7 +23,7 @@ void PVBaseImpl::write(const timespec& /* pTimestamp */, const std::int32_t& /* 
 
 void PVBaseImpl::initialize()
 {
-    getPort().registerPV(*(static_cast<PVBase*>(m_pInterfaceObject)));
+    getPort()->registerPV(std::static_pointer_cast<PVBaseImpl>(shared_from_this()));
 }
 
 }

@@ -7,10 +7,15 @@
 namespace nds
 {
 
+class PVBaseImpl;
 
 class PVBase: public Base
 {
 public:
+#ifndef SWIG
+    PVBase(std::shared_ptr<PVBaseImpl> pvImpl);
+#endif
+
     PVBase(const std::string& name);
 
     // For now only int32. All the base versions throw.

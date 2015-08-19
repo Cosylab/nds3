@@ -9,14 +9,17 @@ Node::Node()
 
 }
 
-Node::Node(const std::string &name)
+Node::Node(std::shared_ptr<NodeImpl> nodeImpl): Base(std::static_pointer_cast<BaseImpl>(nodeImpl))
 {
-    m_pImplementation.reset(new NodeImpl(name, this));
 }
 
-void Node::addChildInternal(Base* pChild)
+Node::Node(const std::string &name): Base(std::shared_ptr<BaseImpl>(new NodeImpl(name)))
 {
-    static_cast<NodeImpl*>(m_pImplementation.get())->addChild(pChild);
+}
+
+void Node::addChildInternal(Base& child)
+{
+    std::static_pointer_cast<NodeImpl>(m_pImplementation)->addChild(child.m_pImplementation);
 }
 
 }

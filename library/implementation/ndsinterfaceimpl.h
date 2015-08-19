@@ -4,7 +4,7 @@
 #include <asynPortDriver.h>
 #include <string>
 #include <vector>
-#include "../include/nds3/ndspvbase.h"
+#include "ndspvbaseimpl.h"
 
 namespace nds
 {
@@ -21,7 +21,7 @@ class InterfaceImpl: public asynPortDriver
 public:
     InterfaceImpl(const std::string& portName);
 
-    void registerPV(PVBase& pv);
+    void registerPV(std::shared_ptr<PVBaseImpl> pv);
 
     virtual asynStatus readInt32(asynUser *pasynUser, epicsInt32 *value);
     virtual asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
@@ -33,7 +33,7 @@ public:
     epicsTimeStamp convertUnixTimeToEpicsTime(const timespec& time);
 
 private:
-    std::vector<PVBase*> m_pvs;
+    std::vector<std::shared_ptr<PVBaseImpl> > m_pvs;
 };
 
 }

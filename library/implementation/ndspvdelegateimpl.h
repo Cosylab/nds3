@@ -10,7 +10,7 @@ namespace nds
  * @brief Delegating PV. Delegates the read/write to another object
  */
 template <typename T>
-class DelegatePVImpl: public PVBaseImpl
+class PVDelegateImpl: public PVBaseImpl
 {
 public:
     /**
@@ -32,7 +32,7 @@ public:
      * @param readFunction  read method
      * @param writeFunction write method
      */
-    DelegatePVImpl(const std::string& name, tRead readFunction, tWrite writeFunction): AsynPVBase(name),
+    PVDelegateImpl(const std::string& name, tRead readFunction, tWrite writeFunction): PVBaseImpl(name),
         m_reader(readFunction), m_writer(writeFunction)
     {}
 
@@ -50,7 +50,7 @@ private:
     tRead m_reader;
     tWrite m_writer;
 
-}
-;
+};
+
 }
 #endif // NDSDELEGATEPVIMPL_H

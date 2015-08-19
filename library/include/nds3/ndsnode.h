@@ -6,12 +6,18 @@
 namespace nds
 {
 
+class NodeImpl;
+
 class Node: public Base
 {
 protected:
     Node();
 
 public:
+#ifndef SWIG
+    Node(std::shared_ptr<NodeImpl> portImpl);
+#endif
+
     /**
      * @brief Construct the node.
      *
@@ -28,14 +34,16 @@ public:
      * @return a reference to the added node
      */
     template<class T>
-    T& addChild(T* pChild)
+    T addChild(T child)
     {
-        addChildInternal(pChild);
-        return *pChild;
+        addChildInternal(child);
+        return child;
     }
 
 protected:
-    void addChildInternal(Base* pChild);
+#ifndef SWIG
+    void addChildInternal(Base& child);
+#endif
 
 };
 

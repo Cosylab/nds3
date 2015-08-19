@@ -4,19 +4,23 @@
 namespace nds
 {
 
-PVBase::PVBase(const std::string &name)
+PVBase::PVBase(const std::string &name): Base(std::shared_ptr<BaseImpl>(new PVBaseImpl(name)))
 {
-    m_pImplementation.reset(new PVBaseImpl(name, this));
+}
+
+PVBase::PVBase(std::shared_ptr<PVBaseImpl> pvImpl): Base(std::static_pointer_cast<BaseImpl>(pvImpl))
+{
+
 }
 
 void PVBase::read(timespec* pTimestamp, std::int32_t* pValue)
 {
-    static_cast<PVBaseImpl*>(m_pImplementation.get())->read(pTimestamp, pValue);
+    std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->read(pTimestamp, pValue);
 }
 
 void PVBase::write(const timespec& timestamp, const std::int32_t& value)
 {
-    static_cast<PVBaseImpl*>(m_pImplementation.get())->write(timestamp, value);
+    std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->write(timestamp, value);
 }
 
 }

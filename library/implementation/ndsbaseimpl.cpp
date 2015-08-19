@@ -1,18 +1,18 @@
 #include "ndsbaseimpl.h"
-#include "../include/nds3/ndsbase.h"
-#include "../include/nds3/ndsnode.h"
+#include "ndsnodeimpl.h"
 
 namespace nds
 {
 
 
-Port& BaseImpl::getPort()
+std::shared_ptr<PortImpl> BaseImpl::getPort()
 {
-    if(m_pParent == 0)
+    std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();
+    if(temporaryPointer.get() == 0)
     {
         throw;
     }
-    return m_pParent->getPort();
+    return temporaryPointer->getPort();
 }
 
 std::string BaseImpl::getComponentName() const
@@ -22,15 +22,16 @@ std::string BaseImpl::getComponentName() const
 
 std::string BaseImpl::getFullName() const
 {
-    if(m_pParent == 0)
+    std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();
+    if(temporaryPointer == 0)
     {
         return getComponentName();
     }
 
-    return m_pParent->getFullName() + "-" + getComponentName();
+    return temporaryPointer->getFullName() + "-" + getComponentName();
 }
 
-void BaseImpl::setParent(Node *pParent)
+void BaseImpl::setParent(std::shared_ptr<NodeImpl> pParent)
 {
     m_pParent = pParent;
 }
@@ -38,9 +39,11 @@ void BaseImpl::setParent(Node *pParent)
 std::string BaseImpl::getFullNameFromPort() const
 {
     std::string parentName;
-    if(m_pParent != 0)
+
+    std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();
+    if(temporaryPointer != 0)
     {
-        parentName = m_pParent->getFullNameFromPort();
+        parentName = temporaryPointer->getFullNameFromPort();
     }
     if(parentName.empty())
     {

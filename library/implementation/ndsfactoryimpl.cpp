@@ -15,6 +15,13 @@
 #include <string>
 #include "scansymbols.h"
 
+typedef void (*reg_func)(void);
+epicsShareExtern reg_func pvar_func_arrInitialize, pvar_func_asSub,
+    pvar_func_asynInterposeEosRegister,
+    pvar_func_asynInterposeFlushRegister, pvar_func_asynRegister,
+    pvar_func_dbndInitialize, pvar_func_ndsRegister,
+    pvar_func_syncInitialize, pvar_func_tsInitialize;
+
 namespace nds
 {
 
@@ -131,7 +138,7 @@ void FactoryImpl::registerRecordTypes(DBBASE* pDatabase)
     for(std::set<std::string>::const_iterator scanDevices(devices.begin()), endDevices(devices.end()); scanDevices != endDevices; ++scanDevices)
     {
         const void* deviceFunction = symbols[epicsDsetPrefix + *scanDevices].m_pAddress;
-        m_deviceFunctions.push_back((dset*)deviceFunction);
+        m_deviceFunctions.push_back((dset*)*(dset**)deviceFunction);
         m_deviceNames.push_back(*scanDevices);
         m_deviceNamesCstr.emplace_back(m_deviceNames.back().c_str());
     }
@@ -172,6 +179,17 @@ void FactoryImpl::registerRecordTypes(DBBASE* pDatabase)
     ::registerDevices(pDatabase, m_deviceNames.size(), m_deviceNamesCstr.data(), m_deviceFunctions.data());
 
     ::registerDrivers(pDatabase, m_driverNames.size(), m_driverNamesCstr.data(), m_driverFunctions.data());
+
+    void* addr = thisModule.getAddress("pvar_func_mbboRecordSizeOffset");
+
+    pvar_func_arrInitialize();
+    pvar_func_asSub();
+    pvar_func_asynInterposeEosRegister();
+    pvar_func_asynInterposeFlushRegister();
+    pvar_func_asynRegister();
+    pvar_func_dbndInitialize();
+    pvar_func_syncInitialize();
+    pvar_func_tsInitialize();
 
     ::iocshRegisterVariable(m_variableFunctions.data());
 

@@ -23,17 +23,15 @@ public:
      *
      * @param name  node's name (e.g. "CHANNEL0" or "CHANNELGROUP1")
      */
-    NodeImpl(const std::string& name, Node* pInterface);
+    NodeImpl(const std::string& name);
 
-    ~NodeImpl();
-
-    void addChild(Base* child);
+    void addChild(std::shared_ptr<BaseImpl> pChild);
 
     virtual void initialize();
 
 
 private:
-    typedef std::map<std::string, Base* > tChildren;
+    typedef std::map<std::string, std::shared_ptr<BaseImpl> > tChildren;
     tChildren m_children;
 };
 

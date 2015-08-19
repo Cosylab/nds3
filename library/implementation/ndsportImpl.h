@@ -6,9 +6,8 @@
 namespace nds
 {
 
-class Port;
 class InterfaceImpl;
-class PVBase;
+class PVBaseImpl;
 
 /**
  * @brief Node that holds an ASYN port
@@ -18,32 +17,33 @@ class PVBase;
  */
 class PortImpl: public NodeImpl
 {
-    //friend class AsynPVBase;
-
 public:
     /**
      * @brief Construct an AsynPort.
      *
      * @param port's name. Used also as port name in the AsynDriver
      */
-    PortImpl(const std::string& name, Port* pInterface);
+    PortImpl(const std::string& name);
+
+    virtual ~PortImpl();
+
 
     /**
      * @brief Return a pointer to this object.
      * @return a pointer to this object
      */
-    virtual Port& getPort();
+    virtual std::shared_ptr<PortImpl> getPort();
 
     virtual std::string getFullNameFromPort() const;
 
     virtual void initialize();
 
-    void registerPV(PVBase& pv);
+    void registerPV(std::shared_ptr<PVBaseImpl> pv);
 
 private:
     std::unique_ptr<InterfaceImpl> m_pAsynInterface;
 
-    typedef std::map<int, std::shared_ptr<PVBase> > tRecords;
+    typedef std::map<int, std::shared_ptr<PVBaseImpl> > tRecords;
     tRecords m_records;
 };
 

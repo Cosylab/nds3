@@ -1,8 +1,13 @@
 #include "../include/nds3/ndsbase.h"
+#include "../include/nds3/ndsport.h"
 #include "ndsbaseimpl.h"
 
 namespace nds
 {
+
+Base::Base(std::shared_ptr<BaseImpl> impl): m_pImplementation(impl)
+{
+}
 
 Base::Base()
 {
@@ -13,9 +18,9 @@ Base::~Base()
 {
 }
 
-Port& Base::getPort()
+Port Base::getPort()
 {
-    return m_pImplementation->getPort();
+    return Port(m_pImplementation->getPort());
 }
 
 
@@ -40,12 +45,6 @@ void Base::initialize()
 {
     m_pImplementation->initialize();
 }
-
-void Base::setParent(Node *pParent)
-{
-    m_pImplementation->setParent(pParent);
-}
-
 
 
 }

@@ -10,9 +10,8 @@
 namespace nds
 {
 
-class Port;
-class Base;
-class Node;
+
+class NodeImpl;
 class PortImpl;
 
 /**
@@ -20,13 +19,14 @@ class PortImpl;
  * @brief This is the base class for nodes, devices, PVs.
  *
  */
-class BaseImpl
+class BaseImpl: public std::enable_shared_from_this<BaseImpl>
 {
     friend class NodeImpl;
+    friend class PortImpl;
 
 protected:
-    BaseImpl(const std::string& name, Base* pInterface):
-        m_pInterfaceObject(pInterface), m_name(name), m_pParent(0)
+    BaseImpl(const std::string& name):
+        /* m_pInterfaceObject(pInterface), */ m_name(name)
     {}
 
 public:
@@ -41,7 +41,7 @@ public:
      * @return a reference to the parent AsynNode, which can be used to communicate directly with
      *         the AsynDriver
      */
-    virtual Port& getPort();
+    virtual std::shared_ptr<PortImpl> getPort();
 
 
     /**
@@ -60,7 +60,7 @@ public:
      */
     std::string getFullName() const;
 
-    void setParent(Node* pParent);
+    void setParent(std::shared_ptr<NodeImpl> pParent);
 
 
     /**
@@ -81,10 +81,9 @@ public:
     virtual void initialize() = 0;
 
 protected:
-    Base* m_pInterfaceObject;
 
     std::string m_name;
-    Node* m_pParent;
+    std::weak_ptr<NodeImpl> m_pParent;
 
 };
 

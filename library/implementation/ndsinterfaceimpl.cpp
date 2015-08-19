@@ -43,9 +43,9 @@ InterfaceImpl::InterfaceImpl(const std::string& portName): asynPortDriver(
 }
 
 
-void InterfaceImpl::registerPV(PVBase& pv)
+void InterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
 {
-    m_pvs.push_back(&pv);
+    m_pvs.push_back(pv);
 }
 
 asynStatus InterfaceImpl::readInt32(asynUser *pasynUser, epicsInt32 *value)
@@ -78,7 +78,7 @@ asynStatus InterfaceImpl::drvUserCreate(asynUser *pasynUser, const char *drvInfo
         if(m_pvs[scanReasons]->getFullNameFromPort() == drvInfo)
         {
             pasynUser->reason = scanReasons;
-            pasynUser->userData = m_pvs[scanReasons];
+            pasynUser->userData = m_pvs[scanReasons].get();
             return asynSuccess;
         }
     }
