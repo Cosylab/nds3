@@ -29,6 +29,8 @@ public:
 
     void registerRecordTypes(DBBASE* pDatabase);
 
+    void run();
+
 private:
     void addToSet(const std::string symbolName, std::set<std::string>* pSet, const std::string& prefix, const std::string& postfix);
 

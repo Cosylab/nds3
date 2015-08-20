@@ -1,14 +1,20 @@
 #ifndef NDSNODE_H
 #define NDSNODE_H
 
+#include "definitions.h"
 #include "ndsbase.h"
 
 namespace nds
 {
 
 class NodeImpl;
+class PVBase;
 
-class Node: public Base
+/**
+ * @brief A node object that can contain other nodes as children.
+ *
+ */
+class NDS3_API Node: public Base
 {
 protected:
     Node();
@@ -25,7 +31,6 @@ public:
      */
     Node(const std::string& name);
 
-
     /**
      * @brief Add a child node or record to this node. This node will
      *        take ownership of the added one and will take care of deleting it.
@@ -39,6 +44,10 @@ public:
         addChildInternal(child);
         return child;
     }
+
+    void addNode(Node& node);
+
+    void addPV(PVBase& pvBase);
 
 protected:
 #ifndef SWIG

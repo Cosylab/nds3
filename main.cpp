@@ -65,6 +65,7 @@ int main()
                                   std::bind(&Delegate::writeErrorCode, &myLogicIsHere, std::placeholders::_1, std::placeholders::_2)
                                   ));
 
+    port.addChild(nds::PVHoldDelegate("Delegate", new nds::Delegate()));
 
     // All the structure has been setup. Register the ports and the PVs
     ///////////////////////////////////////////////////////////////////

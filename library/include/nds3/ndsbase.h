@@ -1,6 +1,7 @@
 #ifndef NDSBASE_H
 #define NDSBASE_H
 
+#include "definitions.h"
 #include <memory>
 #include <string>
 
@@ -11,7 +12,12 @@ class BaseImpl;
 class Port;
 class Node;
 
-class Base
+/**
+ * @brief This is the base class for all the NDS3 public classes that
+ *        declare a device structure.
+ *
+ */
+class NDS3_API Base
 {
     friend class Node;
 protected:
@@ -22,7 +28,24 @@ public:
     Base(std::shared_ptr<BaseImpl> impl);
 #endif
 
-    ~Base();
+    /**
+     * @brief Copy constructor for the base class. The copy will refer to the same
+     *        implementation object referenced in the copied object.
+     *
+     * @param right the object to copy
+     */
+    Base(const Base& right);
+
+    /**
+     * @brief Copy operator. The copy will refer to the same implementation object
+     *        referenced in the copied object.
+     *
+     * @param right the object to copy
+     * @return
+     */
+    Base& operator=(const Base& right);
+
+    virtual ~Base();
 
     /**
      * @brief Get the Node that holds an ASYN port. Query the parent nodes if necessary.
@@ -32,14 +55,12 @@ public:
      */
     virtual Port getPort();
 
-
     /**
      * @brief Return the node's name.
      *
      * @return the node's name.
      */
     std::string getComponentName() const;
-
 
     /**
      * @brief Return the full node's name, prepending the parents' names if necessary

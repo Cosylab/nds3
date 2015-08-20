@@ -1,6 +1,7 @@
 #ifndef NDSPORT_H
 #define NDSPORT_H
 
+#include "definitions.h"
 #include "ndsnode.h"
 
 namespace nds
@@ -9,11 +10,10 @@ namespace nds
 class PVBase;
 class PortImpl;
 
-
-class Port: public Node
+class NDS3_API Port: public Node
 {
 protected:
-    Port() = delete;
+    Port();
 
 public:
 #ifndef SWIG

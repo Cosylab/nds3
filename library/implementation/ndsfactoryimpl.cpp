@@ -61,6 +61,11 @@ void FactoryImpl::registrationCommand(const std::string& registrationCommandName
 
 }
 
+void FactoryImpl::run()
+{
+    iocsh(0);
+}
+
 
 void FactoryImpl::registerRecordTypes(DBBASE* pDatabase)
 {

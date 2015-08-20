@@ -2,7 +2,10 @@ TEMPLATE = app
 QT -= qt
 QT += console
 
-QMAKE_CXXFLAGS += -std=c++0x -O0 -rdynamic
+QMAKE_CXXFLAGS += -std=c++0x -O0 -rdynamic -fvisibility=hidden -fvisibility-inlines-hidden
+
+DEFINES += GOINGTHERE_DLL
+DEFINES += GOINGTHERE_DLL_EXPORTS
 
 LIBS += -L/opt/codac-5.0/epics/base/lib/linux-x86_64 \
     -L/opt/codac-5.0/epics/modules/asyn/lib/linux-x86_64 \
@@ -14,11 +17,6 @@ INCLUDEPATH += /opt/codac-5.0/epics/base/include \
     /opt/codac-5.0/epics/base/include/os/Linux/ \
     /opt/codac-5.0/epics/modules/asyn/include \
 
-
-#INCLUDEPATH += /opt/codac-5.0/epics/base/include \
-#    /opt/codac-5.0/epics/base/include/compiler/gcc \
-#    /opt/codac-5.0/epics/base/include/os/Linux/ \
-#    /opt/codac-5.0/epics/modules/asyn/include \
 
 SOURCES += main.cpp \
     library/implementation/ndsbaseimpl.cpp \
@@ -33,7 +31,11 @@ SOURCES += main.cpp \
     library/implementation/ndsfactoryimpl.cpp \
     library/implementation/scansymbols.cpp \
     library/implementation/ndspvdelegateimpl.cpp \
-    library/implementation/ndspvdelegate.cpp
+    library/implementation/ndspvdelegate.cpp \
+    library/implementation/ndsdelegate.cpp \
+    library/implementation/ndspvholddelegateimpl.cpp \
+    library/implementation/ndspvholddelegate.cpp \
+    library/implementation/ndsfactory.cpp
 
 HEADERS += \
     library/implementation/ndsbaseimpl.h \
@@ -51,5 +53,10 @@ HEADERS += \
     library/implementation/scansymbols.h \
     library/implementation/ndspvdelegateimpl.h \
     library/implementation/ndspvdelegateimpl.h \
-    library/include/nds3/nds3.h
+    library/include/nds3/nds3.h \
+    library/include/nds3/definitions.h \
+    library/include/nds3/ndsdelegate.h \
+    library/include/nds3/ndspvholddelegate.h \
+    library/implementation/ndspvholddelegateimpl.h \
+    library/include/nds3/ndsfactory.h
 

@@ -9,9 +9,14 @@ Base::Base(std::shared_ptr<BaseImpl> impl): m_pImplementation(impl)
 {
 }
 
-Base::Base()
+Base::Base(const Base& right): m_pImplementation(right.m_pImplementation)
 {
+}
 
+Base& Base::operator=(const Base& right)
+{
+    m_pImplementation = right.m_pImplementation;
+    return *this;
 }
 
 Base::~Base()

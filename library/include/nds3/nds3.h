@@ -14,5 +14,9 @@
 #include "ndsport.h"
 #include "ndspvbase.h"
 #include "ndspvdelegate.h"
+#include "ndsdelegate.h"
+#include "ndspvholddelegate.h"
+#include "ndsfactory.h"
+
 
 #endif // NDS3_H
