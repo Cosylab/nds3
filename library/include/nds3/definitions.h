@@ -16,17 +16,16 @@
 #endif
 
 
-// GOINGTHERE_API is used for the public API symbols
-// GOINGTHERE_LOCAL is used for non-api symbols
+// NDS3_API is used for the public API symbols
 
-#ifdef NDS3_DLL // defined if GoingThere is compiled as a DLL
-  #ifdef NDS3_DLL_EXPORTS // defined if we are building the GoingThere DLL (instead of using it)
+#ifdef NDS3_DLL // defined if NDS3 is compiled as a DLL
+  #ifdef NDS3_DLL_EXPORTS // defined if we are building the NDS3 DLL (instead of using it)
     #define NDS3_API NDS3_HELPER_DLL_EXPORT
   #else
     #define NDS3_API NDS3_HELPER_DLL_IMPORT
-  #endif // GOINGTHERE_DLL_EXPORTS
-#else // GOINGTHERE_DLL is not defined: this means GoingThere is a static lib.
+  #endif // NDS3_DLL_EXPORTS
+#else // NDS3_DLL is not defined: this means NDS3 is a static lib.
   #define NDS3_API
-#endif // GOINGTHERE_DLL
+#endif // NDS3_DLL
 
 #endif // NDS3_DEFINITIONS_H
