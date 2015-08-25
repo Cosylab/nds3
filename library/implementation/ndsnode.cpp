@@ -1,5 +1,6 @@
 #include "../include/nds3/ndsnode.h"
 #include "../include/nds3/ndspvbase.h"
+#include "../include/nds3/ndsstatemachine.h"
 
 #include "ndsnodeimpl.h"
 
@@ -14,14 +15,22 @@ Node::Node(const std::string &name): Base(std::shared_ptr<BaseImpl>(new NodeImpl
 {
 }
 
-void Node::addNode(Node& node)
+Node Node::addNode(Node& node)
 {
     addChildInternal(node);
+    return node;
 }
 
-void Node::addPV(PVBase& pvBase)
+PVBase Node::addPV(PVBase& pvBase)
 {
     addChildInternal(pvBase);
+    return pvBase;
+}
+
+StateMachine Node::addStateMachine(StateMachine& stateMachine)
+{
+    addChildInternal(stateMachine);
+    return stateMachine;
 }
 
 void Node::addChildInternal(Base& child)

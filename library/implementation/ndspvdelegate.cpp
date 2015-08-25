@@ -5,7 +5,7 @@ namespace nds
 {
 
 template <typename T>
-PVDelegate<T>::PVDelegate(const std::string& name, tRead readFunction, tWrite writeFunction):
+PVDelegate<T>::PVDelegate(const std::string& name, read_t readFunction, write_t writeFunction):
     PVBase(std::shared_ptr<PVBaseImpl>(new PVDelegateImpl<T>(name, readFunction, writeFunction)))
 {}
 

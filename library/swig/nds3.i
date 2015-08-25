@@ -9,7 +9,6 @@
 
 #define NDS3_API
 
-
 %include <std_string.i>
 %include "../include/nds3/ndsbase.h"
 %include "../include/nds3/ndsnode.h"

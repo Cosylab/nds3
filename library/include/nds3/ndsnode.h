@@ -9,6 +9,7 @@ namespace nds
 
 class NodeImpl;
 class PVBase;
+class StateMachine;
 
 /**
  * @brief A node object that can contain other nodes as children.
@@ -45,9 +46,11 @@ public:
         return child;
     }
 
-    void addNode(Node& node);
+    Node addNode(Node& node);     // Specialized for SWIG
 
-    void addPV(PVBase& pvBase);
+    PVBase addPV(PVBase& pvBase); // Specialized for SWIG
+
+    StateMachine addStateMachine(StateMachine& stateMachine); // Specialized for SWIG
 
 protected:
 #ifndef SWIG

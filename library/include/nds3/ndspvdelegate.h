@@ -30,12 +30,12 @@ public:
      *  a value: the function will have to fill both the timespec and value
      *  with proper data.
      */
-    typedef std::function<void (timespec*, T*)> tRead;
+    typedef std::function<void (timespec*, T*)> read_t;
 
     /**
      * @brief Definition of the method used to write.
      */
-    typedef std::function<void (const timespec&, const T&)> tWrite;
+    typedef std::function<void (const timespec&, const T&)> write_t;
 
     /**
      * @brief Construct the PVDelegate object and specifies the external functions
@@ -45,12 +45,12 @@ public:
      * @param readFunction  function to be used for reading
      * @param writeFunction function to be used for writing
      */
-    PVDelegate(const std::string& name, tRead readFunction, tWrite writeFunction);
+    PVDelegate(const std::string& name, read_t readFunction, write_t writeFunction);
 
 
 private:
-    tRead m_reader;
-    tWrite m_writer;
+    read_t m_reader;
+    write_t m_writer;
 };
 
 }

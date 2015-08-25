@@ -2,12 +2,14 @@
 #define NDSNODEIMPL_H
 
 #include "ndsbaseimpl.h"
+#include "../include/nds3/definitions.h"
 #include <list>
 
 namespace nds
 {
 
 class Node;
+class StateMachineImpl;
 
 /**
  * @brief Represents a node (channel or channelGroup in the old NDS) which can contain
@@ -29,10 +31,16 @@ public:
 
     virtual void initialize();
 
+    virtual state_t getLocalState();
+    virtual state_t getGlobalState();
+    state_t getChildrenState();
+
 
 private:
     typedef std::map<std::string, std::shared_ptr<BaseImpl> > tChildren;
     tChildren m_children;
+
+    std::shared_ptr<StateMachineImpl> m_pStateMachine;
 };
 
 }

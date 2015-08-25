@@ -1,6 +1,33 @@
 #ifndef NDS3_DEFINITIONS_H
 #define NDS3_DEFINITIONS_H
 
+#include <cstdint>
+#include <functional>
+
+namespace nds
+{
+
+/**
+ * @brief Available states, ordered by priority (lowest to higher).
+ */
+enum state_t
+{
+    unknownState,
+    off,
+    switchingOff,
+    initializing,
+    on,
+    stopping,
+    starting,
+    running,
+    fault
+};
+
+typedef std::function<void ()> stateChange_t;
+typedef std::function<bool (const state_t, const state_t)> allowChange_t;
+
+}
+
 // Generic helper definitions for shared library support
 #if defined _WIN32 || defined __CYGWIN__
   #define NDS3_HELPER_DLL_IMPORT __declspec(dllimport)

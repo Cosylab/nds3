@@ -62,6 +62,8 @@ public:
 
     void setParent(std::shared_ptr<NodeImpl> pParent);
 
+    std::shared_ptr<NodeImpl> getParent() const;
+
 
     /**
      * @brief Return the node's name as seen by the parent AsynPort.

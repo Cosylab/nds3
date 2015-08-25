@@ -57,8 +57,6 @@ asynStatus InterfaceImpl::readInt32(asynUser *pasynUser, epicsInt32 *value)
     }
     m_pvs[pasynUser->reason]->read(&timestamp, (std::int32_t*)value);
 
-
-
     return asynSuccess;
 }
 

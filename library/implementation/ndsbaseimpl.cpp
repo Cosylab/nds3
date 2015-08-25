@@ -20,6 +20,11 @@ std::string BaseImpl::getComponentName() const
     return m_name;
 }
 
+std::shared_ptr<NodeImpl> BaseImpl::getParent() const
+{
+    return m_pParent.lock();
+}
+
 std::string BaseImpl::getFullName() const
 {
     std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();

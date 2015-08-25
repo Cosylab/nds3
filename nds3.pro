@@ -35,7 +35,10 @@ SOURCES += main.cpp \
     library/implementation/ndsdelegate.cpp \
     library/implementation/ndspvholddelegateimpl.cpp \
     library/implementation/ndspvholddelegate.cpp \
-    library/implementation/ndsfactory.cpp
+    library/implementation/ndsfactory.cpp \
+    library/implementation/ndsstatemachine.cpp \
+    library/implementation/ndsstatemachineimpl.cpp \
+    library/implementation/ndsexceptions.cpp
 
 HEADERS += \
     library/implementation/ndsbaseimpl.h \
@@ -58,5 +61,8 @@ HEADERS += \
     library/include/nds3/ndsdelegate.h \
     library/include/nds3/ndspvholddelegate.h \
     library/implementation/ndspvholddelegateimpl.h \
-    library/include/nds3/ndsfactory.h
+    library/include/nds3/ndsfactory.h \
+    library/include/nds3/ndsstatemachine.h \
+    library/implementation/ndsstatemachineimpl.h \
+    library/include/nds3/ndsexceptions.h
 

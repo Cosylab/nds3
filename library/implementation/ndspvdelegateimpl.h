@@ -16,14 +16,16 @@ public:
     /**
      * @brief Definition of the method used to read.
      *
-     * We should include also the timestamp here or AsynUser (now there isn't)
+     * The read function will receive a pointer to a timespec and a pointer to
+     *  a value: the function will have to fill both the timespec and value
+     *  with proper data.
      */
-    typedef std::function<void (timespec* pTimestamp, T*)> tRead;
+    typedef std::function<void (timespec*, T*)> read_t;
 
     /**
      * @brief Definition of the method used to write.
      */
-    typedef std::function<void (const timespec& pTimestamp, const T&)> tWrite;
+    typedef std::function<void (const timespec&, const T&)> write_t;
 
     /**
      * @brief Constructor. Specify the methods used for read/write
@@ -32,7 +34,7 @@ public:
      * @param readFunction  read method
      * @param writeFunction write method
      */
-    PVDelegateImpl(const std::string& name, tRead readFunction, tWrite writeFunction): PVBaseImpl(name),
+    PVDelegateImpl(const std::string& name, read_t readFunction, write_t writeFunction): PVBaseImpl(name),
         m_reader(readFunction), m_writer(writeFunction)
     {}
 
@@ -47,8 +49,8 @@ public:
     }
 
 private:
-    tRead m_reader;
-    tWrite m_writer;
+    read_t m_reader;
+    write_t m_writer;
 
 };
 
