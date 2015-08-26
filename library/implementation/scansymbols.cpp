@@ -154,7 +154,6 @@ int iterate_phdr(struct dl_phdr_info *info, size_t size, void *dataref)
                     void *const ptr = dynamic_pointer(base + symtab[s].st_value, base, header, (ElfW(Half))headers);
                     symbol_bind bind;
                     symbol_type type;
-                    int         result;
 
                     if (!ptr)
                         continue;
@@ -172,8 +171,6 @@ int iterate_phdr(struct dl_phdr_info *info, size_t size, void *dataref)
                     (*pList)[symbolName].m_type = type;
                     (*pList)[symbolName].m_pAddress = ptr;
 
-                    if (result)
-                        return result;
                 }
             }
         }
