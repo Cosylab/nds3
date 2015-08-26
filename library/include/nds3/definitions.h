@@ -23,8 +23,27 @@ enum state_t
     fault
 };
 
+/**
+ * @brief PV data types
+ */
+enum dataType_t
+{
+    dataInt8,
+    dataUint8,
+    dataInt32,
+    dataUint32,
+    dataFloat64,
+    dataInt8Array,
+    dataUint8Array,
+    dataInt32Array,
+    dataUint32Array,
+    dataFloat64Array,
+    dataString,
+};
+
+
 typedef std::function<void ()> stateChange_t;
-typedef std::function<bool (const state_t, const state_t)> allowChange_t;
+typedef std::function<bool (const state_t, const state_t, const state_t)> allowChange_t;
 
 }
 

@@ -9,6 +9,7 @@
  *
  */
 
+#include "definitions.h"
 #include "ndsbase.h"
 #include "ndsnode.h"
 #include "ndsport.h"

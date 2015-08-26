@@ -11,7 +11,7 @@ class Delegate;
 class NDS3_API PVHoldDelegate: public PVBase
 {
 public:
-    PVHoldDelegate(const std::string& name, Delegate* pDelegate);
+    PVHoldDelegate(const std::string& name, dataType_t dataType, Delegate* pDelegate);
 
 };
 

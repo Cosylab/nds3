@@ -4,8 +4,8 @@
 namespace nds
 {
 
-PVHoldDelegateImpl::PVHoldDelegateImpl(const std::string &name,  Delegate* pDelegate):
-    PVBaseImpl(name), m_pDelegate(pDelegate)
+PVHoldDelegateImpl::PVHoldDelegateImpl(const std::string &name, dataType_t dataType, Delegate* pDelegate):
+    PVBaseImpl(name), m_pDelegate(pDelegate), m_dataType(dataType)
 {
 
 }
@@ -19,5 +19,11 @@ void PVHoldDelegateImpl::write(const timespec& timestamp, const std::int32_t& va
 {
     m_pDelegate->writeInt32(timestamp, value);
 }
+
+dataType_t PVHoldDelegateImpl::getDataType()
+{
+    return m_dataType;
+}
+
 
 }

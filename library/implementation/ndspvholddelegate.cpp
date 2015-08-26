@@ -6,8 +6,8 @@
 namespace nds
 {
 
-PVHoldDelegate::PVHoldDelegate(const std::string& name, Delegate* pDelegate):
-    PVBase(std::shared_ptr<PVBaseImpl>(new PVHoldDelegateImpl(name, pDelegate)))
+PVHoldDelegate::PVHoldDelegate(const std::string& name, dataType_t dataType, Delegate* pDelegate):
+    PVBase(std::shared_ptr<PVBaseImpl>(new PVHoldDelegateImpl(name, dataType, pDelegate)))
 {
 
 }

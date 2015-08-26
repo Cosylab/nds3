@@ -45,41 +45,48 @@ StateMachineImpl::~StateMachineImpl()
 
 bool StateMachineImpl::canChange(state_t newState) const
 {
-    state_t currentState(getGlobalState());
+    state_t localState, globalState;
+    {
+        std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
+        globalState = getGlobalState();
+        localState = getLocalState();
+    }
 
-    return isAllowedTransition(currentState, newState) &&  m_allowChange(currentState, newState);
+    return isAllowedTransition(localState, newState) &&  m_allowChange(localState, globalState, newState);
 }
 
 void StateMachineImpl::setState(const state_t newState)
 {
-    state_t currentState;
+    state_t localState;
+    state_t globalState;
     state_t transitionState;
     stateChange_t transitionFunction;
     {
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
-        currentState = getGlobalState();
+        localState = getLocalState();
+        globalState = getGlobalState();
 
-        if(currentState == off && newState == on)
+        if(localState == off && newState == on)
         {
             transitionFunction = m_switchOn;
             transitionState = initializing;
         }
-        else if(currentState == on && newState == off)
+        else if(localState == on && newState == off)
         {
             transitionFunction = m_switchOff;
             transitionState = switchingOff;
         }
-        else if(currentState == on && newState == running)
+        else if(localState == on && newState == running)
         {
             transitionFunction = m_start;
             transitionState = starting;
         }
-        else if(currentState == running && newState == on)
+        else if(localState == running && newState == on)
         {
             transitionFunction = m_stop;
             transitionState = stopping;
         }
-        else if(currentState == fault && newState == off)
+        else if(localState == fault && newState == off)
         {
             transitionFunction = m_recover;
             transitionState = switchingOff;
@@ -87,16 +94,16 @@ void StateMachineImpl::setState(const state_t newState)
         else
         {
             std::ostringstream buildErrorMessage;
-            buildErrorMessage << "No transition from state " << currentState << " to state " << newState;
+            buildErrorMessage << "No transition from state " << localState << " to state " << newState;
             throw StateMachineNoSuchTransition(buildErrorMessage.str());
         }
 
         // Check if the transition is allowed, then set the intermediate state
         //////////////////////////////////////////////////////////////////////
-        if(m_allowChange(currentState, newState))
+        if(m_allowChange(localState, globalState, newState))
         {
             std::ostringstream buildErrorMessage;
-            buildErrorMessage << "The transition from state " << currentState << " to state " << newState << " has been denied";
+            buildErrorMessage << "The transition from state " << localState << " to state " << newState << " has been denied";
             throw StateMachineTransitionDenied(buildErrorMessage.str());
         }
         m_localState = transitionState;
@@ -110,7 +117,7 @@ void StateMachineImpl::setState(const state_t newState)
     catch(StateMachineRollBack& e)
     {
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
-        m_localState = currentState;
+        m_localState = localState;
     }
     catch(std::runtime_error& e)
     {

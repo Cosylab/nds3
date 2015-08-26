@@ -2,6 +2,7 @@
 #define NDSDELEGATEPVIMPL_H
 
 #include "ndspvbaseimpl.h"
+#include "../include/nds3/definitions.h"
 
 namespace nds
 {
@@ -38,15 +39,17 @@ public:
         m_reader(readFunction), m_writer(writeFunction)
     {}
 
-    virtual void read(timespec* pTimestamp, std::int32_t* pValue)
+    virtual void read(timespec* pTimestamp, T* pValue)
     {
         m_reader(pTimestamp, pValue);
     }
 
-    virtual void write(const timespec& timestamp, const std::int32_t& value)
+    virtual void write(const timespec& timestamp, const T& value)
     {
         m_writer(timestamp, value);
     }
+
+    virtual dataType_t getDataType();
 
 private:
     read_t m_reader;

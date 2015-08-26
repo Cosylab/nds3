@@ -126,6 +126,7 @@ void FactoryImpl::registerRecordTypes(DBBASE* pDatabase)
         {
             continue;
         }
+
         // Collect both the rset and the sizeoffset functions
         const void* sizeOffset = symbols[epicsFuncPrefix + *scanTypes + epicsSizeOffsetPostfix].m_pAddress;
         const void* resetFunction = findRset->second.m_pAddress;
@@ -185,8 +186,6 @@ void FactoryImpl::registerRecordTypes(DBBASE* pDatabase)
 
     ::registerDrivers(pDatabase, m_driverNames.size(), m_driverNamesCstr.data(), m_driverFunctions.data());
 
-    void* addr = thisModule.getAddress("pvar_func_mbboRecordSizeOffset");
-
     pvar_func_arrInitialize();
     pvar_func_asSub();
     pvar_func_asynInterposeEosRegister();
@@ -234,7 +233,7 @@ DBEntry::~DBEntry()
     dbFreeEntry(m_pDBEntry);
 }
 
-DynamicModule::DynamicModule(): m_moduleHandle(dlopen(0, RTLD_NOW | RTLD_GLOBAL))
+DynamicModule::DynamicModule(): m_moduleHandle(dlopen(0, RTLD_NOW | RTLD_GLOBAL | RTLD_NODELETE))
 {
 }
 

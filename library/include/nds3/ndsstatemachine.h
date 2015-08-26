@@ -19,11 +19,17 @@ class StateMachine: public Node
 
 public:
     /**
-     * @brief Creates a state machine to be attached to a node.
+     * @brief Represents a state machine to be attached to a node.
      *
      * Attach the state machine to a node by using Node::addChild().
+     *
+     * The state machine provides a <b>local state</b> and a <b>global state</b>:
+     * - the local state represents the state of a single state machine
+     * - the global state takes into account all the state machines attached to
+     *   the children nodes
+     *
      * In EPICS the state machine PVs will be available as "StateMachine-state" and
-     * "StateMachine-globalState"
+     * "StateMachine-globalState".
      *
      * @param switchOnFunction         function to be called to switch the node on.
      *                                 The function is guaranteed to be called only when
