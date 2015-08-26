@@ -1,21 +1,22 @@
 TEMPLATE = app
 QT -= qt
-QT += console
 
 QMAKE_CXXFLAGS += -std=c++0x -O0 -rdynamic -fvisibility=hidden -fvisibility-inlines-hidden
 
 DEFINES += GOINGTHERE_DLL
 DEFINES += GOINGTHERE_DLL_EXPORTS
 
-LIBS += -L/opt/codac-5.0/epics/base/lib/linux-x86_64 \
-    -L/opt/codac-5.0/epics/modules/asyn/lib/linux-x86_64 \
-    -ldbCore -ldbRecStd -lgdd -lasyn \
-    -lca -lcas -ldl -pthread
+EPICS_BASE = $$(EPICS_BASE)
 
-INCLUDEPATH += /opt/codac-5.0/epics/base/include \
-    /opt/codac-5.0/epics/base/include/compiler/gcc \
-    /opt/codac-5.0/epics/base/include/os/Linux/ \
-    /opt/codac-5.0/epics/modules/asyn/include \
+LIBS += -L$$EPICS_BASE/lib/linux-x86_64 \
+    -L$$EPICS_BASE/../modules/asyn/lib/linux-x86_64 \
+    -ldbCore -ldbRecStd -lgdd -lasyn \
+    -lca -lcas -lCom -ldl -pthread
+
+INCLUDEPATH += $$EPICS_BASE/include \
+    $$EPICS_BASE/include/compiler/gcc \
+    $$EPICS_BASE/include/os/Linux/ \
+    $$EPICS_BASE/../modules/asyn/include \
 
 
 SOURCES += main.cpp \
