@@ -6,7 +6,7 @@
 namespace nds
 {
 
-class InterfaceImpl;
+class InterfaceBaseImpl;
 class PVBaseImpl;
 
 /**
@@ -41,7 +41,7 @@ public:
     void registerPV(std::shared_ptr<PVBaseImpl> pv);
 
 private:
-    std::unique_ptr<InterfaceImpl> m_pAsynInterface;
+    std::unique_ptr<InterfaceBaseImpl> m_pInterface;
 
     typedef std::map<int, std::shared_ptr<PVBaseImpl> > tRecords;
     tRecords m_records;

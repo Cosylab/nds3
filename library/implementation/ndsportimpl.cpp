@@ -1,5 +1,5 @@
 #include "ndsportImpl.h"
-#include "ndsinterfaceimpl.h"
+#include "ndsepicsinterfaceimpl.h"
 #include "ndspvbaseimpl.h"
 
 namespace nds
@@ -27,13 +27,18 @@ std::string PortImpl::getFullNameFromPort() const
 
 void PortImpl::initialize()
 {
-    m_pAsynInterface.reset(new InterfaceImpl(getFullName()));
+    if(m_pInterface.get() == 0)
+    {
+        m_pInterface.reset(new EpicsInterfaceImpl(getFullName()));
+    }
     NodeImpl::initialize();
+
+    m_pInterface->registrationTerminated();
 }
 
 void PortImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
 {
-    m_pAsynInterface->registerPV(pv);
+    m_pInterface->registerPV(pv);
 }
 
 }

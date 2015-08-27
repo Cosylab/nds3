@@ -1,10 +1,11 @@
-#ifndef NDSINTERFACEIMPL_H
-#define NDSINTERFACEIMPL_H
+#ifndef NDSEPICSINTERFACEIMPL_H
+#define NDSEPICSINTERFACEIMPL_H
 
 #include <asynPortDriver.h>
 #include <string>
 #include <vector>
 #include "ndspvbaseimpl.h"
+#include "ndsinterfacebaseimpl.h"
 
 namespace nds
 {
@@ -16,12 +17,16 @@ class PVBase;
  * @brief The AsynInterface class. Allocated by AsynPort
  *        to communicate with the AsynDriver
  */
-class InterfaceImpl: public asynPortDriver
+class EpicsInterfaceImpl: public InterfaceBaseImpl, asynPortDriver
 {
 public:
-    InterfaceImpl(const std::string& portName);
+    EpicsInterfaceImpl(const std::string& portName);
 
-    void registerPV(std::shared_ptr<PVBaseImpl> pv);
+    virtual void registerPV(std::shared_ptr<PVBaseImpl> pv);
+
+    virtual void registrationTerminated();
+
+    virtual void push(const timespec& timestamp, const pvList_t& pvList);
 
     virtual asynStatus readInt32(asynUser *pasynUser, epicsInt32 *value);
     virtual asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
@@ -43,4 +48,4 @@ private:
 
 }
 
-#endif // NDSINTERFACEIMPL_H
+#endif // NDSEPICSINTERFACEIMPL_H

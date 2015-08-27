@@ -60,12 +60,15 @@ int main()
     //  in our business logic class.
     // This PV will be registered as "ErrorCode" in the port "MightyDevice-MyPort"
     //////////////////////////////////////////////////////////////////////////////
-    port.addChild(nds::PVDelegate<std::int32_t>("ErrorCode",
+    nds::PVBase errorCode = port.addChild(nds::PVDelegate<std::int32_t>("ErrorCode",
                                   std::bind(&Delegate::readErrorCode, &myLogicIsHere, std::placeholders::_1, std::placeholders::_2),
                                   std::bind(&Delegate::writeErrorCode, &myLogicIsHere, std::placeholders::_1, std::placeholders::_2)
                                   ));
+    errorCode.setType("longin");
+    errorCode.setDescription("Represents the error code");
+    errorCode.setInterfaceName("STS");
 
-    port.addChild(nds::PVHoldDelegate("Delegate", new nds::Delegate()));
+    port.addChild(nds::PVHoldDelegate("Delegate", nds::dataInt32, new nds::Delegate()));
 
     // All the structure has been setup. Register the ports and the PVs
     ///////////////////////////////////////////////////////////////////
@@ -73,7 +76,7 @@ int main()
 
     iocshCmd("dbLoadDatabase /home/codac-dev/Documents/m-nds-test/target/main/epics/dbd/ndsTest.dbd");
     iocshCmd("myIoc pdbbase");
-    iocshCmd("dbLoadRecords /home/codac-dev/Documents/m-nds-test/target/main/epics/db/ndsTest.db, \"ASYN_PORT=MightyDevice-MyPort, PREFIX=myport\"");
+    iocshCmd("dbLoadRecords auto_generated_MightyDevice-MyPort.db");
     iocshCmd("iocInit");
     iocsh(0);
 }
