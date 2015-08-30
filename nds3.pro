@@ -9,8 +9,12 @@ DEFINES += GOINGTHERE_DLL_EXPORTS
 EPICS_BASE = $$(EPICS_BASE)
 EPICS_HOST_ARCH = $$(EPICS_HOST_ARCH)
 
-LIBS += -L$$EPICS_BASE/lib/$$EPICS_HOST_ARCH \
-    -L$$EPICS_BASE/../modules/asyn/lib/$$EPICS_HOST_ARCH \
+LIBS_BASE = $$EPICS_BASE/lib/$$EPICS_HOST_ARCH
+LIBS_ASYN = $$EPICS_BASE/../modules/asyn/lib/$$EPICS_HOST_ARCH
+
+
+LIBS += -L$$LIBS_BASE \
+    -L$$LIBS_ASYN \
     -ldbCore -ldbRecStd -lgdd -lasyn \
     -lca -lcas -lCom -ldl -pthread
 
