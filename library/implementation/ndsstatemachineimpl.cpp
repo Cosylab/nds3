@@ -123,6 +123,7 @@ void StateMachineImpl::setState(const state_t newState)
     {
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
         m_localState = fault;
+        throw;
     }
 }
 
