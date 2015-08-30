@@ -9,6 +9,11 @@ namespace nds
 
 template <typename T> class PVDelegateImpl;
 
+/**
+ * @brief Implements the state machine.
+ *
+ * Provides 2 PVs that allow to read and set the local and global state.
+ */
 class StateMachineImpl: public NodeImpl
 {
 public:
