@@ -9,7 +9,7 @@ namespace nds
 
 class FactoryImpl;
 
-class Factory
+class NDS3_API Factory
 {
 public:
     Factory();
@@ -18,8 +18,10 @@ public:
 
     void run();
 
+#ifndef SWIG
 private:
     FactoryImpl* m_pFactory;
+#endif
 };
 
 }

@@ -47,10 +47,11 @@ public:
      */
     PVDelegate(const std::string& name, read_t readFunction, write_t writeFunction);
 
-
+#ifndef SWIG
 private:
     read_t m_reader;
     write_t m_writer;
+#endif
 };
 
 }
