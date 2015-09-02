@@ -1,6 +1,15 @@
 #ifndef NDSBASE_H
 #define NDSBASE_H
 
+/**
+ * @file ndsbase.h
+ * @brief Defines the base class used for nodes, PVs and state machines.
+ *
+ * Include nds3.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
+
 #include "definitions.h"
 #include <memory>
 #include <string>

@@ -14,11 +14,16 @@ dataType_t PVDelegateImpl<T>::getDataType()
     {
         return dataFloat64;
     }
+    if(std::is_same<T, std::vector<std::int32_t> >::value)
+    {
+        return dataInt32Array;
+    }
 
 }
 
 template class PVDelegateImpl<std::int32_t>;
 template class PVDelegateImpl<double>;
+template class PVDelegateImpl<std::vector<std::int32_t> >;
 
 }
 

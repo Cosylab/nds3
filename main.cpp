@@ -1,4 +1,6 @@
 #include <iostream>
+#include <memory>
+#include <vector>
 
 #include "library/implementation/ndsfactoryimpl.h"
 #include "iocsh.h"
@@ -27,12 +29,17 @@ public:
         return;
     }
 
-    void readData(epicsInt32* pData)
+    void readData(timespec*, std::vector<std::int32_t> * pWave)
     {
-        *pData = 2;
+        pWave->resize(5);
+        (*pWave)[0] = 1;
+        (*pWave)[1] = 2;
+        (*pWave)[2] = 3;
+        (*pWave)[3] = 4;
+        (*pWave)[4] = 5;
     }
 
-    void writeData(epicsInt32 data)
+    void writeData(const timespec&, const std::vector<std::int32_t>& wave)
     {
         // nothing for now
     }
@@ -64,11 +71,22 @@ int main()
                                   std::bind(&Delegate::readErrorCode, &myLogicIsHere, std::placeholders::_1, std::placeholders::_2),
                                   std::bind(&Delegate::writeErrorCode, &myLogicIsHere, std::placeholders::_1, std::placeholders::_2)
                                   ));
-    errorCode.setType("longin");
+    errorCode.setType(nds::longin);
     errorCode.setDescription("Represents the error code");
     errorCode.setInterfaceName("STS");
+    errorCode.setScanType(nds::passive, 0);
 
-    port.addChild(nds::PVHoldDelegate("Delegate", nds::dataInt32, new nds::Delegate()));
+    nds::PVBase data = port.addChild(nds::PVDelegate<std::vector<std::int32_t> >("Data",
+                                  std::bind(&Delegate::readData, &myLogicIsHere, std::placeholders::_1, std::placeholders::_2),
+                                  std::bind(&Delegate::writeData, &myLogicIsHere, std::placeholders::_1, std::placeholders::_2)
+                                  ));
+    data.setType(nds::waveformIn);
+    data.setDescription("Acquired data");
+    data.setInterfaceName("DATA");
+    data.setScanType(nds::passive, 0);
+    data.setMaxElements(20);
+
+    port.addChild(nds::PVHoldDelegate("Delegate", nds::dataInt32, std::shared_ptr<nds::Delegate>(new nds::Delegate())));
 
     // All the structure has been setup. Register the ports and the PVs
     ///////////////////////////////////////////////////////////////////

@@ -1,6 +1,14 @@
 #ifndef NDS3_DEFINITIONS_H
 #define NDS3_DEFINITIONS_H
 
+/**
+ * @file definitions.h
+ * @brief Defines all the enumeration and common types used across the NDS library.
+ *
+ * Include nds3.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include <cstdint>
 #include <functional>
 
@@ -38,8 +46,45 @@ enum dataType_t
     dataInt32Array,
     dataUint32Array,
     dataFloat64Array,
-    dataString,
+    dataString
 };
+
+enum scanType_t
+{
+    periodic,
+    passive,
+    interrupt
+};
+
+/**
+ * @brief Possible record types.
+ *
+ * The record types are mostly used by EPICS to auto-generate the db file.
+ *
+ * PVs that have the record type set to notSpecified will not be included in the
+ *  auto generated db file.
+ */
+enum recordType_t
+{
+    notSpecified, ///< The PV's type is not specified
+    aai,          ///< Array analog input
+    aao,          ///< Array analog output
+    ai,           ///< Analog input
+    ao,           ///< Analog output
+    bi,           ///< Binary input
+    bo,           ///< Binary output
+    longin,       ///< Long input
+    longout,      ///< Long output
+    mbbi,         ///< Multi-bit binary input
+    mbbo,         ///< Multi-bit binary output
+    mbbiDirect,   ///< Multi-bit binary input direct
+    mbboDirect,   ///< Multi-bit binary output direct
+    stringIn,     ///< String input
+    stringOut,    ///< String output
+    waveformIn,   ///< Waveworm input. On EPICS db files "waveform" together with an input array type will be used
+    waveformOut   ///< Waveform output. On EPICS db files "waveform" together with an output array type will be used
+};
+
 
 
 typedef std::function<void ()> stateChange_t;

@@ -1,6 +1,9 @@
 #include "../include/nds3/ndspvdelegate.h"
 #include "ndspvdelegateimpl.h"
 
+#include <cstdint>
+#include <vector>
+
 namespace nds
 {
 
@@ -12,6 +15,7 @@ PVDelegate<T>::PVDelegate(const std::string& name, read_t readFunction, write_t 
 
 template class PVDelegate<std::int32_t>;
 template class PVDelegate<double>;
+template class PVDelegate<std::vector<std::int32_t> >;
 
 
 }

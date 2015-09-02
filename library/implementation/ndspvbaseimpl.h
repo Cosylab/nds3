@@ -23,11 +23,11 @@ public:
     // Only the overwritten ones in the AsynPV or AsynDelegatePV
     // will function correctly.
     ////////////////////////////////////////////////////////////
-    virtual void read(timespec* pTimestamp, std::int32_t* pValue);
-    virtual void write(const timespec& pTimestamp, const std::int32_t& value);
+    template<typename T>
+    void read(timespec* pTimestamp, T* pValue);
 
-    virtual void read(timespec* pTimestamp, double* pValue);
-    virtual void write(const timespec& pTimestamp, const double& value);
+    template<typename T>
+    void write(const timespec& timestamp, const T& value);
 
     virtual void initialize();
 
@@ -40,18 +40,26 @@ public:
      */
     virtual dataType_t getDataType() = 0;
 
-    void setType(const std::string& type);
+    void setType(const recordType_t type);
     void setDescription(const std::string& description);
     void setInterfaceName(const std::string& interfaceName);
+    void setScanType(const scanType_t scanType, const double periodSeconds);
+    void setMaxElements(const size_t maxElements);
 
-    std::string getType();
-    std::string getDescription();
-    std::string getInterfaceName();
+    recordType_t getType() const;
+    std::string getDescription() const;
+    std::string getInterfaceName() const;
+    scanType_t getScanType() const;
+    double getScanPeriodSeconds() const;
+    size_t getMaxElements() const;
 
 protected:
-    std::string m_type;
+    recordType_t m_type;
     std::string m_description;
     std::string m_interfaceName;
+    scanType_t m_scanType;
+    double m_periodicScanSeconds;
+    size_t m_maxElements;
 };
 }
 #endif // NDSPVBASEIMPL_H

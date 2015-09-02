@@ -34,6 +34,11 @@ public:
     virtual asynStatus readFloat64(asynUser *pasynUser, epicsFloat64 *value);
     virtual asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
 
+    virtual asynStatus readInt32Array(asynUser *pasynUser, epicsInt32 *value,
+                                                  size_t nElements, size_t *nIn);
+    virtual asynStatus writeInt32Array(asynUser *pasynUser, epicsInt32 *value,
+                                                   size_t nElements);
+
     virtual asynStatus drvUserCreate(asynUser *pasynUser, const char *drvInfo,
                                      const char **pptypeName, size_t *psize);
 

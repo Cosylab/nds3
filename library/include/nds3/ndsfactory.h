@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include "definitions.h"
 
 namespace nds
 {

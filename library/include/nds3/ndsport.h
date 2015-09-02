@@ -10,6 +10,9 @@ namespace nds
 class PVBase;
 class PortImpl;
 
+/**
+ * @brief Represents a node with direct connection with the controlled device.
+ */
 class NDS3_API Port: public Node
 {
 protected:
