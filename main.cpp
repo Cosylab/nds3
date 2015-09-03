@@ -92,7 +92,7 @@ int main()
     ///////////////////////////////////////////////////////////////////
     theDevice.initialize();
 
-    iocshCmd("dbLoadDatabase /home/codac-dev/Documents/m-nds-test/target/main/epics/dbd/ndsTest.dbd");
+    iocshCmd("dbLoadDatabase asyn.dbd /home/paolo/Desktop/EPICS/modules/asyn/dbd");
     iocshCmd("myIoc pdbbase");
     iocshCmd("dbLoadRecords auto_generated_MightyDevice-MyPort.db");
     iocshCmd("iocInit");

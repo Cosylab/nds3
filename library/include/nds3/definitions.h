@@ -90,6 +90,10 @@ enum recordType_t
 typedef std::function<void ()> stateChange_t;
 typedef std::function<bool (const state_t, const state_t, const state_t)> allowChange_t;
 
+typedef std::function<timespec ()> getTimestampPlugin_t;
+
+
+
 }
 
 // Generic helper definitions for shared library support

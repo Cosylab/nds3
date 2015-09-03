@@ -45,7 +45,8 @@ SOURCES += main.cpp \
     library/implementation/ndsstatemachineimpl.cpp \
     library/implementation/ndsexceptions.cpp \
     library/implementation/ndsepicsinterfaceimpl.cpp \
-    library/implementation/ndsinterfacebaseimpl.cpp
+    library/implementation/ndsinterfacebaseimpl.cpp \
+    library/implementation/ndsdataacquisitionimpl.cpp
 
 HEADERS += \
     library/implementation/ndsbaseimpl.h \
@@ -72,5 +73,7 @@ HEADERS += \
     library/implementation/ndsstatemachineimpl.h \
     library/include/nds3/ndsexceptions.h \
     library/implementation/ndsepicsinterfaceimpl.h \
-    library/implementation/ndsinterfacebaseimpl.h
+    library/implementation/ndsinterfacebaseimpl.h \
+    library/include/nds3/ndsdataacquisition.h \
+    library/implementation/ndsdataacquisitionimpl.h
 

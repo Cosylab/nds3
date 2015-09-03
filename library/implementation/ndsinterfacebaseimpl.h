@@ -44,15 +44,9 @@ public:
      */
     virtual void registrationTerminated() = 0;
 
-    typedef std::list<std::shared_ptr<PVBaseImpl> > pvList_t;
-
-    /**
-     * @brief Pushes immediately a list of PVs' data to the control system.
-     *
-     * @param timestamp the timestamp of the pushed values
-     * @param pvList    a list of PV's to push
-     */
-    virtual void push(const timespec& timestamp, const pvList_t& pvList) = 0;
+    virtual void push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv, const std::int32_t& value) = 0;
+    virtual void push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv, const double& value) = 0;
+    virtual void push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv, const std::vector<std::int32_t> & value) = 0;
 
 protected:
     std::string m_portName;

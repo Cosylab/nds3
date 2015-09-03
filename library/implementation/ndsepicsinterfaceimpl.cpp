@@ -40,7 +40,7 @@ EpicsInterfaceImpl::EpicsInterfaceImpl(const std::string& portName): InterfaceBa
                                                                asynInt32ArrayMask //|
                                                                //asynFloat32ArrayMask |
                                                                //asynFloat64ArrayMask |
-                                                               //asynGenericPointerMask,            /* Interface mask */
+                                                               //asynGenericPointerMask,            /* Interrupt mask */
                                                                , ASYN_CANBLOCK | ASYN_MULTIDEVICE,  /* asynFlags. */
                                                                1,                                 /* Autoconnect */
                                                                0,                                 /* Default priority */
@@ -134,6 +134,7 @@ void EpicsInterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
     // Save the PV in a list. The order in the is used as "reason".
     ///////////////////////////////////////////////////////////////
     m_pvs.push_back(pv);
+    m_pvNameToReason[pv->getFullNameFromPort()] = m_pvs.size() - 1;
 
     // If the record type is specified then attempt to auto generate a db file
     //////////////////////////////////////////////////////////////////////////
@@ -209,10 +210,26 @@ void EpicsInterfaceImpl::registrationTerminated()
     outputStream.flush();
 }
 
-void EpicsInterfaceImpl::push(const timespec& timestamp, const pvList_t& pvList)
+void EpicsInterfaceImpl::push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv)
+{
+    // Locate reason
+
+
+    switch(pv->getDataType())
+    {
+    case
+    }
+}
+
+void EpicsInterfaceImpl::push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv, const std::int32_t& value)
 {
 
 }
+
+void push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv, const double& value);
+void push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv, const std::vector<std::int32_t> & value);
+
+
 
 
 asynStatus EpicsInterfaceImpl::readInt32(asynUser *pasynUser, epicsInt32 *value)

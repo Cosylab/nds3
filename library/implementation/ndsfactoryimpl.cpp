@@ -127,6 +127,8 @@ void FactoryImpl::registerRecordTypes(DBBASE* pDatabase)
             continue;
         }
 
+        std::cout << "Registering type " << *scanTypes << "\n";
+
         // Collect both the rset and the sizeoffset functions
         const void* sizeOffset = symbols[epicsFuncPrefix + *scanTypes + epicsSizeOffsetPostfix].m_pAddress;
         const void* resetFunction = findRset->second.m_pAddress;
@@ -143,6 +145,8 @@ void FactoryImpl::registerRecordTypes(DBBASE* pDatabase)
     ///////////////////////////
     for(std::set<std::string>::const_iterator scanDevices(devices.begin()), endDevices(devices.end()); scanDevices != endDevices; ++scanDevices)
     {
+        std::cout << "Registering device " << *scanDevices << "\n";
+
         const void* deviceFunction = symbols[epicsDsetPrefix + *scanDevices].m_pAddress;
         m_deviceFunctions.push_back((dset*)*(dset**)deviceFunction);
         m_deviceNames.push_back(*scanDevices);
@@ -153,6 +157,8 @@ void FactoryImpl::registerRecordTypes(DBBASE* pDatabase)
     ///////////////////////////
     for(std::set<std::string>::const_iterator scanDrivers(drivers.begin()), endDrivers(drivers.end()); scanDrivers != endDrivers; ++scanDrivers)
     {
+        std::cout << "Registering driver " << *scanDrivers << "\n";
+
         const void* driverFunction = symbols[epicsDrvetPrefix + *scanDrivers].m_pAddress;
         m_driverFunctions.push_back((drvet*)driverFunction);
         m_driverNames.push_back(*scanDrivers);

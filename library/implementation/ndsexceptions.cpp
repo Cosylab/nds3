@@ -5,7 +5,6 @@ namespace nds
 
 NdsError::NdsError(const std::string &what): std::runtime_error(what)
 {
-
 }
 
 StateMachineError::StateMachineError(const std::string& what): NdsError(what)
@@ -18,12 +17,10 @@ StateMachineRollBack::StateMachineRollBack(const std::string& what): StateMachin
 
 StateMachineTransitionDenied::StateMachineTransitionDenied(const std::string& what): StateMachineError(what)
 {
-
 }
 
 StateMachineNoSuchTransition::StateMachineNoSuchTransition(const std::string& what): StateMachineError(what)
 {
-
 }
 
 }
