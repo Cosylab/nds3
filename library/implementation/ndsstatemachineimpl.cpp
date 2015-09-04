@@ -107,22 +107,26 @@ void StateMachineImpl::setState(const state_t newState)
             throw StateMachineTransitionDenied(buildErrorMessage.str());
         }
         m_localState = transitionState;
+        m_stateTimestamp = getTimestamp();
     }
     try
     {
         transitionFunction();
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
         m_localState = newState;
+        m_stateTimestamp = getTimestamp();
     }
     catch(StateMachineRollBack& e)
     {
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
         m_localState = localState;
+        m_stateTimestamp = getTimestamp();
     }
     catch(std::runtime_error& e)
     {
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
         m_localState = fault;
+        m_stateTimestamp = getTimestamp();
         throw;
     }
 }
@@ -177,10 +181,12 @@ bool StateMachineImpl::isIntermediateState(const state_t state) const
 
 void StateMachineImpl::readLocalState(timespec* pTimestamp, std::int32_t* pValue)
 {
-    *pValue = getLocalState();
+    std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
+    *pTimestamp = m_stateTimestamp;
+    *pValue = m_localState;
 }
 
-void StateMachineImpl::writeLocalState(const timespec& pTimestamp, const std::int32_t& value)
+void StateMachineImpl::writeLocalState(const timespec& /* pTimestamp */, const std::int32_t& value)
 {
     setState((state_t)value);
 }
@@ -188,6 +194,7 @@ void StateMachineImpl::writeLocalState(const timespec& pTimestamp, const std::in
 void StateMachineImpl::readGlobalState(timespec* pTimestamp, std::int32_t* pValue)
 {
     *pValue = getGlobalState();
+    *pTimestamp = getTimestamp();
 }
 
 void StateMachineImpl::writeGlobalState(const timespec& pTimestamp, const std::int32_t& value)

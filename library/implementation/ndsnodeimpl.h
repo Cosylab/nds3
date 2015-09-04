@@ -35,12 +35,13 @@ public:
     virtual state_t getGlobalState();
     state_t getChildrenState();
 
-
 private:
+
     typedef std::map<std::string, std::shared_ptr<BaseImpl> > tChildren;
     tChildren m_children;
 
     std::shared_ptr<StateMachineImpl> m_pStateMachine;
+
 };
 
 }

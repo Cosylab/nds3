@@ -74,7 +74,7 @@ int main()
     errorCode.setType(nds::longin);
     errorCode.setDescription("Represents the error code");
     errorCode.setInterfaceName("STS");
-    errorCode.setScanType(nds::passive, 0);
+    errorCode.setScanType(nds::interrupt, 0);
 
     nds::PVBase data = port.addChild(nds::PVDelegate<std::vector<std::int32_t> >("Data",
                                   std::bind(&Delegate::readData, &myLogicIsHere, std::placeholders::_1, std::placeholders::_2),
@@ -92,10 +92,14 @@ int main()
     ///////////////////////////////////////////////////////////////////
     theDevice.initialize();
 
-    iocshCmd("dbLoadDatabase asyn.dbd /home/paolo/Desktop/EPICS/modules/asyn/dbd");
+    iocshCmd("dbLoadDatabase ndsTest.dbd /home/codac-dev/Documents/m-nds-test/target/main/epics/dbd");
     iocshCmd("myIoc pdbbase");
     iocshCmd("dbLoadRecords auto_generated_MightyDevice-MyPort.db");
     iocshCmd("iocInit");
+
+    ::sleep(2);
+    timespec time;
+    errorCode.push(time, 4);
     iocsh(0);
 }
 

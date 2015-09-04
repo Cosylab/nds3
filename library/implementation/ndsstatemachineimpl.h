@@ -66,6 +66,7 @@ protected:
     void writeGlobalState(const timespec& pTimestamp, const std::int32_t& value);
 
     state_t m_localState;
+    timespec m_stateTimestamp;
 
     stateChange_t m_switchOn;
     stateChange_t m_switchOff;

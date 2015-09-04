@@ -26,9 +26,9 @@ public:
 
     virtual void registrationTerminated();
 
-    virtual void push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv, const std::int32_t& value);
-    virtual void push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv, const double& value);
-    virtual void push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv, const std::vector<std::int32_t> & value);
+    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int32_t& value);
+    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const double& value);
+    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int32_t> & value);
 
     virtual asynStatus readInt32(asynUser *pasynUser, epicsInt32 *value);
     virtual asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
@@ -48,6 +48,21 @@ public:
     epicsTimeStamp convertUnixTimeToEpicsTime(const timespec& time);
 
 private:
+    template<typename T, typename interruptType>
+    void pushOneValue(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const T& value, void* interruptPvt);
+
+    template<typename T>
+    asynStatus writeOneValue(asynUser* pasynUser, const T& pValue);
+
+    template<typename T>
+    asynStatus readOneValue(asynUser* pasynUser, T* pValue);
+
+    template<typename T>
+    asynStatus readArray(asynUser *pasynUser, T* pValue, size_t nElements, size_t *nIn);
+
+    template<typename T>
+    asynStatus writeArray(asynUser *pasynUser, T* pValue, size_t nElements);
+
     std::vector<std::shared_ptr<PVBaseImpl> > m_pvs;
 
     std::map<std::string, size_t> m_pvNameToReason;

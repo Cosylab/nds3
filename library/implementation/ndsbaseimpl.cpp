@@ -4,6 +4,9 @@
 namespace nds
 {
 
+BaseImpl::BaseImpl(const std::string& name): m_name(name), m_timestampFunction(std::bind(&BaseImpl::getLocalTimestamp, this))
+{}
+
 
 std::shared_ptr<PortImpl> BaseImpl::getPort()
 {
@@ -55,6 +58,28 @@ std::string BaseImpl::getFullNameFromPort() const
         return getComponentName();
     }
     return parentName + "-" + getComponentName();
+}
+
+timespec BaseImpl::getTimestamp() const
+{
+    return m_timestampFunction();
+}
+
+void BaseImpl::setTimestampDelegate(getTimestampPlugin_t timestampDelegate)
+{
+    m_timestampFunction = timestampDelegate;
+}
+
+timespec BaseImpl::getLocalTimestamp() const
+{
+    std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();
+    if(temporaryPointer != 0)
+    {
+        return temporaryPointer->getTimestamp();
+    }
+    timespec timestamp;
+    clock_gettime(CLOCK_MONOTONIC, &timestamp);
+    return timestamp;
 }
 
 }

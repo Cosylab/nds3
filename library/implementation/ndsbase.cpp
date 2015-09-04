@@ -51,5 +51,15 @@ void Base::initialize()
     m_pImplementation->initialize();
 }
 
+timespec Base::getTimestamp() const
+{
+    return m_pImplementation->getTimestamp();
+}
+
+void Base::setTimestampDelegate(getTimestampPlugin_t timestampDelegate)
+{
+    m_pImplementation->setTimestampDelegate(timestampDelegate);
+}
+
 
 }

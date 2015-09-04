@@ -210,77 +210,83 @@ void EpicsInterfaceImpl::registrationTerminated()
     outputStream.flush();
 }
 
-void EpicsInterfaceImpl::push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv)
+
+void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int32_t& value)
 {
-    // Locate reason
 
-
-    switch(pv->getDataType())
-    {
-    case
-    }
+    pushOneValue<epicsInt32, asynInt32Interrupt>(pv, timestamp, (epicsInt32)value, asynStdInterfaces.int32InterruptPvt);
 }
 
-void EpicsInterfaceImpl::push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv, const std::int32_t& value)
+void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const double& value)
+{
+    pushOneValue<epicsFloat64, asynFloat64Interrupt>(pv, timestamp, (epicsFloat64)value, asynStdInterfaces.float64InterruptPvt);
+}
+
+void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int32_t> & value)
 {
 
 }
 
-void push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv, const double& value);
-void push(const timespec& timestamp, std::shared_ptr<PVBaseImpl> pv, const std::vector<std::int32_t> & value);
-
-
-
-
-asynStatus EpicsInterfaceImpl::readInt32(asynUser *pasynUser, epicsInt32 *value)
+template<typename T, typename interruptType>
+void EpicsInterfaceImpl::pushOneValue(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const T& value, void* interruptPvt)
 {
-    timespec timestamp;
+    size_t reason = m_pvNameToReason[pv->getFullNameFromPort()];
+
+    ELLLIST       *pclientList;
+    int            addr;
+
+    pasynManager->interruptStart(interruptPvt, &pclientList);
+
+    interruptNode* pnode = (interruptNode *)ellFirst(pclientList);
+    while (pnode)
+      {
+        interruptType *pInterrupt = (interruptType *)pnode->drvPvt;
+        pInterrupt->pasynUser->timestamp = convertUnixTimeToEpicsTime(timestamp);
+        pasynManager->getAddr(pInterrupt->pasynUser, &addr);
+        if ((pInterrupt->pasynUser->reason == reason) && (0 == addr))
+          {
+            //pInterrrupt->pasynUser->auxStatus = (asynStatus)status;
+            pInterrupt->callback(pInterrupt->userPvt, pInterrupt->pasynUser, value);
+          }
+        pnode = (interruptNode *)ellNext(&pnode->node);
+      }
+    pasynManager->interruptEnd(interruptPvt);
+}
+
+template<typename T>
+asynStatus EpicsInterfaceImpl::writeOneValue(asynUser* pasynUser, const T& value)
+{
+    timespec timestamp = convertEpicsTimeToUnixTime(pasynUser->timestamp);
+
+    m_pvs[pasynUser->reason]->write(timestamp, value);
+
+    return asynSuccess;
+}
+
+template<typename T>
+asynStatus EpicsInterfaceImpl::readOneValue(asynUser* pasynUser, T* pValue)
+{
+    timespec timestamp = convertEpicsTimeToUnixTime(pasynUser->timestamp);
+
+    m_pvs[pasynUser->reason]->read(&timestamp, pValue);
+
+    pasynUser->timestamp = convertUnixTimeToEpicsTime(timestamp);
+
+    return asynSuccess;
+
+}
+
+template<typename T>
+asynStatus EpicsInterfaceImpl::readArray(asynUser *pasynUser, T* pValue, size_t nElements, size_t *nIn)
+{
+    timespec timestamp = convertEpicsTimeToUnixTime(pasynUser->timestamp);
+
     if(pasynUser->timestamp.secPastEpoch == 0 && pasynUser->timestamp.nsec == 0)
     {
         clock_gettime(CLOCK_MONOTONIC, &timestamp);
     }
-    m_pvs[pasynUser->reason]->read(&timestamp, (std::int32_t*)value);
 
-    return asynSuccess;
-}
-
-asynStatus EpicsInterfaceImpl::writeInt32(asynUser *pasynUser, epicsInt32 value)
-{
-    timespec timestamp;
-
-    m_pvs[pasynUser->reason]->write(timestamp,(std::int32_t) value);
-    return asynSuccess;
-}
-
-asynStatus EpicsInterfaceImpl::readFloat64(asynUser *pasynUser, epicsFloat64 *value)
-{
-    timespec timestamp;
-    if(pasynUser->timestamp.secPastEpoch == 0 && pasynUser->timestamp.nsec == 0)
-    {
-        clock_gettime(CLOCK_MONOTONIC, &timestamp);
-    }
-    m_pvs[pasynUser->reason]->read(&timestamp, (double*)value);
-
-    return asynSuccess;
-}
-
-asynStatus EpicsInterfaceImpl::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
-{
-    timespec timestamp;
-
-    m_pvs[pasynUser->reason]->write(timestamp,(double) value);
-    return asynSuccess;
-}
-
-asynStatus EpicsInterfaceImpl::readInt32Array(asynUser *pasynUser, epicsInt32 *value,
-                                              size_t nElements, size_t *nIn)
-{
-    timespec timestamp;
-    if(pasynUser->timestamp.secPastEpoch == 0 && pasynUser->timestamp.nsec == 0)
-    {
-        clock_gettime(CLOCK_MONOTONIC, &timestamp);
-    }
-    std::vector<std::int32_t> vector(nElements);
+    std::vector<T> vector(nElements);
     m_pvs[pasynUser->reason]->read(&timestamp, &vector);
 
     if(vector.size() > nElements)
@@ -288,21 +294,61 @@ asynStatus EpicsInterfaceImpl::readInt32Array(asynUser *pasynUser, epicsInt32 *v
         vector.resize(nElements);
     }
     *nIn = vector.size();
-    ::memcpy(value, vector.data(), vector.size() * sizeof(std::int32_t));
+
+    ::memcpy(pValue, vector.data(), vector.size() * sizeof(T));
+
+    pasynUser->timestamp = convertUnixTimeToEpicsTime(timestamp);
 
     return asynSuccess;
 }
 
-asynStatus EpicsInterfaceImpl::writeInt32Array(asynUser *pasynUser, epicsInt32 *value,
-                                               size_t nElements)
+template<typename T>
+asynStatus EpicsInterfaceImpl::writeArray(asynUser *pasynUser, T* pValue, size_t nElements)
 {
-    timespec timestamp;
+    timespec timestamp = convertEpicsTimeToUnixTime(pasynUser->timestamp);
 
-    std::vector<std::int32_t> vector(nElements);
-    ::memcpy(vector.data(), value, vector.size() * sizeof(std::int32_t));
+    std::vector<T> vector(nElements);
+    ::memcpy(vector.data(), pValue, vector.size() * sizeof(T));
 
     m_pvs[pasynUser->reason]->write(timestamp, vector);
     return asynSuccess;
+}
+
+
+
+
+
+asynStatus EpicsInterfaceImpl::readInt32(asynUser *pasynUser, epicsInt32 *pValue)
+{
+    return readOneValue(pasynUser, (std::int32_t*)pValue);
+}
+
+asynStatus EpicsInterfaceImpl::writeInt32(asynUser *pasynUser, epicsInt32 value)
+{
+    return writeOneValue(pasynUser, (std::int32_t)value);
+}
+
+
+asynStatus EpicsInterfaceImpl::readFloat64(asynUser *pasynUser, epicsFloat64 *pValue)
+{
+    return readOneValue(pasynUser, (double*)pValue);
+}
+
+asynStatus EpicsInterfaceImpl::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
+{
+    return writeOneValue(pasynUser, (double)value);
+}
+
+asynStatus EpicsInterfaceImpl::readInt32Array(asynUser *pasynUser, epicsInt32* pValue,
+                                              size_t nElements, size_t *nIn)
+{
+    return readArray(pasynUser, (std::int32_t*)pValue, nElements, nIn);
+}
+
+asynStatus EpicsInterfaceImpl::writeInt32Array(asynUser *pasynUser, epicsInt32* pValue,
+                                               size_t nElements)
+{
+    return writeArray(pasynUser, pValue, nElements);
 }
 
 
@@ -324,19 +370,47 @@ asynStatus EpicsInterfaceImpl::drvUserCreate(asynUser *pasynUser, const char *dr
     return asynError;
 }
 
+static const uint64_t nanosecondCoeff(1000000000L);
+static const uint64_t conversionToEpics(uint64_t(POSIX_TIME_AT_EPICS_EPOCH) * nanosecondCoeff);
+
 timespec EpicsInterfaceImpl::convertEpicsTimeToUnixTime(const epicsTimeStamp& time)
 {
+    if(time.secPastEpoch == 0 && time.nsec == 0)
+    {
+        timespec unixTime{0, 0};
+        return unixTime;
+    }
+
+    std::uint64_t timeNs((std::uint64_t)time.secPastEpoch * nanosecondCoeff + (std::uint64_t)time.nsec + conversionToEpics);
+
     timespec unixTime;
+    unixTime.tv_sec = (std::uint32_t)(timeNs / nanosecondCoeff);
+    unixTime.tv_nsec = (std::uint32_t)(timeNs % nanosecondCoeff);
 
     return unixTime;
-
 }
 
 epicsTimeStamp EpicsInterfaceImpl::convertUnixTimeToEpicsTime(const timespec& time)
 {
-    epicsTimeStamp epicsTime;
-    return epicsTime;
+    if(time.tv_sec == 0 && time.tv_nsec == 0)
+    {
+        epicsTimeStamp epicsTime{0, 0};
+        return epicsTime;
+    }
 
+    std::uint64_t timeNs((std::uint64_t)time.tv_sec * nanosecondCoeff + (std::uint64_t)time.tv_nsec);
+    if(timeNs < conversionToEpics)
+    {
+        throw;
+    }
+
+    std::uint64_t epicsTimeNs(timeNs - conversionToEpics);
+
+    epicsTimeStamp epicsTime;
+    epicsTime.secPastEpoch = epicsTimeNs / nanosecondCoeff;
+    epicsTime.nsec = epicsTimeNs % nanosecondCoeff;
+
+    return epicsTime;
 }
 
 }

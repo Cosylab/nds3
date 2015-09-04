@@ -19,7 +19,7 @@ public:
                     stateChange_t recoverFunction,
                     allowChange_t allowStateChangeFunction);
 
-    pushData(const timespec& timestamp, const T& data);
+    void pushData(const timespec& timestamp, const T& data);
 
     double getFrequencyHz();
     double getDurationSeconds();

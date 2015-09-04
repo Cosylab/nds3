@@ -6,6 +6,8 @@
 #include <memory>
 #include <vector>
 
+#include "../include/nds3/definitions.h"
+
 
 namespace nds
 {
@@ -25,9 +27,7 @@ class BaseImpl: public std::enable_shared_from_this<BaseImpl>
     friend class PortImpl;
 
 protected:
-    BaseImpl(const std::string& name):
-        /* m_pInterfaceObject(pInterface), */ m_name(name)
-    {}
+    BaseImpl(const std::string& name);
 
 public:
     BaseImpl(const BaseImpl& right) = delete;
@@ -82,10 +82,17 @@ public:
      */
     virtual void initialize() = 0;
 
+    timespec getTimestamp() const;
+
+    void setTimestampDelegate(getTimestampPlugin_t timestampDelegate);
+
 protected:
+    timespec getLocalTimestamp() const;
 
     std::string m_name;
     std::weak_ptr<NodeImpl> m_pParent;
+
+    getTimestampPlugin_t m_timestampFunction;
 
 };
 

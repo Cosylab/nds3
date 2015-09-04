@@ -21,14 +21,23 @@ void PVBase::write(const timespec& timestamp, const T& value)
     std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->write(timestamp, value);
 }
 
+template<typename T>
+void PVBase::push(const timespec& timestamp, const T& value)
+{
+    std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->push(timestamp, value);
+}
+
 template void PVBase::read<std::int32_t>(timespec*, std::int32_t*);
 template void PVBase::write<std::int32_t>(const timespec&, const std::int32_t&);
+template void PVBase::push<std::int32_t>(const timespec&, const std::int32_t&);
 
 template void PVBase::read<std::vector<std::int32_t> >(timespec*, std::vector<std::int32_t>*);
 template void PVBase::write<std::vector<std::int32_t> >(const timespec&, const std::vector<std::int32_t>&);
+template void PVBase::push<std::vector<std::int32_t> >(const timespec&, const std::vector<std::int32_t>&);
 
 template void PVBase::read<double>(timespec*, double*);
 template void PVBase::write<double>(const timespec&, const double&);
+template void PVBase::push<double>(const timespec&, const double&);
 
 void PVBase::setType(const recordType_t type)
 {

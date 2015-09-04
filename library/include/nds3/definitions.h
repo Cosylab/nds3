@@ -11,6 +11,7 @@
 
 #include <cstdint>
 #include <functional>
+#include <time.h>
 
 namespace nds
 {

@@ -96,6 +96,20 @@ public:
      */
     void initialize();
 
+    /**
+     * @brief Get the current time.
+     *
+     * - if a custom time function has been declared with setTimestampDelegate() then the
+     *   delegate function is called, or...
+     * - if this is not the root node, the parent node's getTimestamp() is called, or...
+     * - if this is the parent node then the local machine's UTC time is returned.
+     *
+     * @return the current time
+     */
+    timespec getTimestamp() const;
+
+    void setTimestampDelegate(getTimestampPlugin_t timestampDelegate);
+
 #ifndef SWIG
 protected:
     std::shared_ptr<BaseImpl> m_pImplementation;

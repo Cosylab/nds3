@@ -27,14 +27,26 @@ void PVBaseImpl::write(const timespec& /* pTimestamp */, const T& /* value */)
     throw;
 }
 
+template<typename T>
+void PVBaseImpl::push(const timespec& timestamp, const T& value)
+{
+    // Find the port then push the value
+    ////////////////////////////////////
+    std::shared_ptr<PortImpl> pPort(getPort());
+    pPort->push(std::static_pointer_cast<PVBaseImpl>(shared_from_this()), timestamp, value);
+}
+
 template void PVBaseImpl::read<std::int32_t>(timespec*, std::int32_t*);
 template void PVBaseImpl::write<std::int32_t>(const timespec&, const std::int32_t&);
+template void PVBaseImpl::push<std::int32_t>(const timespec&, const std::int32_t&);
 
 template void PVBaseImpl::read<std::vector<std::int32_t> >(timespec*, std::vector<std::int32_t>*);
 template void PVBaseImpl::write<std::vector<std::int32_t> >(const timespec&, const std::vector<std::int32_t>&);
+template void PVBaseImpl::push<std::vector<std::int32_t> >(const timespec&, const std::vector<std::int32_t>&);
 
 template void PVBaseImpl::read<double>(timespec*, double*);
 template void PVBaseImpl::write<double>(const timespec&, const double&);
+template void PVBaseImpl::push<double>(const timespec&, const double&);
 
 
 void PVBaseImpl::setType(const recordType_t type)

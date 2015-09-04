@@ -75,6 +75,4 @@ state_t NodeImpl::getChildrenState()
     return returnState;
 }
 
-
-
 }

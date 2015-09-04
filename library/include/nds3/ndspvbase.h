@@ -52,6 +52,9 @@ public:
     template<typename T>
     void write(const timespec& timestamp, const T& value);
 
+    template<typename T>
+    void push(const timespec& timestamp, const T& value);
+
     void setType(const recordType_t type);
     void setDescription(const std::string& description);
     void setInterfaceName(const std::string& interfaceName);

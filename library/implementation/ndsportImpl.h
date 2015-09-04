@@ -40,6 +40,9 @@ public:
 
     void registerPV(std::shared_ptr<PVBaseImpl> pv);
 
+    template<typename T>
+    void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const T& value);
+
 private:
     std::unique_ptr<InterfaceBaseImpl> m_pInterface;
 
