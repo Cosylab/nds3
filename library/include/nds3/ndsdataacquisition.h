@@ -14,7 +14,7 @@ namespace nds
  * It also provides a state machine that allows to start/stop the acquisition.
  */
 template <typename T>
-class DataAcquisition: public Node
+class NDS3_API DataAcquisition: public Node
 {
 protected:
     DataAcquisition();

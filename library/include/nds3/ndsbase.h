@@ -108,6 +108,15 @@ public:
      */
     timespec getTimestamp() const;
 
+    /**
+     * @brief Specify the delegate funtion to call to get the timestamp.
+     *
+     * If this method is not called then an internal function is called, which traverse
+     * all the parent nodes until the node with no parent returns the local time or
+     * call its own delegate function if specified.
+     *
+     * @param timestampDelegate the delegate function to call to get the timestamp
+     */
     void setTimestampDelegate(getTimestampPlugin_t timestampDelegate);
 
 #ifndef SWIG
