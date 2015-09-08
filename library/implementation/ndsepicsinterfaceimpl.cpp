@@ -60,10 +60,29 @@ dataTypeAndFTVL_t dataTypeToEpicsString(dataType_t dataType, bool bInput)
 {
     switch(dataType)
     {
+    case dataUint8:
     case dataInt32:
         return dataTypeAndFTVL_t("asynInt32", "");
     case dataFloat64:
         return dataTypeAndFTVL_t("asynFloat64", "");
+    case dataInt8Array:
+        if(bInput)
+        {
+            return dataTypeAndFTVL_t("asynOctetRead", "CHAR");
+        }
+        else
+        {
+            return dataTypeAndFTVL_t("asynOctetWrite", "CHAR");
+        }
+    case dataUint8Array:
+        if(bInput)
+        {
+            return dataTypeAndFTVL_t("asynOctetRead", "UCHAR");
+        }
+        else
+        {
+            return dataTypeAndFTVL_t("asynOctetWrite", "UCHAR");
+        }
     case dataInt32Array:
         if(bInput)
         {

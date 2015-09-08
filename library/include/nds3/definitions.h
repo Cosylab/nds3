@@ -45,7 +45,6 @@ enum dataType_t
     dataInt8Array,
     dataUint8Array,
     dataInt32Array,
-    dataUint32Array,
     dataFloat64Array,
     dataString
 };
