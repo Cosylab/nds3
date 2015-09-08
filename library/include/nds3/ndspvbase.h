@@ -52,6 +52,15 @@ public:
     template<typename T>
     void write(const timespec& timestamp, const T& value);
 
+    /**
+     * @brief Pushes a value to the control system.
+     *
+     * The control system will receive the value immediately, regardless of
+     * when it calls the read() function.
+     *
+     * @param timestamp    the new value's timestamp
+     * @param value        the value to push to the control system
+     */
     template<typename T>
     void push(const timespec& timestamp, const T& value);
 

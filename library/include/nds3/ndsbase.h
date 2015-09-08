@@ -3,9 +3,10 @@
 
 /**
  * @file ndsbase.h
- * @brief Defines the base class used for nodes, PVs and state machines.
+ * @brief Defines the base class used for nodes, PVs, state machines and acquisition
+ *        devices.
  *
- * Include nds3.h instead of this one, since nds3.h takes care of including all the
+ * Include nds3.h instead of this file, since nds3.h takes care of including all the
  * necessary header files (including this one).
  */
 
@@ -14,6 +15,11 @@
 #include <memory>
 #include <string>
 
+/**
+ * @namespace nds
+ * @brief All the classes and methods defined by the NDS3 framework are in the namespace
+ *        nds.
+ */
 namespace nds
 {
 
@@ -29,8 +35,6 @@ class Node;
 class NDS3_API Base
 {
     friend class Node;
-protected:
-    Base();
 
 public:
 #ifndef SWIG
@@ -38,7 +42,12 @@ public:
 #endif
 
     /**
-     * @brief Copy constructor for the base class. The copy will refer to the same
+     * @brief Initializes an empty base class.
+     */
+    Base();
+
+    /**
+     * @brief Copy constructor. The copy will refer to the same
      *        implementation object referenced in the copied object.
      *
      * @param right the object to copy
@@ -57,10 +66,11 @@ public:
     virtual ~Base();
 
     /**
-     * @brief Get the Node that holds an ASYN port. Query the parent nodes if necessary.
+     * @brief Get the Node that communicate with the device (ASYN port on EPICS, Device on Tango).
+     *        Query the parent nodes if necessary.
      *
-     * @return a reference to the parent AsynNode, which can be used to communicate directly with
-     *         the AsynDriver
+     * @return a reference to the parent Device node, which can be used to communicate directly with
+     *         the device
      */
     virtual Port getPort();
 
@@ -80,18 +90,19 @@ public:
     std::string getFullName() const;
 
     /**
-     * @brief Return the node's name as seen by the parent AsynPort.
+     * @brief Return the node's name as seen by the parent Port node (the node that communicates
+     *        with the device).
      *
      * For instance, for a record "TIME" contained in the channel "CH0" that is part of
-     * an AsynPort named "DEVICE" the return value will be "CH0-TIME": node that the "DEVICE"
+     * an Port named "DEVICE" the return value will be "CH0-TIME": node that the "DEVICE"
      * part is missing.
      *
-     * @return the node's name relative to the AsynPort that contains it.
+     * @return the node's name relative to the Port that contains it.
      */
     std::string getFullNameFromPort() const;
 
     /**
-     * @brief Registers all the records with the AsynDriver. Call this from the root node
+     * @brief Registers all the records with the control system. Call this from the root node
      *        which will take care of traversing its children and initialize them.
      */
     void initialize();
@@ -101,7 +112,7 @@ public:
      *
      * - if a custom time function has been declared with setTimestampDelegate() then the
      *   delegate function is called, or...
-     * - if this is not the root node, the parent node's getTimestamp() is called, or...
+     * - if this is not the root node then the parent node's getTimestamp() is called, or...
      * - if this is the parent node then the local machine's UTC time is returned.
      *
      * @return the current time
@@ -109,9 +120,9 @@ public:
     timespec getTimestamp() const;
 
     /**
-     * @brief Specify the delegate funtion to call to get the timestamp.
+     * @brief Specify the delegate function to call to get the timestamp.
      *
-     * If this method is not called then an internal function is called, which traverse
+     * If this method is not called then an internal function is called, which traverses
      * all the parent nodes until the node with no parent returns the local time or
      * call its own delegate function if specified.
      *

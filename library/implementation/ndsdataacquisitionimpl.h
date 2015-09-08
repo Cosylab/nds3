@@ -2,7 +2,9 @@
 #define NDSDATAACQUISITIONIMPL_H
 
 #include "ndsnodeimpl.h"
-
+#include "ndspvvariableimpl.h"
+#include "../include/nds3/definitions.h"
+#include <memory>
 namespace nds
 {
 
@@ -11,6 +13,7 @@ class DataAcquisitionImpl: public NodeImpl
 {
 public:
     DataAcquisitionImpl(const std::string& name,
+                    recordType_t recordType,
                     size_t maxElements,
                     stateChange_t switchOnFunction,
                     stateChange_t switchOffFunction,
@@ -19,12 +22,26 @@ public:
                     stateChange_t recoverFunction,
                     allowChange_t allowStateChangeFunction);
 
+    /**
+     * @brief Specifies the function to call to get the acquisition start timestamp.
+     *
+     * The function is called only once at each start of the acquisition and its result
+     * is stored in a local variable that can be retrieved with getStartTimestamp().
+     *
+     * If this function is not called then getTimestamp() is used to get the start time.
+     *
+     * @param timestampDelegate the function to call to get the start time
+     */
+    void setStartTimestampDelegate(getTimestampPlugin_t timestampDelegate);
+
     void pushData(const timespec& timestamp, const T& data);
 
     double getFrequencyHz();
     double getDurationSeconds();
     size_t getMaxElements();
     size_t getDecimation();
+
+
 
     /**
      * @brief Returns the timestamp at the moment of the start of the acquisition.
@@ -43,17 +60,23 @@ public:
     void onStart();
 
 
-
 protected:
-    timespec getLocalTimestamp();
-
+    // Delegate functions
+    /////////////////////
     stateChange_t m_onStartDelegate;
 
-    allowChange_t m_allowChangeDelegate;
-
-    getTimestampPlugin_t m_getTimestampFunction;
+    getTimestampPlugin_t m_startTimestampFunction;
 
     timespec m_startTime;
+
+    // PVs
+    std::shared_ptr<PVVariableImpl<T> > m_dataPV;
+    std::shared_ptr<PVVariableImpl<double> > m_frequencyPV;
+    std::shared_ptr<PVVariableImpl<double> > m_durationPV;
+    std::shared_ptr<PVVariableImpl<std::int32_t> > m_maxElementsPV;
+    std::shared_ptr<PVVariableImpl<std::int32_t> > m_decimationPV;
+    std::shared_ptr<StateMachineImpl> m_stateMachine;
+
 
 
 };

@@ -74,12 +74,6 @@ protected:
     stateChange_t m_stop;
     stateChange_t m_recover;
     allowChange_t m_allowChange;
-
-
-
-
-
-
 };
 
 

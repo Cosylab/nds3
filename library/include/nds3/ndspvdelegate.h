@@ -47,6 +47,8 @@ public:
      */
     PVDelegate(const std::string& name, read_t readFunction, write_t writeFunction);
 
+    PVDelegate(const std::string& name, read_t readFunction);
+
 #ifndef SWIG
 private:
     read_t m_reader;

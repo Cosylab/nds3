@@ -18,7 +18,7 @@ class PortImpl;
 
 /**
  * @internal
- * @brief This is the base class for nodes, devices, PVs.
+ * @brief This is the base class for the implementation of nodes, devices, PVs.
  *
  */
 class BaseImpl: public std::enable_shared_from_this<BaseImpl>
@@ -33,7 +33,6 @@ public:
     BaseImpl(const BaseImpl& right) = delete;
 
     virtual ~BaseImpl(){}
-
 
     /**
      * @brief Get the Node that holds an ASYN port. Query the parent nodes if necessary.
@@ -77,11 +76,24 @@ public:
     virtual std::string getFullNameFromPort() const;
 
     /**
-     * @brief Registers all the records with the AsynDriver. Call this from the root node
+     * @brief Registers all the records with the control system. Call this from the root node
      *        which will take care of traversing its children and initialize them.
+     *
+     * On EPICS it will create all the PVs and register them with the AsynDriver,
+     * on Tango will create the dynamic attributes.
      */
     virtual void initialize() = 0;
 
+    /**
+     * @brief Return the current time.
+     *
+     * If a delegate function has been defined with setTimestampDelegate() then call
+     *  the delegated function, otherwise call the parent node's getTimestamp().
+     * If the node has no parent then return the current time as reported by the
+     *  operating system.
+     *
+     * @return the current time
+     */
     timespec getTimestamp() const;
 
     void setTimestampDelegate(getTimestampPlugin_t timestampDelegate);

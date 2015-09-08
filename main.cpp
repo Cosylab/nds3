@@ -2,6 +2,11 @@
 #include <memory>
 #include <vector>
 
+#include <math.h>
+#include <thread>
+#include <cstdint>
+#include <functional>
+
 #include "library/implementation/ndsfactoryimpl.h"
 #include "iocsh.h"
 
@@ -17,32 +22,153 @@
  * day may react to changes in a state machine class.
  *
  */
-class Delegate
+class Oscilloscope
 {
 public:
-    void readErrorCode(timespec*, std::int32_t* pCode)
+
+    nds::Node root;
+    Oscilloscope()
     {
-        *pCode = 10;
-    }
-    void writeErrorCode(const timespec&, const std::int32_t&)
-    {
-        return;
+        // We create a device. We could use directly a port here, but for fun this device will have
+        //  more than one Asyn port
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        root = nds::Node("Dev");
+
+        // We add the first port that will be registered as "Dev-MyPort".
+        //////////////////////////////////////////////////////////////////////////
+        nds::Port port = root.addChild(nds::Port("MyPort"));
+
+        // I have two channels: one connected to a sinusoidal wave generator, one to a square w. gen
+        channel0 = port.addChild(nds::DataAcquisition<double>("Ch0",
+                                          nds::ai,
+                                          1,
+                                          std::bind(&Oscilloscope::doNothing, this),     // Transition from off to on. Nothing to do
+                                          std::bind(&Oscilloscope::doNothing, this),     // Transition from on to off. Nothing to do
+                                          std::bind(&Oscilloscope::startChannel0, this), // Transition from on to running. Launch the thread
+                                          std::bind(&Oscilloscope::stopChannel0, this),  // Transition from running to on. Stop the thread
+                                          std::bind(&Oscilloscope::doNothing, this),     // Try to recover from errors. Now does nothing
+                                          std::bind(&Oscilloscope::canChange, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
+                                          ));
+
+        channel1 = port.addChild(nds::DataAcquisition<double>("Ch1",
+                                          nds::ai,
+                                          1,
+                                          std::bind(&Oscilloscope::doNothing, this),
+                                          std::bind(&Oscilloscope::doNothing, this),
+                                          std::bind(&Oscilloscope::startChannel1, this),
+                                          std::bind(&Oscilloscope::stopChannel1, this),
+                                          std::bind(&Oscilloscope::doNothing, this),
+                                          std::bind(&Oscilloscope::canChange, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
+                                          ));
+
+        // All the structure has been setup. Register the ports and the PVs
+        ///////////////////////////////////////////////////////////////////
+        root.initialize();
+
     }
 
-    void readData(timespec*, std::vector<std::int32_t> * pWave)
+    // Used for transitions that don't require any action
+    /////////////////////////////////////////////////////
+    void doNothing()
+    {}
+
+    // Thread that produce a sinusoidal wave and push it. Takes channel 0
+    //  as a parameter.
+    /////////////////////////////////////////////////////////////////////
+    void sinThread(nds::DataAcquisition<double> dataAcquisition)
     {
-        pWave->resize(5);
-        (*pWave)[0] = 1;
-        (*pWave)[1] = 2;
-        (*pWave)[2] = 3;
-        (*pWave)[3] = 4;
-        (*pWave)[4] = 5;
+        double hz = dataAcquisition.getFrequencyHz();
+
+        const std::uint64_t secMultiplier(1000000000);
+        const timespec startTime = dataAcquisition.getStartTimestamp();
+        const std::uint64_t startTimeNsec(startTime.tv_sec * secMultiplier + startTime.tv_nsec);
+
+        const std::uint64_t hzMultiplier = 1000000;
+        const std::uint64_t periodNsec = (secMultiplier * hzMultiplier) / (std::uint64_t)(hz * (double)hzMultiplier);
+
+        while(m_bSinContinue)
+        {
+            timespec currentTime = dataAcquisition.getTimestamp();
+            std::uint64_t currentTimeNsec(currentTime.tv_sec * secMultiplier + currentTime.tv_nsec);
+            std::uint64_t difference(currentTimeNsec - startTimeNsec);
+
+            double angle = M_PI * 2 * (double)(difference % periodNsec) / (double)periodNsec;
+
+            dataAcquisition.pushData(currentTime, sin(angle) * double(100));
+
+            ::sleep(0); // Give other threads a chance
+        }
     }
 
-    void writeData(const timespec&, const std::vector<std::int32_t>& wave)
+    void sqrThread(nds::DataAcquisition<double> dataAcquisition)
     {
-        // nothing for now
+        double hz = dataAcquisition.getFrequencyHz();
+
+        const std::uint64_t secMultiplier(1000000000);
+        const timespec startTime = dataAcquisition.getStartTimestamp();
+        const std::uint64_t startTimeNsec(startTime.tv_sec * secMultiplier + startTime.tv_nsec);
+
+        const std::uint64_t hzMultiplier = 1000000;
+        const std::uint64_t periodNsec = (secMultiplier * hzMultiplier) / (std::uint64_t)(hz * (double)hzMultiplier);
+
+        while(m_bSqrContinue)
+        {
+            timespec currentTime = dataAcquisition.getTimestamp();
+            std::uint64_t currentTimeNsec(currentTime.tv_sec * secMultiplier + currentTime.tv_nsec);
+            std::uint64_t difference(currentTimeNsec - startTimeNsec);
+
+            if(difference % periodNsec > periodNsec / 2)
+            {
+                dataAcquisition.pushData(currentTime, 100);
+            }
+            else
+            {
+                dataAcquisition.pushData(currentTime, 0);
+            }
+
+            ::sleep(0);
+        }
     }
+
+    void startChannel0()
+    {
+        m_bSinContinue = true;
+        m_sinThread = std::thread(std::bind(&Oscilloscope::sinThread, this, channel0));
+    }
+
+    void stopChannel0()
+    {
+        m_bSinContinue = false;
+        m_sinThread.join();
+    }
+
+    void startChannel1()
+    {
+        m_bSqrContinue = true;
+        m_sqrThread = std::thread(std::bind(&Oscilloscope::sqrThread, this, channel1));
+    }
+
+    void stopChannel1()
+    {
+        m_bSqrContinue = false;
+        m_sqrThread.join();
+    }
+
+    bool canChange(const nds::state_t, const nds::state_t, const nds::state_t)
+    {
+        return true;
+    }
+
+private:
+    nds::DataAcquisition<double> channel0;
+    nds::DataAcquisition<double> channel1;
+
+    std::thread m_sinThread;
+    std::thread m_sqrThread;
+
+    bool m_bSinContinue;
+    bool m_bSqrContinue;
+
 };
 
 
@@ -50,56 +176,14 @@ int main()
 {
     nds::FactoryImpl::getInstance().registrationCommand("myIoc");
 
-    Delegate myLogicIsHere;
+    Oscilloscope oscilloscope;
 
-    // We create a device. We could use directly a port here, but for fun this device will have
-    //  more than one Asyn port
-    ///////////////////////////////////////////////////////////////////////////////////////////
-    nds::Node theDevice("MightyDevice");
-
-    // We add the first port, that will be registered as "MightyDevice-MyPort"
-    // addChild takes ownership of the added object and returns a reference
-    //  to it.
-    //////////////////////////////////////////////////////////////////////////
-    nds::Port port = theDevice.addChild(nds::Port("MyPort"));
-
-    // Now we add a PV to the port, which will delegates read & write to 2 methods
-    //  in our business logic class.
-    // This PV will be registered as "ErrorCode" in the port "MightyDevice-MyPort"
-    //////////////////////////////////////////////////////////////////////////////
-    nds::PVBase errorCode = port.addChild(nds::PVDelegate<std::int32_t>("ErrorCode",
-                                  std::bind(&Delegate::readErrorCode, &myLogicIsHere, std::placeholders::_1, std::placeholders::_2),
-                                  std::bind(&Delegate::writeErrorCode, &myLogicIsHere, std::placeholders::_1, std::placeholders::_2)
-                                  ));
-    errorCode.setType(nds::longin);
-    errorCode.setDescription("Represents the error code");
-    errorCode.setInterfaceName("STS");
-    errorCode.setScanType(nds::interrupt, 0);
-
-    nds::PVBase data = port.addChild(nds::PVDelegate<std::vector<std::int32_t> >("Data",
-                                  std::bind(&Delegate::readData, &myLogicIsHere, std::placeholders::_1, std::placeholders::_2),
-                                  std::bind(&Delegate::writeData, &myLogicIsHere, std::placeholders::_1, std::placeholders::_2)
-                                  ));
-    data.setType(nds::waveformIn);
-    data.setDescription("Acquired data");
-    data.setInterfaceName("DATA");
-    data.setScanType(nds::passive, 0);
-    data.setMaxElements(20);
-
-    port.addChild(nds::PVHoldDelegate("Delegate", nds::dataInt32, std::shared_ptr<nds::Delegate>(new nds::Delegate())));
-
-    // All the structure has been setup. Register the ports and the PVs
-    ///////////////////////////////////////////////////////////////////
-    theDevice.initialize();
 
     iocshCmd("dbLoadDatabase ndsTest.dbd /home/codac-dev/Documents/m-nds-test/target/main/epics/dbd");
     iocshCmd("myIoc pdbbase");
-    iocshCmd("dbLoadRecords auto_generated_MightyDevice-MyPort.db");
+    iocshCmd("dbLoadRecords auto_generated_Dev-MyPort.db");
     iocshCmd("iocInit");
 
-    ::sleep(2);
-    timespec time;
-    errorCode.push(time, 4);
     iocsh(0);
 }
 

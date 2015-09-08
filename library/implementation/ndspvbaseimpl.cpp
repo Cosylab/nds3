@@ -15,14 +15,33 @@ PVBaseImpl::PVBaseImpl(const std::string& name): BaseImpl(name),
 
 }
 
-template<typename T>
-void PVBaseImpl::read(timespec* /* pTimestamp */, T* /* pValue */)
+//template<typename T>
+void PVBaseImpl::read(timespec* /* pTimestamp */, std::int32_t* /* pValue */)
 {
     throw;
 }
 
-template<typename T>
-void PVBaseImpl::write(const timespec& /* pTimestamp */, const T& /* value */)
+void PVBaseImpl::read(timespec* /* pTimestamp */, double* /* pValue */)
+{
+    throw;
+}
+
+void PVBaseImpl::read(timespec* /* pTimestamp */, std::vector<std::int32_t>* /* pValue */)
+{
+    throw;
+}
+
+void PVBaseImpl::write(const timespec& /* pTimestamp */, const std::int32_t& /* value */)
+{
+    throw;
+}
+
+void PVBaseImpl::write(const timespec& /* pTimestamp */, const double& /* value */)
+{
+    throw;
+}
+
+void PVBaseImpl::write(const timespec& /* pTimestamp */, const std::vector<std::int32_t>& /* value */)
 {
     throw;
 }
@@ -36,18 +55,11 @@ void PVBaseImpl::push(const timespec& timestamp, const T& value)
     pPort->push(std::static_pointer_cast<PVBaseImpl>(shared_from_this()), timestamp, value);
 }
 
-template void PVBaseImpl::read<std::int32_t>(timespec*, std::int32_t*);
-template void PVBaseImpl::write<std::int32_t>(const timespec&, const std::int32_t&);
+
+
 template void PVBaseImpl::push<std::int32_t>(const timespec&, const std::int32_t&);
-
-template void PVBaseImpl::read<std::vector<std::int32_t> >(timespec*, std::vector<std::int32_t>*);
-template void PVBaseImpl::write<std::vector<std::int32_t> >(const timespec&, const std::vector<std::int32_t>&);
 template void PVBaseImpl::push<std::vector<std::int32_t> >(const timespec&, const std::vector<std::int32_t>&);
-
-template void PVBaseImpl::read<double>(timespec*, double*);
-template void PVBaseImpl::write<double>(const timespec&, const double&);
 template void PVBaseImpl::push<double>(const timespec&, const double&);
-
 
 void PVBaseImpl::setType(const recordType_t type)
 {

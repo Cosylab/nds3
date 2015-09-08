@@ -17,6 +17,8 @@
 #include "ndspvdelegate.h"
 #include "ndsdelegate.h"
 #include "ndspvholddelegate.h"
+#include "ndspvvariable.h"
+#include "ndsdataacquisition.h"
 #include "ndsfactory.h"
 
 

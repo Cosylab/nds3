@@ -25,17 +25,29 @@ StateMachineImpl::StateMachineImpl(stateChange_t switchOnFunction,
             m_allowChange(allowStateChangeFunction)
 {
     // Add PVs for the state machine
-    m_pStatePV.reset(
-                new PVDelegateImpl<std::int32_t>("state",
+    std::shared_ptr<PVDelegateImpl<std::int32_t> > pSetStatePV(
+                new PVDelegateImpl<std::int32_t>("setState",
                                                  std::bind(&StateMachineImpl::readLocalState, this, std::placeholders::_1, std::placeholders::_2),
                                                  std::bind(&StateMachineImpl::writeLocalState, this, std::placeholders::_1, std::placeholders::_2)));
-    m_pGlobalStatePV.reset(
-                new PVDelegateImpl<std::int32_t>("globalState",
-                                                 std::bind(&StateMachineImpl::readGlobalState, this, std::placeholders::_1, std::placeholders::_2),
-                                                 std::bind(&StateMachineImpl::writeGlobalState, this, std::placeholders::_1, std::placeholders::_2)));
+    pSetStatePV->setDescription("Set local state");
+    pSetStatePV->setScanType(passive, 0);
+    pSetStatePV->setType(longout);
+    addChild(pSetStatePV);
 
-    addChild(m_pStatePV);
-    addChild(m_pGlobalStatePV);
+    std::shared_ptr<PVDelegateImpl<std::int32_t> > pGetStatePV(
+                new PVDelegateImpl<std::int32_t>("getState",
+                                                 std::bind(&StateMachineImpl::readLocalState, this, std::placeholders::_1, std::placeholders::_2)));
+    pGetStatePV->setDescription("Get local state");
+    pGetStatePV->setScanType(passive, 0);
+    pGetStatePV->setType(longin);
+    addChild(pGetStatePV);
+
+    std::shared_ptr<PVDelegateImpl<std::int32_t> > pGetGlobalStatePV(
+                new PVDelegateImpl<std::int32_t>("getGlobalState",
+                                                 std::bind(&StateMachineImpl::readGlobalState, this, std::placeholders::_1, std::placeholders::_2)));
+    pGetGlobalStatePV->setScanType(passive, 0);
+    pGetGlobalStatePV->setType(longin);
+    addChild(pGetGlobalStatePV);
 }
 
 StateMachineImpl::~StateMachineImpl()
@@ -100,7 +112,7 @@ void StateMachineImpl::setState(const state_t newState)
 
         // Check if the transition is allowed, then set the intermediate state
         //////////////////////////////////////////////////////////////////////
-        if(m_allowChange(localState, globalState, newState))
+        if(!m_allowChange(localState, globalState, newState))
         {
             std::ostringstream buildErrorMessage;
             buildErrorMessage << "The transition from state " << localState << " to state " << newState << " has been denied";
@@ -201,6 +213,5 @@ void StateMachineImpl::writeGlobalState(const timespec& pTimestamp, const std::i
 {
 
 }
-
 
 }

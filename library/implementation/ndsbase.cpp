@@ -5,6 +5,10 @@
 namespace nds
 {
 
+Base::Base()
+{
+}
+
 Base::Base(std::shared_ptr<BaseImpl> impl): m_pImplementation(impl)
 {
 }

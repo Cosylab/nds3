@@ -22,7 +22,6 @@ public:
 
     virtual void readInt32(const std::string& pvName, timespec* pTimestamp, std::int32_t* pValue);
     virtual void writeInt32(const std::string& pvName, const timespec& timestamp, const std::int32_t& value);
-
 };
 
 }

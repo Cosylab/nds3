@@ -7,6 +7,11 @@
 namespace nds
 {
 
+Node::Node()
+{
+
+}
+
 Node::Node(std::shared_ptr<NodeImpl> nodeImpl): Base(std::static_pointer_cast<BaseImpl>(nodeImpl))
 {
 }

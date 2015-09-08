@@ -46,14 +46,16 @@ SOURCES += main.cpp \
     library/implementation/ndsexceptions.cpp \
     library/implementation/ndsepicsinterfaceimpl.cpp \
     library/implementation/ndsinterfacebaseimpl.cpp \
-    library/implementation/ndsdataacquisitionimpl.cpp
+    library/implementation/ndsdataacquisitionimpl.cpp \
+    library/implementation/ndspvvariableimpl.cpp \
+    library/implementation/ndspvvariable.cpp \
+    library/implementation/ndsdataacquisition.cpp
 
 HEADERS += \
     library/implementation/ndsbaseimpl.h \
     library/implementation/ndsnodeimpl.h \
     library/implementation/ndsportImpl.h \
     library/implementation/ndspvbaseimpl.h \
-    library/implementation/ndspvimpl.h \
     library/include/nds3/ndsbase.h \
     library/include/nds3/ndsnode.h \
     library/include/nds3/ndsport.h \
@@ -75,5 +77,7 @@ HEADERS += \
     library/implementation/ndsepicsinterfaceimpl.h \
     library/implementation/ndsinterfacebaseimpl.h \
     library/include/nds3/ndsdataacquisition.h \
-    library/implementation/ndsdataacquisitionimpl.h
+    library/implementation/ndsdataacquisitionimpl.h \
+    library/implementation/ndspvvariableimpl.h \
+    library/include/nds3/ndspvvariable.h
 

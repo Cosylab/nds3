@@ -35,21 +35,27 @@ public:
      * @param readFunction  read method
      * @param writeFunction write method
      */
-    PVDelegateImpl(const std::string& name, read_t readFunction, write_t writeFunction): PVBaseImpl(name),
-        m_reader(readFunction), m_writer(writeFunction)
-    {}
+    PVDelegateImpl(const std::string& name, read_t readFunction, write_t writeFunction);
 
-    virtual void read(timespec* pTimestamp, T* pValue)
-    {
-        m_reader(pTimestamp, pValue);
-    }
+    /**
+     * @brief Constructor for read-only PVs. Specify the methods used for reading
+     *
+     * @param name          PV's name
+     * @param readFunction  read method
+     */
+    PVDelegateImpl(const std::string& name, read_t readFunction);
 
-    virtual void write(const timespec& timestamp, const T& value)
-    {
-        m_writer(timestamp, value);
-    }
+    virtual void read(timespec* pTimestamp, T* pValue);
+
+    virtual void write(const timespec& timestamp, const T& value);
 
     virtual dataType_t getDataType();
+
+    /**
+     * @brief Pass this function as writing delegate when the PVis read-only.
+     */
+    void dontWrite(const timespec&, const T&);
+
 
 private:
     read_t m_reader;

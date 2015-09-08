@@ -18,7 +18,6 @@ void NodeImpl::addChild(std::shared_ptr<BaseImpl> pChild)
     {
         throw;
     }
-    pChild->setParent(std::static_pointer_cast<NodeImpl>(shared_from_this()) );
     m_children[name] = pChild;
 
     std::shared_ptr<StateMachineImpl> stateMachine = std::dynamic_pointer_cast<StateMachineImpl>(pChild);
@@ -30,6 +29,10 @@ void NodeImpl::addChild(std::shared_ptr<BaseImpl> pChild)
 
 void NodeImpl::initialize()
 {
+    for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
+    {
+        scanChildren->second->setParent(std::static_pointer_cast<NodeImpl>(shared_from_this()) );
+    }
     for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
     {
         scanChildren->second->initialize();

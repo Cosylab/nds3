@@ -7,7 +7,6 @@ namespace nds
 BaseImpl::BaseImpl(const std::string& name): m_name(name), m_timestampFunction(std::bind(&BaseImpl::getLocalTimestamp, this))
 {}
 
-
 std::shared_ptr<PortImpl> BaseImpl::getPort()
 {
     std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();
@@ -78,7 +77,7 @@ timespec BaseImpl::getLocalTimestamp() const
         return temporaryPointer->getTimestamp();
     }
     timespec timestamp;
-    clock_gettime(CLOCK_MONOTONIC, &timestamp);
+    clock_gettime(CLOCK_REALTIME, &timestamp);
     return timestamp;
 }
 

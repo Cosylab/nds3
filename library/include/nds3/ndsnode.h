@@ -17,13 +17,13 @@ class StateMachine;
  */
 class NDS3_API Node: public Base
 {
-protected:
-    Node();
 
 public:
 #ifndef SWIG
     Node(std::shared_ptr<NodeImpl> portImpl);
 #endif
+
+    Node();
 
     /**
      * @brief Construct the node.

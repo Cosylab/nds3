@@ -23,11 +23,13 @@ public:
     // Only the overwritten ones in the AsynPV or AsynDelegatePV
     // will function correctly.
     ////////////////////////////////////////////////////////////
-    template<typename T>
-    void read(timespec* pTimestamp, T* pValue);
+    virtual void read(timespec* pTimestamp, std::int32_t* pValue);
+    virtual void read(timespec* pTimestamp, double* pValue);
+    virtual void read(timespec* pTimestamp, std::vector<std::int32_t>* pValue);
 
-    template<typename T>
-    void write(const timespec& timestamp, const T& value);
+    virtual void write(const timespec& timestamp, const std::int32_t& value);
+    virtual void write(const timespec& timestamp, const double& value);
+    virtual void write(const timespec& timestamp, const std::vector<std::int32_t>& value);
 
     template<typename T>
     void push(const timespec& timestamp, const T& value);
@@ -57,6 +59,23 @@ public:
     size_t getMaxElements() const;
 
 protected:
+    template<typename T>
+    dataType_t getDataTypeForCPPType()
+    {
+        if(std::is_same<T, std::int32_t>::value)
+        {
+            return dataInt32;
+        }
+        if(std::is_same<T, double>::value)
+        {
+            return dataFloat64;
+        }
+        if(std::is_same<T, std::vector<std::int32_t> >::value)
+        {
+            return dataInt32Array;
+        }
+    }
+
     recordType_t m_type;
     std::string m_description;
     std::string m_interfaceName;

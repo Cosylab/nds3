@@ -283,7 +283,7 @@ asynStatus EpicsInterfaceImpl::readArray(asynUser *pasynUser, T* pValue, size_t 
 
     if(pasynUser->timestamp.secPastEpoch == 0 && pasynUser->timestamp.nsec == 0)
     {
-        clock_gettime(CLOCK_MONOTONIC, &timestamp);
+        clock_gettime(CLOCK_REALTIME, &timestamp);
     }
 
     std::vector<T> vector(nElements);
