@@ -1,6 +1,7 @@
 #ifndef NDSPVIMPL_H
 #define NDSPVIMPL_H
 
+#include <mutex>
 #include "ndspvbaseimpl.h"
 
 namespace nds
@@ -27,6 +28,9 @@ public:
 private:
     T m_value;
     timespec m_timestamp;
+
+    std::mutex m_pvMutex;
+
 };
 
 }

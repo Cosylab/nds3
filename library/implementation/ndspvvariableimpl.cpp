@@ -14,6 +14,7 @@ PVVariableImpl<T>::PVVariableImpl(const std::string& name): PVBaseImpl(name)
 template <typename T>
 void PVVariableImpl<T>::read(timespec* pTimestamp, T* pValue)
 {
+    std::unique_lock<std::mutex> lock(m_pvMutex);
     *pValue = m_value;
     *pTimestamp = m_timestamp;
 }
@@ -21,6 +22,7 @@ void PVVariableImpl<T>::read(timespec* pTimestamp, T* pValue)
 template <typename T>
 void PVVariableImpl<T>::write(const timespec timestamp, const T& value)
 {
+    std::unique_lock<std::mutex> lock(m_pvMutex);
     m_value =value;
     m_timestamp = timestamp;
 }

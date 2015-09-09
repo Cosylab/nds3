@@ -41,8 +41,6 @@ public:
     size_t getMaxElements();
     size_t getDecimation();
 
-
-
     /**
      * @brief Returns the timestamp at the moment of the start of the acquisition.
      *

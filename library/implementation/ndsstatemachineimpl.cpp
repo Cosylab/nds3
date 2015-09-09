@@ -1,5 +1,6 @@
 #include "ndsstatemachineimpl.h"
 #include "ndspvdelegateimpl.h"
+#include "ndspvbaseimpl.h"
 #include "../include/nds3/ndsexceptions.h"
 #include <cstdint>
 #include <mutex>
@@ -14,12 +15,14 @@ namespace nds
 //////////////////////////////////////////////////////////////////////
 std::recursive_mutex m_stateMutex;
 
-StateMachineImpl::StateMachineImpl(stateChange_t switchOnFunction,
+StateMachineImpl::StateMachineImpl(bool bAsync,
+                                   stateChange_t switchOnFunction,
                                    stateChange_t switchOffFunction,
                                    stateChange_t startFunction,
                                    stateChange_t stopFunction,
                                    stateChange_t recoverFunction,
                                    allowChange_t allowStateChangeFunction): NodeImpl("StateMachine"),
+            m_bAsync(bAsync),
             m_localState(state_t::off),
             m_switchOn(switchOnFunction), m_switchOff(switchOffFunction), m_start(startFunction), m_stop(stopFunction), m_recover(recoverFunction),
             m_allowChange(allowStateChangeFunction)
@@ -34,13 +37,13 @@ StateMachineImpl::StateMachineImpl(stateChange_t switchOnFunction,
     pSetStatePV->setType(recordType_t::longout);
     addChild(pSetStatePV);
 
-    std::shared_ptr<PVDelegateImpl<std::int32_t> > pGetStatePV(
+    m_pGetStatePV.reset(
                 new PVDelegateImpl<std::int32_t>("getState",
                                                  std::bind(&StateMachineImpl::readLocalState, this, std::placeholders::_1, std::placeholders::_2)));
-    pGetStatePV->setDescription("Get local state");
-    pGetStatePV->setScanType(scanType_t::passive, 0);
-    pGetStatePV->setType(recordType_t::longin);
-    addChild(pGetStatePV);
+    m_pGetStatePV->setDescription("Get local state");
+    m_pGetStatePV->setScanType(scanType_t::interrupt, 0);
+    m_pGetStatePV->setType(recordType_t::longin);
+    addChild(m_pGetStatePV);
 
     std::shared_ptr<PVDelegateImpl<std::int32_t> > pGetGlobalStatePV(
                 new PVDelegateImpl<std::int32_t>("getGlobalState",
@@ -52,8 +55,22 @@ StateMachineImpl::StateMachineImpl(stateChange_t switchOnFunction,
 
 StateMachineImpl::~StateMachineImpl()
 {
-
+    if(m_transitionThread.joinable())
+    {
+        m_transitionThread.join();
+    }
 }
+
+void StateMachineImpl::initialize()
+{
+    NodeImpl::initialize();
+
+    std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
+    m_localState = state_t::off;
+    m_stateTimestamp = getTimestamp();
+    m_pGetStatePV->push(m_stateTimestamp, (std::int32_t)m_localState);
+}
+
 
 bool StateMachineImpl::canChange(state_t newState) const
 {
@@ -120,25 +137,46 @@ void StateMachineImpl::setState(const state_t newState)
         }
         m_localState = transitionState;
         m_stateTimestamp = getTimestamp();
+        m_pGetStatePV->push(m_stateTimestamp, (std::int32_t)m_localState);
     }
+    if(m_bAsync)
+    {
+        if(m_transitionThread.joinable())
+        {
+            m_transitionThread.join();
+        }
+        m_transitionThread = std::thread(std::bind(&StateMachineImpl::executeTransition, this, localState, newState, transitionFunction));
+    }
+    else
+    {
+        executeTransition(localState, newState, transitionFunction);
+    }
+}
+
+void StateMachineImpl::executeTransition(const state_t initialState, const state_t finalState, stateChange_t transitionFunction)
+{
     try
     {
         transitionFunction();
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
-        m_localState = newState;
+        m_localState = finalState;
         m_stateTimestamp = getTimestamp();
+        m_pGetStatePV->push(m_stateTimestamp, (std::int32_t)m_localState);
     }
     catch(StateMachineRollBack& e)
     {
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
-        m_localState = localState;
+        m_localState = initialState;
         m_stateTimestamp = getTimestamp();
+        m_pGetStatePV->push(m_stateTimestamp, (std::int32_t)m_localState);
+        throw;
     }
     catch(std::runtime_error& e)
     {
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
         m_localState = state_t::fault;
         m_stateTimestamp = getTimestamp();
+        m_pGetStatePV->push(m_stateTimestamp, (std::int32_t)m_localState);
         throw;
     }
 }

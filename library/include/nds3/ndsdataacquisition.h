@@ -19,6 +19,7 @@ namespace nds
  * In particular, the transition from the state off to running should launch
  *  the data acquisition thread which pushes the acquired data via pushData(),
  *  while the transition from running to on should stop the data acquisition thread.
+ *
  */
 template <typename T>
 class NDS3_API DataAcquisition: public Node

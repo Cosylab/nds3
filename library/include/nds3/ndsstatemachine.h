@@ -31,6 +31,9 @@ public:
      * In EPICS the state machine PVs will be available as "StateMachine-state" and
      * "StateMachine-globalState".
      *
+     * @param bAsync                   if true then the state transitions are executed
+     *                                  in a dedicated thread, if false then the state
+     *                                  transitions block
      * @param switchOnFunction         function to be called to switch the node on.
      *                                 The function is guaranteed to be called only when
      *                                  the current state is off.
@@ -46,7 +49,8 @@ public:
      * @param recoverFunction
      * @param allowStateChangeFunction
      */
-    StateMachine(stateChange_t switchOnFunction,
+    StateMachine(bool bAsync,
+                 stateChange_t switchOnFunction,
                  stateChange_t switchOffFunction,
                  stateChange_t startFunction,
                  stateChange_t stopFunction,
@@ -103,7 +107,6 @@ public:
      * @return true if the transition is legal and has not been denied, false otherwise.
      */
     bool canChange(const state_t newState);
-
 
 };
 

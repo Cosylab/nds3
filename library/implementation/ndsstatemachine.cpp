@@ -4,18 +4,20 @@
 namespace nds
 {
 
-StateMachine::StateMachine(stateChange_t switchOnFunction,
+StateMachine::StateMachine(bool bAsync,
+                           stateChange_t switchOnFunction,
                            stateChange_t switchOffFunction,
                            stateChange_t startFunction,
                            stateChange_t stopFunction,
                            stateChange_t recoverFunction,
                            allowChange_t allowStateChangeFunction):
-    Node(std::shared_ptr<NodeImpl>(new StateMachineImpl(switchOnFunction,
-                                                    switchOffFunction,
-                                                    startFunction,
-                                                    stopFunction,
-                                                    recoverFunction,
-                                                    allowStateChangeFunction)))
+    Node(std::shared_ptr<NodeImpl>(new StateMachineImpl(bAsync,
+                                                        switchOnFunction,
+                                                        switchOffFunction,
+                                                        startFunction,
+                                                        stopFunction,
+                                                        recoverFunction,
+                                                        allowStateChangeFunction)))
 {
 }
 

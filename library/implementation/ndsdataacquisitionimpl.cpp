@@ -55,7 +55,7 @@ DataAcquisitionImpl<T>::DataAcquisitionImpl(
     addChild(m_decimationPV);
 
     // Add state machine
-    m_stateMachine.reset(new StateMachineImpl(
+    m_stateMachine.reset(new StateMachineImpl(true,
                                    switchOnFunction,
                                    switchOffFunction,
                                    std::bind(&DataAcquisitionImpl::onStart, this),

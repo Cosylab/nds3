@@ -1,6 +1,7 @@
 #ifndef NDSSTATEMACHINEIMPL_H
 #define NDSSTATEMACHINEIMPL_H
 
+#include <thread>
 #include "ndsnodeimpl.h"
 #include "../include/nds3/definitions.h"
 
@@ -18,7 +19,8 @@ class StateMachineImpl: public NodeImpl
 {
 public:
 
-    StateMachineImpl(stateChange_t switchOnFunction,
+    StateMachineImpl(bool bAsync,
+                     stateChange_t switchOnFunction,
                      stateChange_t switchOffFunction,
                      stateChange_t startFunction,
                      stateChange_t stopFunction,
@@ -26,6 +28,8 @@ public:
                      allowChange_t allowStateChangeFunction);
 
     ~StateMachineImpl();
+
+    virtual void initialize();
 
     /**
      * @brief Instructs the state machine to start the transition to another state.
@@ -56,6 +60,8 @@ public:
     bool isIntermediateState(const state_t newState) const;
 
 protected:
+    void executeTransition(const state_t initialState, const state_t finalState, stateChange_t transitionFunction);
+
     std::shared_ptr<PVDelegateImpl<std::int32_t> > m_pStatePV; ///< The PV holding the current state
     std::shared_ptr<PVDelegateImpl<std::int32_t> > m_pGlobalStatePV; ///< The PV holding the current state
 
@@ -64,6 +70,10 @@ protected:
 
     void readGlobalState(timespec* pTimestamp, std::int32_t* pValue);
     void writeGlobalState(const timespec& pTimestamp, const std::int32_t& value);
+
+    bool m_bAsync;
+
+    std::thread m_transitionThread;
 
     state_t m_localState;
     timespec m_stateTimestamp;
@@ -74,6 +84,9 @@ protected:
     stateChange_t m_stop;
     stateChange_t m_recover;
     allowChange_t m_allowChange;
+
+    std::shared_ptr<PVDelegateImpl<std::int32_t> > m_pGetStatePV;
+
 };
 
 

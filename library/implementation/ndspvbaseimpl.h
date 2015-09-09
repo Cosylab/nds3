@@ -83,5 +83,6 @@ protected:
     double m_periodicScanSeconds;
     size_t m_maxElements;
 };
+
 }
 #endif // NDSPVBASEIMPL_H
