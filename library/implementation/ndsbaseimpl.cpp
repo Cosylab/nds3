@@ -12,7 +12,7 @@ std::shared_ptr<PortImpl> BaseImpl::getPort()
     std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();
     if(temporaryPointer.get() == 0)
     {
-        throw;
+        throw ;
     }
     return temporaryPointer->getPort();
 }

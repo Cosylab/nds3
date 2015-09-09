@@ -2,12 +2,12 @@
 #include "ndspvbaseimpl.h"
 #include "ndsportImpl.h"
 #include "../include/nds3/ndspvbase.h"
-
+#include "../include/nds3/ndsexceptions.h"
 #include <cstdint>
 #include <sstream>
 #include <ostream>
 #include <fstream>
-
+#include <stdexcept>
 #include <memory.h>
 
 namespace nds
@@ -60,12 +60,12 @@ dataTypeAndFTVL_t dataTypeToEpicsString(dataType_t dataType, bool bInput)
 {
     switch(dataType)
     {
-    case dataUint8:
-    case dataInt32:
+    case dataType_t::dataUint8:
+    case dataType_t::dataInt32:
         return dataTypeAndFTVL_t("asynInt32", "");
-    case dataFloat64:
+    case dataType_t::dataFloat64:
         return dataTypeAndFTVL_t("asynFloat64", "");
-    case dataInt8Array:
+    case dataType_t::dataInt8Array:
         if(bInput)
         {
             return dataTypeAndFTVL_t("asynOctetRead", "CHAR");
@@ -74,7 +74,7 @@ dataTypeAndFTVL_t dataTypeToEpicsString(dataType_t dataType, bool bInput)
         {
             return dataTypeAndFTVL_t("asynOctetWrite", "CHAR");
         }
-    case dataUint8Array:
+    case dataType_t::dataUint8Array:
         if(bInput)
         {
             return dataTypeAndFTVL_t("asynOctetRead", "UCHAR");
@@ -83,7 +83,7 @@ dataTypeAndFTVL_t dataTypeToEpicsString(dataType_t dataType, bool bInput)
         {
             return dataTypeAndFTVL_t("asynOctetWrite", "UCHAR");
         }
-    case dataInt32Array:
+    case dataType_t::dataInt32Array:
         if(bInput)
         {
             return dataTypeAndFTVL_t("asynInt32ArrayIn", "LONG");
@@ -108,37 +108,37 @@ typeAndInput_t recordTypeToEpicsString(recordType_t recordType)
 {
     switch(recordType)
     {
-    case aai:
+    case recordType_t::aai:
         return typeAndInput_t("aai", true);
-    case aao:
+    case recordType_t::aao:
         return typeAndInput_t("aao", false);
-    case ai:
+    case recordType_t::ai:
         return typeAndInput_t("ai", true);
-    case  ao:
+    case recordType_t::ao:
         return typeAndInput_t("ao", false);
-    case bi:
+    case recordType_t::bi:
         return typeAndInput_t("bi", true);
-    case bo:
+    case recordType_t::bo:
         return typeAndInput_t("bo", false);
-    case longin:
+    case recordType_t::longin:
         return typeAndInput_t("longin", true);
-    case longout:
+    case recordType_t::longout:
         return typeAndInput_t("longout", false);
-    case mbbi:
+    case recordType_t::mbbi:
         return typeAndInput_t("mbbi", true);
-    case mbbo:
+    case recordType_t::mbbo:
         return typeAndInput_t("mbbo", false);
-    case mbbiDirect:
+    case recordType_t::mbbiDirect:
         return typeAndInput_t("mbbiDirect", true);
-    case mbboDirect:
+    case recordType_t::mbboDirect:
         return typeAndInput_t("mbboDirect", false);
-    case stringIn:
+    case recordType_t::stringIn:
         return typeAndInput_t("stringin", true);
-    case stringOut:
+    case recordType_t::stringOut:
         return typeAndInput_t("stringout", false);
-    case waveformIn:
+    case recordType_t::waveformIn:
         return typeAndInput_t("waveform", true);
-    case waveformOut:
+    case recordType_t::waveformOut:
         return typeAndInput_t("waveform", false);
     }
 }
@@ -158,7 +158,7 @@ void EpicsInterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
     // If the record type is specified then attempt to auto generate a db file
     //////////////////////////////////////////////////////////////////////////
     recordType_t type = pv->getType();
-    if(type != notSpecified)
+    if(type != recordType_t::notSpecified)
     {
         typeAndInput_t recordTypeAndInput = recordTypeToEpicsString(type);
 
@@ -175,13 +175,13 @@ void EpicsInterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
 
         switch(pv->getScanType())
         {
-        case passive:
+        case scanType_t::passive:
             scanType << "Passive";
             break;
-        case periodic:
+        case scanType_t::periodic:
             scanType << pv->getScanPeriodSeconds() << " second";
             break;
-        case interrupt:
+        case scanType_t::interrupt:
             scanType << "I/O Intr";
             break;
         }
@@ -229,10 +229,8 @@ void EpicsInterfaceImpl::registrationTerminated()
     outputStream.flush();
 }
 
-
 void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int32_t& value)
 {
-
     pushOneValue<epicsInt32, asynInt32Interrupt>(pv, timestamp, (epicsInt32)value, asynStdInterfaces.int32InterruptPvt);
 }
 
@@ -243,9 +241,14 @@ void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& ti
 
 void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int32_t> & value)
 {
-
+    pushArray<epicsInt32, asynInt32ArrayInterrupt>(pv, timestamp, (epicsInt32*)value.data(), value.size(), asynStdInterfaces.int32ArrayInterruptPvt);
 }
 
+
+/*
+ * Push a scalar value to EPICS
+ *
+ ******************************/
 template<typename T, typename interruptType>
 void EpicsInterfaceImpl::pushOneValue(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const T& value, void* interruptPvt)
 {
@@ -264,7 +267,7 @@ void EpicsInterfaceImpl::pushOneValue(std::shared_ptr<PVBaseImpl> pv, const time
         pasynManager->getAddr(pInterrupt->pasynUser, &addr);
         if ((pInterrupt->pasynUser->reason == reason) && (0 == addr))
           {
-            //pInterrrupt->pasynUser->auxStatus = (asynStatus)status;
+            pInterrupt->pasynUser->auxStatus = asynSuccess;
             pInterrupt->callback(pInterrupt->userPvt, pInterrupt->pasynUser, value);
           }
         pnode = (interruptNode *)ellNext(&pnode->node);
@@ -272,55 +275,131 @@ void EpicsInterfaceImpl::pushOneValue(std::shared_ptr<PVBaseImpl> pv, const time
     pasynManager->interruptEnd(interruptPvt);
 }
 
+
+template<typename T, typename interruptType>
+void EpicsInterfaceImpl::pushArray(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const T* pValue, size_t numElements, void* interruptPvt)
+{
+    size_t reason = m_pvNameToReason[pv->getFullNameFromPort()];
+
+    ELLLIST       *pclientList;
+    int            addr;
+
+    pasynManager->interruptStart(interruptPvt, &pclientList);
+
+    interruptNode* pnode = (interruptNode *)ellFirst(pclientList);
+    while (pnode)
+      {
+        interruptType *pInterrupt = (interruptType *)pnode->drvPvt;
+        pInterrupt->pasynUser->timestamp = convertUnixTimeToEpicsTime(timestamp);
+        pasynManager->getAddr(pInterrupt->pasynUser, &addr);
+        if ((pInterrupt->pasynUser->reason == reason) && (0 == addr))
+          {
+            pInterrupt->pasynUser->auxStatus = asynSuccess;
+            pInterrupt->callback(pInterrupt->userPvt, pInterrupt->pasynUser, (T*)pValue, numElements);
+          }
+        pnode = (interruptNode *)ellNext(&pnode->node);
+      }
+    pasynManager->interruptEnd(interruptPvt);
+}
+
+/*
+ * Called to write one scalar value into a PV
+ *
+ ********************************************/
 template<typename T>
 asynStatus EpicsInterfaceImpl::writeOneValue(asynUser* pasynUser, const T& value)
 {
     timespec timestamp = convertEpicsTimeToUnixTime(pasynUser->timestamp);
 
-    m_pvs[pasynUser->reason]->write(timestamp, value);
+    try
+    {
+        m_pvs[pasynUser->reason]->write(timestamp, value);
+        pasynUser->auxStatus = asynSuccess;
+    }
+    catch(std::runtime_error& e)
+    {
+        pasynUser->auxStatus = asynError;
+        errorAndSize_t errorAndSize = getErrorString(e.what());
+        pasynUser->errorMessage = (char*)errorAndSize.first;
+        pasynUser->errorMessageSize = errorAndSize.second;
+    }
 
-    return asynSuccess;
+    return (asynStatus)pasynUser->auxStatus;
 }
 
+
+/*
+ * Called to read a scalar value from a PV
+ *
+ *****************************************/
 template<typename T>
 asynStatus EpicsInterfaceImpl::readOneValue(asynUser* pasynUser, T* pValue)
 {
-    timespec timestamp = convertEpicsTimeToUnixTime(pasynUser->timestamp);
+    try
+    {
+        timespec timestamp = convertEpicsTimeToUnixTime(pasynUser->timestamp);
+        m_pvs[pasynUser->reason]->read(&timestamp, pValue);
+        pasynUser->timestamp = convertUnixTimeToEpicsTime(timestamp);
+    }
+    catch(std::runtime_error& e)
+    {
+        pasynUser->auxStatus = asynError;
+        errorAndSize_t errorAndSize = getErrorString(e.what());
+        pasynUser->errorMessage = (char*)errorAndSize.first;
+        pasynUser->errorMessageSize = errorAndSize.second;
+    }
 
-    m_pvs[pasynUser->reason]->read(&timestamp, pValue);
-
-    pasynUser->timestamp = convertUnixTimeToEpicsTime(timestamp);
-
-    return asynSuccess;
+    return (asynStatus)pasynUser->auxStatus;
 
 }
 
+
+/*
+ * Called to read an array from a PV
+ *
+ ***********************************/
 template<typename T>
 asynStatus EpicsInterfaceImpl::readArray(asynUser *pasynUser, T* pValue, size_t nElements, size_t *nIn)
 {
-    timespec timestamp = convertEpicsTimeToUnixTime(pasynUser->timestamp);
-
-    if(pasynUser->timestamp.secPastEpoch == 0 && pasynUser->timestamp.nsec == 0)
+    try
     {
-        clock_gettime(CLOCK_REALTIME, &timestamp);
+        timespec timestamp = convertEpicsTimeToUnixTime(pasynUser->timestamp);
+
+        if(pasynUser->timestamp.secPastEpoch == 0 && pasynUser->timestamp.nsec == 0)
+        {
+            clock_gettime(CLOCK_REALTIME, &timestamp);
+        }
+
+        std::vector<T> vector(nElements);
+        m_pvs[pasynUser->reason]->read(&timestamp, &vector);
+
+        if(vector.size() > nElements)
+        {
+            vector.resize(nElements);
+        }
+        *nIn = vector.size();
+
+        ::memcpy(pValue, vector.data(), vector.size() * sizeof(T));
+
+        pasynUser->timestamp = convertUnixTimeToEpicsTime(timestamp);
+        pasynUser->auxStatus = asynSuccess;
+
     }
-
-    std::vector<T> vector(nElements);
-    m_pvs[pasynUser->reason]->read(&timestamp, &vector);
-
-    if(vector.size() > nElements)
+    catch(std::runtime_error& e)
     {
-        vector.resize(nElements);
+        pasynUser->auxStatus = asynError;
+        errorAndSize_t errorAndSize = getErrorString(e.what());
+        pasynUser->errorMessage = (char*)errorAndSize.first;
+        pasynUser->errorMessageSize = errorAndSize.second;
     }
-    *nIn = vector.size();
-
-    ::memcpy(pValue, vector.data(), vector.size() * sizeof(T));
-
-    pasynUser->timestamp = convertUnixTimeToEpicsTime(timestamp);
-
-    return asynSuccess;
+    return (asynStatus)pasynUser->auxStatus;
 }
 
+
+/*
+ * Called to write an array into a PV
+ *
+ ************************************/
 template<typename T>
 asynStatus EpicsInterfaceImpl::writeArray(asynUser *pasynUser, T* pValue, size_t nElements)
 {
@@ -329,8 +408,20 @@ asynStatus EpicsInterfaceImpl::writeArray(asynUser *pasynUser, T* pValue, size_t
     std::vector<T> vector(nElements);
     ::memcpy(vector.data(), pValue, vector.size() * sizeof(T));
 
-    m_pvs[pasynUser->reason]->write(timestamp, vector);
-    return asynSuccess;
+    try
+    {
+        m_pvs[pasynUser->reason]->write(timestamp, vector);
+        pasynUser->auxStatus = asynSuccess;
+    }
+    catch(std::runtime_error& e)
+    {
+        pasynUser->auxStatus = asynError;
+        errorAndSize_t errorAndSize = getErrorString(e.what());
+        pasynUser->errorMessage = (char*)errorAndSize.first;
+        pasynUser->errorMessageSize = errorAndSize.second;
+    }
+
+    return (asynStatus)pasynUser->auxStatus;
 }
 
 
@@ -389,9 +480,18 @@ asynStatus EpicsInterfaceImpl::drvUserCreate(asynUser *pasynUser, const char *dr
     return asynError;
 }
 
+
+/*
+ * Constants used for the EPICS<-->UNIX time conversion
+ *
+ ******************************************************/
 static const uint64_t nanosecondCoeff(1000000000L);
 static const uint64_t conversionToEpics(uint64_t(POSIX_TIME_AT_EPICS_EPOCH) * nanosecondCoeff);
 
+/*
+ * Conversion from EPICS epoch to UNIX epoch
+ *
+ *******************************************/
 timespec EpicsInterfaceImpl::convertEpicsTimeToUnixTime(const epicsTimeStamp& time)
 {
     if(time.secPastEpoch == 0 && time.nsec == 0)
@@ -409,6 +509,11 @@ timespec EpicsInterfaceImpl::convertEpicsTimeToUnixTime(const epicsTimeStamp& ti
     return unixTime;
 }
 
+
+/*
+ * Conversion from UNIX epoch to EPICS epoch
+ *
+ *******************************************/
 epicsTimeStamp EpicsInterfaceImpl::convertUnixTimeToEpicsTime(const timespec& time)
 {
     if(time.tv_sec == 0 && time.tv_nsec == 0)
@@ -420,7 +525,7 @@ epicsTimeStamp EpicsInterfaceImpl::convertUnixTimeToEpicsTime(const timespec& ti
     std::uint64_t timeNs((std::uint64_t)time.tv_sec * nanosecondCoeff + (std::uint64_t)time.tv_nsec);
     if(timeNs < conversionToEpics)
     {
-        throw;
+        throw TimeConversionError("The Unix epoch is smaller than the Epics epoch 0");
     }
 
     std::uint64_t epicsTimeNs(timeNs - conversionToEpics);
@@ -430,6 +535,17 @@ epicsTimeStamp EpicsInterfaceImpl::convertUnixTimeToEpicsTime(const timespec& ti
     epicsTime.nsec = epicsTimeNs % nanosecondCoeff;
 
     return epicsTime;
+}
+
+
+/*
+ * Allocate a static buffer for an error message
+ *
+ ***********************************************/
+EpicsInterfaceImpl::errorAndSize_t EpicsInterfaceImpl::getErrorString(const std::string& error)
+{
+    std::pair<std::set<std::string>::const_iterator, bool> elementInsertion = m_errorMessages.insert(error);
+    return errorAndSize_t((*elementInsertion.first).c_str(), (*elementInsertion.first).size());
 }
 
 }

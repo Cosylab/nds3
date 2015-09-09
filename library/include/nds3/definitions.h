@@ -19,7 +19,7 @@ namespace nds
 /**
  * @brief Available states, ordered by priority (lowest to higher).
  */
-enum state_t
+enum class state_t
 {
     unknownState,
     off,
@@ -29,13 +29,14 @@ enum state_t
     stopping,
     starting,
     running,
-    fault
+    fault,
+    enumSize        ///< This is not a state but represents the number of states in the enumeration
 };
 
 /**
  * @brief PV data types
  */
-enum dataType_t
+enum class dataType_t
 {
     dataInt8,
     dataUint8,
@@ -49,7 +50,7 @@ enum dataType_t
     dataString
 };
 
-enum scanType_t
+enum class scanType_t
 {
     periodic,
     passive,
@@ -64,7 +65,7 @@ enum scanType_t
  * PVs that have the record type set to notSpecified will not be included in the
  *  auto generated db file.
  */
-enum recordType_t
+enum class recordType_t
 {
     notSpecified, ///< The PV's type is not specified
     aai,          ///< Array analog input

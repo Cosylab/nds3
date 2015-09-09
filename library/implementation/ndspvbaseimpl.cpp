@@ -7,8 +7,8 @@ namespace nds
 {
 
 PVBaseImpl::PVBaseImpl(const std::string& name): BaseImpl(name),
-    m_type(notSpecified),
-    m_scanType(passive),
+    m_type(recordType_t::notSpecified),
+    m_scanType(scanType_t::passive),
     m_periodicScanSeconds(1),
     m_maxElements(1)
 {

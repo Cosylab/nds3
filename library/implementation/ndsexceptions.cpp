@@ -23,4 +23,12 @@ StateMachineNoSuchTransition::StateMachineNoSuchTransition(const std::string& wh
 {
 }
 
+TimeConversionError::TimeConversionError(const std::string &what): NdsError(what)
+{
+}
+
+NoPortDefinedError::NoPortDefinedError(const std::string &what): std::logic_error(what)
+{
+}
+
 }

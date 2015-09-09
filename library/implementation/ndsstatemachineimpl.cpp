@@ -20,7 +20,7 @@ StateMachineImpl::StateMachineImpl(stateChange_t switchOnFunction,
                                    stateChange_t stopFunction,
                                    stateChange_t recoverFunction,
                                    allowChange_t allowStateChangeFunction): NodeImpl("StateMachine"),
-            m_localState(off),
+            m_localState(state_t::off),
             m_switchOn(switchOnFunction), m_switchOff(switchOffFunction), m_start(startFunction), m_stop(stopFunction), m_recover(recoverFunction),
             m_allowChange(allowStateChangeFunction)
 {
@@ -30,23 +30,23 @@ StateMachineImpl::StateMachineImpl(stateChange_t switchOnFunction,
                                                  std::bind(&StateMachineImpl::readLocalState, this, std::placeholders::_1, std::placeholders::_2),
                                                  std::bind(&StateMachineImpl::writeLocalState, this, std::placeholders::_1, std::placeholders::_2)));
     pSetStatePV->setDescription("Set local state");
-    pSetStatePV->setScanType(passive, 0);
-    pSetStatePV->setType(longout);
+    pSetStatePV->setScanType(scanType_t::passive, 0);
+    pSetStatePV->setType(recordType_t::longout);
     addChild(pSetStatePV);
 
     std::shared_ptr<PVDelegateImpl<std::int32_t> > pGetStatePV(
                 new PVDelegateImpl<std::int32_t>("getState",
                                                  std::bind(&StateMachineImpl::readLocalState, this, std::placeholders::_1, std::placeholders::_2)));
     pGetStatePV->setDescription("Get local state");
-    pGetStatePV->setScanType(passive, 0);
-    pGetStatePV->setType(longin);
+    pGetStatePV->setScanType(scanType_t::passive, 0);
+    pGetStatePV->setType(recordType_t::longin);
     addChild(pGetStatePV);
 
     std::shared_ptr<PVDelegateImpl<std::int32_t> > pGetGlobalStatePV(
                 new PVDelegateImpl<std::int32_t>("getGlobalState",
                                                  std::bind(&StateMachineImpl::readGlobalState, this, std::placeholders::_1, std::placeholders::_2)));
-    pGetGlobalStatePV->setScanType(passive, 0);
-    pGetGlobalStatePV->setType(longin);
+    pGetGlobalStatePV->setScanType(scanType_t::passive, 0);
+    pGetGlobalStatePV->setType(recordType_t::longin);
     addChild(pGetGlobalStatePV);
 }
 
@@ -78,35 +78,35 @@ void StateMachineImpl::setState(const state_t newState)
         localState = getLocalState();
         globalState = getGlobalState();
 
-        if(localState == off && newState == on)
+        if(localState == state_t::off && newState == state_t::on)
         {
             transitionFunction = m_switchOn;
-            transitionState = initializing;
+            transitionState = state_t::initializing;
         }
-        else if(localState == on && newState == off)
+        else if(localState == state_t::on && newState == state_t::off)
         {
             transitionFunction = m_switchOff;
-            transitionState = switchingOff;
+            transitionState = state_t::switchingOff;
         }
-        else if(localState == on && newState == running)
+        else if(localState == state_t::on && newState == state_t::running)
         {
             transitionFunction = m_start;
-            transitionState = starting;
+            transitionState = state_t::starting;
         }
-        else if(localState == running && newState == on)
+        else if(localState == state_t::running && newState == state_t::on)
         {
             transitionFunction = m_stop;
-            transitionState = stopping;
+            transitionState = state_t::stopping;
         }
-        else if(localState == fault && newState == off)
+        else if(localState == state_t::fault && newState == state_t::off)
         {
             transitionFunction = m_recover;
-            transitionState = switchingOff;
+            transitionState = state_t::switchingOff;
         }
         else
         {
             std::ostringstream buildErrorMessage;
-            buildErrorMessage << "No transition from state " << localState << " to state " << newState;
+            buildErrorMessage << "No transition from state " << (int)localState << " to state " << (int)newState;
             throw StateMachineNoSuchTransition(buildErrorMessage.str());
         }
 
@@ -115,7 +115,7 @@ void StateMachineImpl::setState(const state_t newState)
         if(!m_allowChange(localState, globalState, newState))
         {
             std::ostringstream buildErrorMessage;
-            buildErrorMessage << "The transition from state " << localState << " to state " << newState << " has been denied";
+            buildErrorMessage << "The transition from state " << (int)localState << " to state " << (int)newState << " has been denied";
             throw StateMachineTransitionDenied(buildErrorMessage.str());
         }
         m_localState = transitionState;
@@ -137,7 +137,7 @@ void StateMachineImpl::setState(const state_t newState)
     catch(std::runtime_error& e)
     {
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
-        m_localState = fault;
+        m_localState = state_t::fault;
         m_stateTimestamp = getTimestamp();
         throw;
     }
@@ -161,7 +161,7 @@ state_t StateMachineImpl::getGlobalState() const
 
     state_t childrenState = pParentNode->getChildrenState();
 
-    if(returnState > childrenState)
+    if((int)returnState > (int)childrenState)
     {
         return returnState;
     }
@@ -172,30 +172,28 @@ state_t StateMachineImpl::getGlobalState() const
 bool StateMachineImpl::isAllowedTransition(const state_t currentState, const state_t newState) const
 {
     return isIntermediateState(currentState) ||
-                (currentState == off && newState == on) ||
-                (currentState == on && newState == off) ||
-                (currentState == on && newState == running) ||
-                (currentState == running && newState == on) ||
-                (currentState == fault && newState == on) ||
-                newState == fault;
+                (currentState == state_t::off && newState == state_t::on) ||
+                (currentState == state_t::on && newState == state_t::off) ||
+                (currentState == state_t::on && newState == state_t::running) ||
+                (currentState == state_t::running && newState == state_t::on) ||
+                (currentState == state_t::fault && newState == state_t::on) ||
+                newState == state_t::fault;
 
 }
 
 bool StateMachineImpl::isIntermediateState(const state_t state) const
 {
-    return state == switchingOff ||
-            state == initializing ||
-            state == starting ||
-            state == stopping;
+    return state == state_t::switchingOff ||
+            state == state_t::initializing ||
+            state == state_t::starting ||
+            state == state_t::stopping;
 }
-
-
 
 void StateMachineImpl::readLocalState(timespec* pTimestamp, std::int32_t* pValue)
 {
     std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
     *pTimestamp = m_stateTimestamp;
-    *pValue = m_localState;
+    *pValue = (std::int32_t)m_localState;
 }
 
 void StateMachineImpl::writeLocalState(const timespec& /* pTimestamp */, const std::int32_t& value)
@@ -205,7 +203,7 @@ void StateMachineImpl::writeLocalState(const timespec& /* pTimestamp */, const s
 
 void StateMachineImpl::readGlobalState(timespec* pTimestamp, std::int32_t* pValue)
 {
-    *pValue = getGlobalState();
+    *pValue = (std::int32_t)getGlobalState();
     *pTimestamp = getTimestamp();
 }
 

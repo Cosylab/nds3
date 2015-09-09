@@ -64,15 +64,15 @@ protected:
     {
         if(std::is_same<T, std::int32_t>::value)
         {
-            return dataInt32;
+            return dataType_t::dataInt32;
         }
         if(std::is_same<T, double>::value)
         {
-            return dataFloat64;
+            return dataType_t::dataFloat64;
         }
         if(std::is_same<T, std::vector<std::int32_t> >::value)
         {
-            return dataInt32Array;
+            return dataType_t::dataInt32Array;
         }
     }
 

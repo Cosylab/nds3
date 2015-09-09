@@ -21,6 +21,10 @@
  * Used as example of a business logic class which implements the reads and writes and one
  * day may react to changes in a state machine class.
  *
+ * This oscilloscope has 2 channels:
+ * - one channel provides a sinusoidal wave as a floating point scalar number that varies over time
+ * - another channel provides a square wave, but this time pushed as an array of int32 values
+ *
  */
 class Oscilloscope
 {
@@ -40,7 +44,7 @@ public:
 
         // I have two channels: one connected to a sinusoidal wave generator, one to a square w. gen
         channel0 = port.addChild(nds::DataAcquisition<double>("Ch0",
-                                          nds::ai,
+                                          nds::recordType_t::ai,
                                           1,
                                           std::bind(&Oscilloscope::doNothing, this),     // Transition from off to on. Nothing to do
                                           std::bind(&Oscilloscope::doNothing, this),     // Transition from on to off. Nothing to do
@@ -50,9 +54,9 @@ public:
                                           std::bind(&Oscilloscope::canChange, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
                                           ));
 
-        channel1 = port.addChild(nds::DataAcquisition<double>("Ch1",
-                                          nds::ai,
-                                          1,
+        channel1 = port.addChild(nds::DataAcquisition<std::vector<std::int32_t> >("Ch1",
+                                          nds::recordType_t::waveformIn,
+                                          100,
                                           std::bind(&Oscilloscope::doNothing, this),
                                           std::bind(&Oscilloscope::doNothing, this),
                                           std::bind(&Oscilloscope::startChannel1, this),
@@ -100,7 +104,10 @@ public:
         }
     }
 
-    void sqrThread(nds::DataAcquisition<double> dataAcquisition)
+    // Thread that produce a square wave and push it. Takes channel 1
+    //  as a parameter.
+    /////////////////////////////////////////////////////////////////////
+    void sqrThread(nds::DataAcquisition<std::vector<std::int32_t> > dataAcquisition)
     {
         double hz = dataAcquisition.getFrequencyHz();
 
@@ -111,22 +118,23 @@ public:
         const std::uint64_t hzMultiplier = 1000000;
         const std::uint64_t periodNsec = (secMultiplier * hzMultiplier) / (std::uint64_t)(hz * (double)hzMultiplier);
 
+        // Prepare the wave
+        ///////////////////
+        std::vector<std::int32_t> squareWave;
+        for(size_t fillSquare(0); fillSquare != dataAcquisition.getMaxElements(); ++fillSquare)
+        {
+            squareWave.push_back(fillSquare < dataAcquisition.getMaxElements() / 2 ? 0 : 100);
+        }
+
+        // Push the wave until we have to stop
+        //////////////////////////////////////
         while(m_bSqrContinue)
         {
-            timespec currentTime = dataAcquisition.getTimestamp();
-            std::uint64_t currentTimeNsec(currentTime.tv_sec * secMultiplier + currentTime.tv_nsec);
-            std::uint64_t difference(currentTimeNsec - startTimeNsec);
+            // Here we are not really caring about the frequency, we just push this wave
+            // as fast as we can
+            dataAcquisition.pushData(dataAcquisition.getTimestamp(), squareWave);
 
-            if(difference % periodNsec > periodNsec / 2)
-            {
-                dataAcquisition.pushData(currentTime, 100);
-            }
-            else
-            {
-                dataAcquisition.pushData(currentTime, 0);
-            }
-
-            ::sleep(0);
+            ::sleep(0); // Give other threads a chance
         }
     }
 
@@ -161,7 +169,7 @@ public:
 
 private:
     nds::DataAcquisition<double> channel0;
-    nds::DataAcquisition<double> channel1;
+    nds::DataAcquisition<std::vector<std::int32_t> > channel1;
 
     std::thread m_sinThread;
     std::thread m_sqrThread;

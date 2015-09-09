@@ -53,7 +53,7 @@ public:
 
     bool isAllowedTransition(const state_t currentState, const state_t newState) const;
 
-    bool isIntermediateState(state_t newState) const;
+    bool isIntermediateState(const state_t newState) const;
 
 protected:
     std::shared_ptr<PVDelegateImpl<std::int32_t> > m_pStatePV; ///< The PV holding the current state

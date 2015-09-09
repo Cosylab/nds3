@@ -72,6 +72,7 @@ public:
     StateMachineNoSuchTransition(const std::string& what);
 };
 
+
 /**
  * @brief This transition is thrown by the state machine when a delegated
  *        function reject the transition.
@@ -82,6 +83,31 @@ public:
     StateMachineTransitionDenied(const std::string& what);
 };
 
+
+/**
+ * @brief This exception is thrown when there is an error in the conversion
+ *        between the UNIX epoch and the EPICS epoch.
+ *
+ * Usually happens when the Unix EPOCH indicates a time before 1st of January 1990
+ * (the starting point for the EPICS epoch).
+ */
+class NDS3_API TimeConversionError: public NdsError
+{
+public:
+    TimeConversionError(const std::string& what);
+};
+
+
+/**
+ * @brief This exception is thrown when there isn't any Port defined in the
+ *        device structure. Without a Port there cannot be any communication
+ *        with the control system.
+ */
+class NDS3_API NoPortDefinedError: public std::logic_error
+{
+public:
+    NoPortDefinedError(const std::string& what);
+};
 
 }
 
