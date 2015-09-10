@@ -87,6 +87,11 @@ void PVBaseImpl::setMaxElements(const size_t maxElements)
     m_maxElements = maxElements;
 }
 
+void PVBaseImpl::setEnumeration(const enumerationStrings_t &enumerations)
+{
+    m_enumeration = enumerations;
+}
+
 recordType_t PVBaseImpl::getType() const
 {
     return m_type;
@@ -117,6 +122,10 @@ size_t PVBaseImpl::getMaxElements() const
     return m_maxElements;
 }
 
+const enumerationStrings_t& PVBaseImpl::getEnumerations()
+{
+    return m_enumeration;
+}
 
 void PVBaseImpl::initialize()
 {

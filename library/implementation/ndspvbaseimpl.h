@@ -50,6 +50,7 @@ public:
     void setInterfaceName(const std::string& interfaceName);
     void setScanType(const scanType_t scanType, const double periodSeconds);
     void setMaxElements(const size_t maxElements);
+    void setEnumeration(const enumerationStrings_t& enumerations);
 
     recordType_t getType() const;
     std::string getDescription() const;
@@ -57,6 +58,8 @@ public:
     scanType_t getScanType() const;
     double getScanPeriodSeconds() const;
     size_t getMaxElements() const;
+    const enumerationStrings_t& getEnumerations();
+
 
 protected:
     template<typename T>
@@ -82,6 +85,7 @@ protected:
     scanType_t m_scanType;
     double m_periodicScanSeconds;
     size_t m_maxElements;
+    enumerationStrings_t m_enumeration;
 };
 
 }

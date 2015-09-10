@@ -43,7 +43,7 @@ state_t NodeImpl::getLocalState()
 {
     if(m_pStateMachine.get() == 0)
     {
-        return state_t::unknownState;
+        return state_t::unknown;
     }
     return m_pStateMachine->getLocalState();
 }
@@ -52,14 +52,14 @@ state_t NodeImpl::getGlobalState()
 {
     if(m_pStateMachine.get() == 0)
     {
-        return state_t::unknownState;
+        return state_t::unknown;
     }
     return m_pStateMachine->getGlobalState();
 }
 
 state_t NodeImpl::getChildrenState()
 {
-    state_t returnState = state_t::unknownState;
+    state_t returnState = state_t::unknown;
     for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
     {
         if(scanChildren->second.get() != m_pStateMachine.get())

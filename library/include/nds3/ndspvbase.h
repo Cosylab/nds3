@@ -5,6 +5,7 @@
 #include "ndsbase.h"
 #include <cstdint>
 #include <time.h>
+#include <string>
 
 namespace nds
 {
@@ -69,6 +70,8 @@ public:
     void setInterfaceName(const std::string& interfaceName);
     void setScanType(const scanType_t scanType, const double periodSeconds);
     void setMaxElements(const size_t maxElements);
+
+    void setEnumeration(const enumerationStrings_t& enumerations);
 
 };
 

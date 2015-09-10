@@ -71,6 +71,8 @@ protected:
     void readGlobalState(timespec* pTimestamp, std::int32_t* pValue);
     void writeGlobalState(const timespec& pTimestamp, const std::int32_t& value);
 
+    static std::string getStateName(const state_t state);
+
     bool m_bAsync;
 
     std::thread m_transitionThread;

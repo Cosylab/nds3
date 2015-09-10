@@ -192,6 +192,6 @@ int main()
     iocshCmd("dbLoadRecords auto_generated_Dev-MyPort.db");
     iocshCmd("iocInit");
 
-    iocsh(0);
+    nds::FactoryImpl::getInstance().run();
 }
 

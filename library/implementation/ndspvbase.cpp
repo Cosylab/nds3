@@ -9,6 +9,11 @@ PVBase::PVBase(std::shared_ptr<PVBaseImpl> pvImpl): Base(std::static_pointer_cas
 
 }
 
+void PVBase::setEnumeration(const enumerationStrings_t &enumerations)
+{
+    std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->setEnumeration(enumerations);
+}
+
 template<typename T>
 void PVBase::read(timespec* pTimestamp, T* pValue)
 {

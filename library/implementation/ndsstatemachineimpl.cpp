@@ -27,14 +27,24 @@ StateMachineImpl::StateMachineImpl(bool bAsync,
             m_switchOn(switchOnFunction), m_switchOff(switchOffFunction), m_start(startFunction), m_stop(stopFunction), m_recover(recoverFunction),
             m_allowChange(allowStateChangeFunction)
 {
+    // Prepare enumeration for states
+    /////////////////////////////////
+    enumerationStrings_t enumerationStrings;
+    for(int state(0); state != (int)state_t::MAX_STATE_NUM; ++state)
+    {
+        enumerationStrings.push_back(getStateName((state_t)state));
+    }
+
     // Add PVs for the state machine
+    ////////////////////////////////
     std::shared_ptr<PVDelegateImpl<std::int32_t> > pSetStatePV(
                 new PVDelegateImpl<std::int32_t>("setState",
                                                  std::bind(&StateMachineImpl::readLocalState, this, std::placeholders::_1, std::placeholders::_2),
                                                  std::bind(&StateMachineImpl::writeLocalState, this, std::placeholders::_1, std::placeholders::_2)));
     pSetStatePV->setDescription("Set local state");
     pSetStatePV->setScanType(scanType_t::passive, 0);
-    pSetStatePV->setType(recordType_t::longout);
+    pSetStatePV->setType(recordType_t::mbbo);
+    pSetStatePV->setEnumeration(enumerationStrings);
     addChild(pSetStatePV);
 
     m_pGetStatePV.reset(
@@ -42,14 +52,16 @@ StateMachineImpl::StateMachineImpl(bool bAsync,
                                                  std::bind(&StateMachineImpl::readLocalState, this, std::placeholders::_1, std::placeholders::_2)));
     m_pGetStatePV->setDescription("Get local state");
     m_pGetStatePV->setScanType(scanType_t::interrupt, 0);
-    m_pGetStatePV->setType(recordType_t::longin);
+    m_pGetStatePV->setType(recordType_t::mbbi);
+    m_pGetStatePV->setEnumeration(enumerationStrings);
     addChild(m_pGetStatePV);
 
     std::shared_ptr<PVDelegateImpl<std::int32_t> > pGetGlobalStatePV(
                 new PVDelegateImpl<std::int32_t>("getGlobalState",
                                                  std::bind(&StateMachineImpl::readGlobalState, this, std::placeholders::_1, std::placeholders::_2)));
     pGetGlobalStatePV->setScanType(scanType_t::passive, 0);
-    pGetGlobalStatePV->setType(recordType_t::longin);
+    pGetGlobalStatePV->setType(recordType_t::mbbi);
+    pGetGlobalStatePV->setEnumeration(enumerationStrings);
     addChild(pGetGlobalStatePV);
 }
 
@@ -123,7 +135,7 @@ void StateMachineImpl::setState(const state_t newState)
         else
         {
             std::ostringstream buildErrorMessage;
-            buildErrorMessage << "No transition from state " << (int)localState << " to state " << (int)newState;
+            buildErrorMessage << "No transition from state " << getStateName(localState) << " to state " << getStateName(newState);
             throw StateMachineNoSuchTransition(buildErrorMessage.str());
         }
 
@@ -132,7 +144,7 @@ void StateMachineImpl::setState(const state_t newState)
         if(!m_allowChange(localState, globalState, newState))
         {
             std::ostringstream buildErrorMessage;
-            buildErrorMessage << "The transition from state " << (int)localState << " to state " << (int)newState << " has been denied";
+            buildErrorMessage << "The transition from state " << getStateName(localState) << " to state " << getStateName(newState) << " has been denied";
             throw StateMachineTransitionDenied(buildErrorMessage.str());
         }
         m_localState = transitionState;
@@ -245,9 +257,37 @@ void StateMachineImpl::readGlobalState(timespec* pTimestamp, std::int32_t* pValu
     *pTimestamp = getTimestamp();
 }
 
-void StateMachineImpl::writeGlobalState(const timespec& pTimestamp, const std::int32_t& value)
+void StateMachineImpl::writeGlobalState(const timespec& /* pTimestamp */, const std::int32_t& /* value */)
 {
 
+}
+
+std::string StateMachineImpl::getStateName(const state_t state)
+{
+    switch(state)
+    {
+    case state_t::unknown:
+        return "UNKNOWN";
+    case state_t::off:
+        return "OFF";
+    case state_t::switchingOff:
+        return "SWITCHING_OFF";
+    case state_t::initializing:
+        return "INITIALIZING";
+    case state_t::on:
+        return "ON";
+    case state_t::stopping:
+        return "STOPPING";
+    case state_t::starting:
+        return "STARTING";
+    case state_t::running:
+        return "RUNNING";
+    case state_t::fault:
+        return "FAULT";
+    case state_t::MAX_STATE_NUM:
+        throw std::logic_error("The enumeration MAX_STATE_NUM is used only to know how many states are defined");
+    }
+    throw std::logic_error("Uknown state");
 }
 
 }

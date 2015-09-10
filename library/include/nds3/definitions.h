@@ -12,6 +12,8 @@
 #include <cstdint>
 #include <functional>
 #include <time.h>
+#include <string>
+#include <list>
 
 namespace nds
 {
@@ -21,16 +23,16 @@ namespace nds
  */
 enum class state_t
 {
-    unknownState,
-    off,
-    switchingOff,
-    initializing,
-    on,
-    stopping,
-    starting,
-    running,
-    fault,
-    enumSize        ///< This is not a state but represents the number of states in the enumeration
+    unknown,      ///< The state is Unknown
+    off,          ///< The device is switched off
+    switchingOff, ///< The device is switched on but is in the process of switching off
+    initializing, ///< The device is switched off but is in the process of switching on
+    on,           ///< The device is switched on
+    stopping,     ///< The device is acquiring data but is in the process of stopping the operations
+    starting,     ///< The device is switched on and is starting the operations
+    running,      ///< The device is operating
+    fault,        ///< An error caused the device to go to FAULT mode
+    MAX_STATE_NUM ///< Indicate the number of states in the enumeration
 };
 
 /**
@@ -93,8 +95,7 @@ typedef std::function<bool (const state_t, const state_t, const state_t)> allowC
 
 typedef std::function<timespec ()> getTimestampPlugin_t;
 
-
-
+typedef std::list<std::string> enumerationStrings_t;
 }
 
 // Generic helper definitions for shared library support

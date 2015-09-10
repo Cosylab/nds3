@@ -24,7 +24,6 @@ static ElfW(Word) gnu_hashtab_symbol_count(const unsigned int *const table)
         if (bucket[b] > max)
             max = bucket[b];
 
-    unsigned int chain_index = max - table[1];
     const unsigned int* chains = bucket + table[1];
     ++max;
     while(!(chains[max] & 1))
@@ -90,7 +89,7 @@ static void *dynamic_pointer(const ElfW(Addr) addr,
  *  EPICS
  *
  *************************************************************/
-int iterate_phdr(struct dl_phdr_info *info, size_t size, void *dataref)
+int iterate_phdr(struct dl_phdr_info *info, size_t /* size */, void *dataref)
 {
     const ElfW(Addr)                 base = info->dlpi_addr;
     const ElfW(Phdr) *const          header = info->dlpi_phdr;

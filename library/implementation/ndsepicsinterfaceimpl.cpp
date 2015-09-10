@@ -51,6 +51,7 @@ EpicsInterfaceImpl::EpicsInterfaceImpl(const std::string& portName): InterfaceBa
 
 /*
  * Convert a data type from enum to string.
+ *
  * We use a switch and not a map for the conversion so we receive warnings
  *  if we forget a conversion.
  *
@@ -60,9 +61,14 @@ dataTypeAndFTVL_t dataTypeToEpicsString(dataType_t dataType, bool bInput)
 {
     switch(dataType)
     {
+    case dataType_t::dataInt8:
+        return dataTypeAndFTVL_t("asynOctet", "CHAR");
     case dataType_t::dataUint8:
+        return dataTypeAndFTVL_t("asynOctet", "UCHAR");
     case dataType_t::dataInt32:
         return dataTypeAndFTVL_t("asynInt32", "");
+    case dataType_t::dataUint32:
+        return dataTypeAndFTVL_t("asynUInt32Digital", "");
     case dataType_t::dataFloat64:
         return dataTypeAndFTVL_t("asynFloat64", "");
     case dataType_t::dataInt8Array:
@@ -92,7 +98,17 @@ dataTypeAndFTVL_t dataTypeToEpicsString(dataType_t dataType, bool bInput)
         {
             return dataTypeAndFTVL_t("asynInt32ArrayOut", "LONG");
         }
+    case dataType_t::dataFloat64Array:
+        if(bInput)
+        {
+            return dataTypeAndFTVL_t("asynFloat64ArrayIn", "DOUBLE");
+        }
+        else
+        {
+            return dataTypeAndFTVL_t("asynFloat64ArrayOut", "DOUBLE");
+        }
     }
+    throw std::logic_error("Unknown data type");
 }
 
 
@@ -108,6 +124,8 @@ typeAndInput_t recordTypeToEpicsString(recordType_t recordType)
 {
     switch(recordType)
     {
+    case recordType_t::notSpecified:
+        throw std::logic_error("The type notSpecified should not be auto-inserted in the generated db file");
     case recordType_t::aai:
         return typeAndInput_t("aai", true);
     case recordType_t::aao:
@@ -141,13 +159,14 @@ typeAndInput_t recordTypeToEpicsString(recordType_t recordType)
     case recordType_t::waveformOut:
         return typeAndInput_t("waveform", false);
     }
+    throw std::logic_error("Unknown record type");
 }
 
 
 /*
- * Register a PV
+ * Register a PV and generated the db file
  *
- ***************/
+ *****************************************/
 void EpicsInterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
 {
     // Save the PV in a list. The order in the is used as "reason".
@@ -212,6 +231,18 @@ void EpicsInterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
             dbEntry << "    field(OUT, \"@asyn(" << pv->getPort()->getFullName() << ", " << portAddress<< ")" << pv->getFullNameFromPort() << "\")" << std::endl;
         }
 
+        // Add enumerations
+        static const char* epicsEnumNames[] = {"ZR", "ON", "TW", "TH", "FR", "FV", "SX", "SV", "EI", "NI", "TE", "EL", "TV", "TT", "FT", "FF"};
+        const enumerationStrings_t& enumerations = pv->getEnumerations();
+        size_t enumNumber(0);
+        for(enumerationStrings_t::const_iterator scanStrings(enumerations.begin()), endScan(enumerations.end()); scanStrings != endScan; ++scanStrings)
+        {
+            dbEntry << "    field(" << epicsEnumNames[enumNumber] << "VL, " << enumNumber << ")" << std::endl;
+            dbEntry << "    field(" << epicsEnumNames[enumNumber] << "ST, \"" << *scanStrings << "\")" << std::endl;
+            enumNumber++;
+        }
+
+
         dbEntry << "}" << std::endl << std::endl;
         dbEntry.flush();
 
@@ -219,6 +250,11 @@ void EpicsInterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
     }
 }
 
+
+/*
+ * Called after the registration of the PVs has been performed
+ *
+ *************************************************************/
 void EpicsInterfaceImpl::registrationTerminated()
 {
     // Save the records in a temporary file
@@ -252,7 +288,7 @@ void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& ti
 template<typename T, typename interruptType>
 void EpicsInterfaceImpl::pushOneValue(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const T& value, void* interruptPvt)
 {
-    size_t reason = m_pvNameToReason[pv->getFullNameFromPort()];
+    int reason = m_pvNameToReason[pv->getFullNameFromPort()];
 
     ELLLIST       *pclientList;
     int            addr;
@@ -276,10 +312,14 @@ void EpicsInterfaceImpl::pushOneValue(std::shared_ptr<PVBaseImpl> pv, const time
 }
 
 
+/*
+ * Push an array to EPICS
+ *
+ ************************/
 template<typename T, typename interruptType>
 void EpicsInterfaceImpl::pushArray(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const T* pValue, size_t numElements, void* interruptPvt)
 {
-    size_t reason = m_pvNameToReason[pv->getFullNameFromPort()];
+    int reason = m_pvNameToReason[pv->getFullNameFromPort()];
 
     ELLLIST       *pclientList;
     int            addr;
