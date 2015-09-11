@@ -13,7 +13,7 @@ namespace nds
  *
  * It also provides a state machine that allows to start/stop the acquisition.
  *
- * The user of a DataAcquisition class must pass declare few delegate functions that
+ * The user of a DataAcquisition class must declare few delegate functions that
  *  specify the actions to perform when the acquisition node's state changes.
  *
  * In particular, the transition from the state off to running should launch
@@ -30,9 +30,6 @@ public:
     /**
      * @brief Constructs the data acquisition node.
      *
-     * @param name        the node name
-     * @param maxElements if the data type is an array, then indicated
-     *                    the maximum size (in elements) of the acquired array
      */
     DataAcquisition(const std::string& name,               ///< The node's name
                     recordType_t recordType,               ///< The acquisition PV type

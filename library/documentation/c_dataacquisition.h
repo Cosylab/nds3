@@ -1,32 +1,49 @@
-#include <iostream>
-#include <memory>
-#include <vector>
-
-#include <math.h>
-#include <thread>
-#include <cstdint>
-#include <functional>
-
-#include "library/implementation/ndsfactoryimpl.h"
-#include <unistd.h>
-#include "iocsh.h"
-
-#include "library/include/nds3/nds3.h"
-
-//using namespace std;
-
-
 /**
- * @brief Sadly this class made it into this file.
- *
- * Used as example of a business logic class which implements the reads and writes and one
- * day may react to changes in a state machine class.
- *
- * This oscilloscope has 2 channels:
- * - one channel provides a sinusoidal wave as a floating point scalar number that varies over time
- * - another channel provides a square wave, but this time pushed as an array of int32 values
- *
- */
+
+@page data_acquisition The Data Acquisition node
+
+nds::DataAcquisition is a particular type of node specialized for data acquisition.
+
+It provides:
+- a data PV that can be used to push data to the control system
+- few control PVs that allow to set the acquisition parameters
+- a state machine that allow to start & stop the data acquisition.
+
+The example below illustrate a simple acquisition device, a simulator for an oscilloscope.
+
+The two oscilloscope channels are constructed from two different DataAcquisition objects (one
+ for Ch0 or channel 0, one for Ch1).
+
+The data acquisition node must declare the delegate functions to be called to start and stop the
+ acquisition, and to switch on and off the acquisition channel.\n
+In our example the switch on/off delegate does nothing (we don't have any special operation to perform).\n
+On the other hand, the start and stop are delegated to two methods that start and stop an acquisition thread
+ respectively: when the acquisition thread starts then it can read the acquisition parameters and perform
+ the data acquisition until it is stopped.
+
+The Oscilloscope can be controlled by using the DataAcquisition state machine: to start the acquisition on
+ Ch0 from the IOC console in EPICS:
+@code
+dbpf Dev-MyPort-Ch0-StateMachine-setState ON
+dbpf Dev-MyPort-Ch0-StateMachine-setState RUNNING
+@endcode
+
+You can monitor the PV Dev-MyPort-Ch0-Data to see the incoming data
+
+To stop the acquisition:
+@code
+dbpf Dev-MyPort-Ch0-StateMachine-setState ON
+@endcode
+
+To switch off the Channel 0:
+@code
+dbpf Dev-MyPort-Ch0-StateMachine-setState OFF
+@endcode
+
+
+Sample source code for the Oscilloscope simulator
+@code
+
 class Oscilloscope
 {
 public:
@@ -34,8 +51,8 @@ public:
     nds::Node root;
     Oscilloscope()
     {
-        // We create a device. We could use directly a port here, but for fun this device will have
-        //  more than one Asyn port
+        // We create a device. We could use directly a port here, but for fun we do this in the
+        //  child node
         ///////////////////////////////////////////////////////////////////////////////////////////
         root = nds::Node("Dev");
 
@@ -44,6 +61,8 @@ public:
         nds::Port port = root.addChild(nds::Port("MyPort"));
 
         // I have two channels: one connected to a sinusoidal wave generator, one to a square w. gen
+        // The sinusoidal wave generator generates a single int32 value at each acquisition, while the
+        //  wave generator pushes an array of data at each acquisition
         channel0 = port.addChild(nds::DataAcquisition<double>("Ch0",
                                           nds::recordType_t::ai,
                                           1,
@@ -179,20 +198,7 @@ private:
     bool m_bSqrContinue;
 
 };
+@endcode
 
 
-int main()
-{
-    nds::FactoryImpl::getInstance().registrationCommand("myIoc");
-
-    Oscilloscope oscilloscope;
-
-
-    iocshCmd("dbLoadDatabase ndsTest.dbd /home/paolo/Downloads");
-    iocshCmd("myIoc pdbbase");
-    iocshCmd("dbLoadRecords auto_generated_Dev-MyPort.db");
-    iocshCmd("iocInit");
-
-    nds::FactoryImpl::getInstance().run();
-}
-
+*/

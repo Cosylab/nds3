@@ -10,26 +10,30 @@ namespace nds
 {
 
 /**
- * @brief Provides a state machine to a Node.
+ * @brief Represents a state machine to be attached to a node.
  *
- * The state machine ha
+ * Attach the state machine to a node by using Node::addChild().
+ *
+ * The state machine provides a <b>local state</b> and a <b>global state</b>:
+ * - the local state represents the state of a single state machine
+ * - the global state takes into account all the state machines attached to
+ *   the children nodes (the state with the higher priority)
+ *
+ * In EPICS the state machine PVs will be available as "StateMachine-setState"
+ *  (set the state) and "StateMachine-getState" (to retrieve the state).
+ * The PV "StateMachine-globalState" represents the global state (state
+ *  with higher priority among the current node and all its children).
+ *
+ * Transitions between the different states can happen on the same
+ *  thread that requested the transition or on a different thread when
+ *  the StateMachine is created with the bAsync flag set to true.
  */
 class NDS3_API StateMachine: public Node
 {
 
 public:
     /**
-     * @brief Represents a state machine to be attached to a node.
-     *
-     * Attach the state machine to a node by using Node::addChild().
-     *
-     * The state machine provides a <b>local state</b> and a <b>global state</b>:
-     * - the local state represents the state of a single state machine
-     * - the global state takes into account all the state machines attached to
-     *   the children nodes (the state with the higher priority)
-     *
-     * In EPICS the state machine PVs will be available as "StateMachine-state" and
-     * "StateMachine-globalState".
+     * @brief Construct the state machine.
      *
      * @param bAsync                   if true then the state transitions are executed
      *                                  in a dedicated thread, if false then the state
@@ -44,7 +48,11 @@ public:
      *                                  the current state is on.
      *                                 The state machine sets the state to switchingOff before
      *                                  calling the function and to off after the function returns.
-     * @param startFunction
+     * @param startFunction            function to be called to switch to the running state.
+     *                                 The function is guaranteed to be called only when
+     *                                  the current state is on.
+     *                                 The state machine sets the state to starting before
+     *                                  calling the function and to running after the function returns.
      * @param stopFunction
      * @param recoverFunction
      * @param allowStateChangeFunction

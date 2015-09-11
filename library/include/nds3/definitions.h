@@ -89,12 +89,42 @@ enum class recordType_t
 };
 
 
-
+/**
+ * @brief Definition for the function executed during the state transition.
+ *
+ * An exception thrown during a state transition will cause the StateMachine to
+ *  switch to the state_t::fault state, unless the exception StateMachineRollBack
+ *  is thrown which cause a rollback to the previous state.
+ */
 typedef std::function<void ()> stateChange_t;
+
+/**
+ * @brief Definition for a function called to allow or deny a state transition.
+ *
+ * The function receives 3 parameters:
+ * - the first one represents the current state
+ * - the secont one represents the current global state
+ * - the last one represents the desidered state
+ *
+ * The function must return true if the transition from the current state to
+ *  the desidered state is allowed, or false otherwise.
+ *
+ * This function is called only after the state machine has verified that
+ *  the requested transition is legal.
+ */
 typedef std::function<bool (const state_t, const state_t, const state_t)> allowChange_t;
 
+/**
+ * @brief Definition for a function called to retrieve a time.
+ *
+ * The function should return the UNIX epoch (seconds and nanoseconds).
+ */
 typedef std::function<timespec ()> getTimestampPlugin_t;
 
+/**
+ * @brief List of strings used for enumeration in PVs that support
+ *        the enumeration field.
+ */
 typedef std::list<std::string> enumerationStrings_t;
 }
 
