@@ -3,7 +3,8 @@
 #include <registryCommon.h>
 #include <dbStaticPvt.h>
 
-#include "ndsfactoryimpl.h"
+#include "ndsepicsfactoryimpl.h"
+#include "ndsepicsinterfaceimpl.h"
 #include "../include/nds3/ndsbase.h"
 
 #include <iostream>
@@ -27,47 +28,54 @@ namespace nds
 
 extern "C" {
 
-static void rrddCallFunc(const iocshArgBuf *)
+void EpicsFactoryImpl::createNdsDevice(const iocshArgBuf * arguments)
 {
-    FactoryImpl::getInstance().registerRecordTypes(*iocshPpdbbase);
+    if(arguments[0].sval == 0)
+    {
+        throw;
+    }
+    EpicsFactoryImpl::getInstance().registerRecordTypes(*iocshPpdbbase);
+    EpicsFactoryImpl::getInstance().createDriver(arguments[0].sval, "");
 }
 
 }
 
-FactoryImpl& FactoryImpl::getInstance()
+EpicsFactoryImpl& EpicsFactoryImpl::getInstance()
 {
-    static FactoryImpl factory;
+    static EpicsFactoryImpl factory;
 
     return factory;
 }
 
-FactoryImpl::FactoryImpl()
-{
-}
-
-
-void FactoryImpl::registrationCommand(const std::string& registrationCommandName)
+EpicsFactoryImpl::EpicsFactoryImpl()
 {
     iocshRegisterCommon();
 
-    static const iocshArg commandArgument = {"pdbbase", iocshArgPdbbase};
-    static const iocshArg* commandArguments[] = {&commandArgument};
+    static const iocshArg nameArgument = {"name", iocshArgString};
+    //static const iocshArg pdbbaseArgument = {"pdbbase", iocshArgPdbbase};
+    static const iocshArg* commandArguments[] = {&nameArgument};
 
-    m_commandName = registrationCommandName;
+    static const std::string commandName("createNdsDevice");
     m_commandDefinition.arg = commandArguments;
-    m_commandDefinition.nargs = 1;
-    m_commandDefinition.name = m_commandName.c_str();
-    iocshRegister(&m_commandDefinition, rrddCallFunc);
-
+    m_commandDefinition.nargs = sizeof(commandArguments) / sizeof(commandArguments[0]);
+    m_commandDefinition.name = commandName.c_str();
+    iocshRegister(&m_commandDefinition, createNdsDevice);
 }
 
-void FactoryImpl::run()
+InterfaceBaseImpl* EpicsFactoryImpl::getNewInterface(const std::string& fullName)
 {
+    return new EpicsInterfaceImpl(fullName);
+}
+
+
+void EpicsFactoryImpl::run()
+{
+    iocshCmd("iocInit");
     iocsh(0);
 }
 
 
-void FactoryImpl::registerRecordTypes(DBBASE* pDatabase)
+void EpicsFactoryImpl::registerRecordTypes(DBBASE* pDatabase)
 {
     DBEntry dbEntry(pDatabase);
 
@@ -205,7 +213,7 @@ void FactoryImpl::registerRecordTypes(DBBASE* pDatabase)
 
 }
 
-void FactoryImpl::addToSet(const std::string symbolName, std::set<std::string>* pSet, const std::string& prefix, const std::string& postfix)
+void EpicsFactoryImpl::addToSet(const std::string symbolName, std::set<std::string>* pSet, const std::string& prefix, const std::string& postfix)
 {
     std::string name = compareString(symbolName, prefix, postfix);
     if(!name.empty())
@@ -214,7 +222,7 @@ void FactoryImpl::addToSet(const std::string symbolName, std::set<std::string>* 
     }
 }
 
-std::string FactoryImpl::compareString(const std::string& string, const std::string& prefix, const std::string& postfix)
+std::string EpicsFactoryImpl::compareString(const std::string& string, const std::string& prefix, const std::string& postfix)
 {
     if(string.size() < prefix.size() || string.size() < postfix.size())
     {

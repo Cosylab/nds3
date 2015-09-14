@@ -6,6 +6,7 @@
 namespace nds
 {
 
+class FactoryBaseImpl;
 class InterfaceBaseImpl;
 class PVBaseImpl;
 
@@ -23,7 +24,7 @@ public:
      *
      * @param port's name. Used also as port name in the AsynDriver
      */
-    PortImpl(const std::string& name);
+    PortImpl(const std::string& name, FactoryBaseImpl& controlSystem);
 
     virtual ~PortImpl();
 
@@ -48,6 +49,8 @@ private:
 
     typedef std::map<int, std::shared_ptr<PVBaseImpl> > tRecords;
     tRecords m_records;
+
+    FactoryBaseImpl* m_pFactory;
 };
 
 }

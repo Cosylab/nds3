@@ -33,7 +33,6 @@ SOURCES += main.cpp \
     library/implementation/ndsportimpl.cpp \
     library/implementation/ndspvbaseimpl.cpp \
     library/implementation/ndspvbase.cpp \
-    library/implementation/ndsfactoryimpl.cpp \
     library/implementation/scansymbols.cpp \
     library/implementation/ndspvdelegateimpl.cpp \
     library/implementation/ndspvdelegate.cpp \
@@ -49,7 +48,9 @@ SOURCES += main.cpp \
     library/implementation/ndsdataacquisitionimpl.cpp \
     library/implementation/ndspvvariableimpl.cpp \
     library/implementation/ndspvvariable.cpp \
-    library/implementation/ndsdataacquisition.cpp
+    library/implementation/ndsdataacquisition.cpp \
+    library/implementation/ndsepicsfactoryimpl.cpp \
+    library/implementation/ndsfactorybaseimpl.cpp
 
 HEADERS += \
     library/implementation/ndsbaseimpl.h \
@@ -61,7 +62,6 @@ HEADERS += \
     library/include/nds3/ndsport.h \
     library/include/nds3/ndspvbase.h \
     library/include/nds3/ndspvdelegate.h \
-    library/implementation/ndsfactoryimpl.h \
     library/implementation/scansymbols.h \
     library/implementation/ndspvdelegateimpl.h \
     library/implementation/ndspvdelegateimpl.h \
@@ -79,5 +79,12 @@ HEADERS += \
     library/include/nds3/ndsdataacquisition.h \
     library/implementation/ndsdataacquisitionimpl.h \
     library/implementation/ndspvvariableimpl.h \
-    library/include/nds3/ndspvvariable.h
+    library/include/nds3/ndspvvariable.h \
+    library/implementation/ndsepicsfactoryimpl.h \
+    library/implementation/ndsfactorybaseimpl.h \
+    library/documentation/mainpage.h \
+    library/documentation/c_dataacquisition.h \
+    library/documentation/b_statemachine.h \
+    library/documentation/b_design.h \
+    library/documentation/a_concepts.h
 
