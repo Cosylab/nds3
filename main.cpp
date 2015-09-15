@@ -7,11 +7,10 @@
 #include <cstdint>
 #include <functional>
 
-#include "library/implementation/ndsfactoryimpl.h"
 #include <unistd.h>
-#include "iocsh.h"
 
 #include "library/include/nds3/nds3.h"
+#include "iocsh.h"
 
 //using namespace std;
 
@@ -180,19 +179,24 @@ private:
 
 };
 
+void* allocateDevice(const std::string& parameter)
+{
+    return new Oscilloscope();
+}
+
+void deallocateDevice(void* device)
+{
+    delete (Oscilloscope*)device;
+}
 
 int main()
 {
-    nds::FactoryImpl::getInstance().registrationCommand("myIoc");
+    nds::Factory factory(nds::controlSystem_t::epics);
+    factory.registerDriver("Oscilloscope", std::bind(&allocateDevice, std::placeholders::_1), std::bind(&deallocateDevice, std::placeholders::_1));
 
-    Oscilloscope oscilloscope;
+    iocshCmd("dbLoadDatabase ndsTest.dbd /home/codac-dev/Documents/m-nds-test/target/main/epics/dbd");
+    iocshCmd("createNdsDevice Oscilloscope");
 
-
-    iocshCmd("dbLoadDatabase ndsTest.dbd /home/paolo/Downloads");
-    iocshCmd("myIoc pdbbase");
-    iocshCmd("dbLoadRecords auto_generated_Dev-MyPort.db");
-    iocshCmd("iocInit");
-
-    nds::FactoryImpl::getInstance().run();
+    factory.run();
 }
 

@@ -19,6 +19,18 @@ namespace nds
 {
 
 /**
+ * The type of control system that NDS must interface with.
+ */
+enum class controlSystem_t
+{
+    defaultSystem,  ///< The control system defined with setDefaultControlSystem()
+    test,           ///< A Mock control system used by the test units
+    epics,          ///< EPICS (http://www.aps.anl.gov/epics)
+    tango           ///< Tango (http://tango-controls.org)
+
+};
+
+/**
  * @brief Available states, ordered by priority (lowest to higher).
  */
 enum class state_t
@@ -88,6 +100,16 @@ enum class recordType_t
     waveformOut   ///< Waveform output. On EPICS db files "waveform" together with an output array type will be used
 };
 
+/**
+ * @brief Definition for the function executed to allocate a driver.
+ *
+ * Returns a pointer to the allocated driver: the pointer will be passed
+ *  to the function defined by deallocateDriver_t.
+ *
+ */
+typedef std::function<void*(const std::string& parameter)> allocateDriver_t;
+
+typedef std::function<void (void*)> deallocateDriver_t;
 
 /**
  * @brief Definition for the function executed during the state transition.

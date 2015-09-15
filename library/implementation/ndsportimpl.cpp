@@ -1,11 +1,13 @@
 #include "ndsportImpl.h"
 #include "ndsepicsinterfaceimpl.h"
 #include "ndspvbaseimpl.h"
+#include "ndsfactorybaseimpl.h"
 
 namespace nds
 {
 
-PortImpl::PortImpl(const std::string& name): NodeImpl(name)
+
+PortImpl::PortImpl(const std::string& name, FactoryBaseImpl& controlSystem): NodeImpl(name), m_pFactory(&controlSystem)
 {
 }
 
@@ -29,7 +31,7 @@ void PortImpl::initialize()
 {
     if(m_pInterface.get() == 0)
     {
-        m_pInterface.reset(new EpicsInterfaceImpl(getFullName()));
+        m_pInterface.reset(m_pFactory->getNewInterface(getFullName()));
     }
     NodeImpl::initialize();
 

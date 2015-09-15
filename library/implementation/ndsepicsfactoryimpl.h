@@ -1,6 +1,8 @@
 #ifndef NDSFACTORYIMPL_CPP
 #define NDSFACTORYIMPL_CPP
 
+#include "../include/nds3/definitions.h"
+#include "ndsfactorybaseimpl.h"
 #include <dbStaticLib.h>
 #include <vector>
 #include <list>
@@ -18,20 +20,22 @@ namespace nds
  * @brief Takes care of registering everything with EPICS
  *
  */
-class FactoryImpl
+class EpicsFactoryImpl: public FactoryBaseImpl
 {
 public:
-    static FactoryImpl& getInstance();
+    static EpicsFactoryImpl& getInstance();
 
-    FactoryImpl();
+    EpicsFactoryImpl();
 
-    void registrationCommand(const std::string& registrationCommandName);
+    static void createNdsDevice(const iocshArgBuf * arguments);
 
-    void registerRecordTypes(DBBASE* pDatabase);
+    virtual InterfaceBaseImpl* getNewInterface(const std::string& fullName);
 
-    void run();
+    virtual void run();
 
 private:
+    void registerRecordTypes(DBBASE* pDatabase);
+
     void addToSet(const std::string symbolName, std::set<std::string>* pSet, const std::string& prefix, const std::string& postfix);
 
     std::string compareString(const std::string& string, const std::string& prefix, const std::string& postfix);
