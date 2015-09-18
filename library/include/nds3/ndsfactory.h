@@ -56,7 +56,7 @@ public:
      *
      * The loop terminates only when the application must exit.
      */
-    virtual void run();
+    virtual void run(int argc,char *argv[]);
 
 #ifndef SWIG
 private:

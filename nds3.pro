@@ -1,10 +1,12 @@
 TEMPLATE = app
 QT -= qt
 
-QMAKE_CXXFLAGS += -std=c++0x -O0 -rdynamic -fvisibility=hidden -fvisibility-inlines-hidden
+QMAKE_CXXFLAGS += -std=c++11 -O0 -rdynamic -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -pedantic
 
 DEFINES += GOINGTHERE_DLL
 DEFINES += GOINGTHERE_DLL_EXPORTS
+
+DEFINES += NDS3_TANGO
 
 EPICS_BASE = $$(EPICS_BASE)
 EPICS_HOST_ARCH = $$(EPICS_HOST_ARCH)
@@ -12,17 +14,23 @@ EPICS_HOST_ARCH = $$(EPICS_HOST_ARCH)
 LIBS_BASE = $$EPICS_BASE/lib/$$EPICS_HOST_ARCH
 LIBS_ASYN = $$EPICS_BASE/../modules/asyn/lib/$$EPICS_HOST_ARCH
 
+#EPICS libraries
+//LIBS += -L$$LIBS_BASE \
+//    -L$$LIBS_ASYN \
+//    -ldbCore -ldbRecStd -lgdd -lasyn \
+//    -lca -lcas -lCom -ldl -pthread
 
-LIBS += -L$$LIBS_BASE \
-    -L$$LIBS_ASYN \
-    -ldbCore -ldbRecStd -lgdd -lasyn \
-    -lca -lcas -lCom -ldl -pthread
+#Tango libraries
+LIBS += -L/usr/local/lib -ltango -llog4tango -lomniORB4 -lomnithread -lomniDynamic4
 
+#EPICS include path
 INCLUDEPATH += $$EPICS_BASE/include \
     $$EPICS_BASE/include/compiler/gcc \
     $$EPICS_BASE/include/os/Linux/ \
     $$EPICS_BASE/../modules/asyn/include \
 
+# Tango include path
+INCLUDEPATH += /usr/local/include/tango /usr/include/omniORB4
 
 SOURCES += main.cpp \
     library/implementation/ndsbaseimpl.cpp \
@@ -50,7 +58,9 @@ SOURCES += main.cpp \
     library/implementation/ndspvvariable.cpp \
     library/implementation/ndsdataacquisition.cpp \
     library/implementation/ndsepicsfactoryimpl.cpp \
-    library/implementation/ndsfactorybaseimpl.cpp
+    library/implementation/ndsfactorybaseimpl.cpp \
+    library/implementation/ndstangofactoryimpl.cpp \
+    library/implementation/ndstangointerfaceimpl.cpp
 
 HEADERS += \
     library/implementation/ndsbaseimpl.h \
@@ -86,5 +96,7 @@ HEADERS += \
     library/documentation/c_dataacquisition.h \
     library/documentation/b_statemachine.h \
     library/documentation/b_design.h \
-    library/documentation/a_concepts.h
+    library/documentation/a_concepts.h \
+    library/implementation/ndstangofactoryimpl.h \
+    library/implementation/ndstangointerfaceimpl.h
 

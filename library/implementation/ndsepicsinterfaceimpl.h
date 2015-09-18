@@ -1,3 +1,5 @@
+#ifdef NDS3_EPICS
+
 #ifndef NDSEPICSINTERFACEIMPL_H
 #define NDSEPICSINTERFACEIMPL_H
 
@@ -93,3 +95,5 @@ private:
 }
 
 #endif // NDSEPICSINTERFACEIMPL_H
+
+#endif // NDS3_EPICS

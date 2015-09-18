@@ -21,7 +21,7 @@ public:
 
     virtual void read(timespec* pTimestamp, T* pValue);
 
-    virtual void write(const timespec timestamp, const T& value);
+    virtual void write(const timespec& timestamp, const T& value);
 
     virtual dataType_t getDataType();
 

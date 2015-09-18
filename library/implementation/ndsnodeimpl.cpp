@@ -39,7 +39,7 @@ void NodeImpl::initialize()
     }
 }
 
-state_t NodeImpl::getLocalState()
+state_t NodeImpl::getLocalState() const
 {
     if(m_pStateMachine.get() == 0)
     {
@@ -48,19 +48,19 @@ state_t NodeImpl::getLocalState()
     return m_pStateMachine->getLocalState();
 }
 
-state_t NodeImpl::getGlobalState()
+state_t NodeImpl::getGlobalState() const
 {
     if(m_pStateMachine.get() == 0)
     {
-        return state_t::unknown;
+        return getChildrenState();
     }
     return m_pStateMachine->getGlobalState();
 }
 
-state_t NodeImpl::getChildrenState()
+state_t NodeImpl::getChildrenState() const
 {
     state_t returnState = state_t::unknown;
-    for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
+    for(tChildren::const_iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
     {
         if(scanChildren->second.get() != m_pStateMachine.get())
         {

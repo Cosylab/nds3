@@ -15,8 +15,12 @@ PVBaseImpl::PVBaseImpl(const std::string& name): BaseImpl(name),
 
 }
 
-//template<typename T>
 void PVBaseImpl::read(timespec* /* pTimestamp */, std::int32_t* /* pValue */)
+{
+    throw;
+}
+
+void PVBaseImpl::read(timespec* /* pTimestamp */, std::uint32_t* /* pValue */)
 {
     throw;
 }
@@ -32,6 +36,11 @@ void PVBaseImpl::read(timespec* /* pTimestamp */, std::vector<std::int32_t>* /* 
 }
 
 void PVBaseImpl::write(const timespec& /* pTimestamp */, const std::int32_t& /* value */)
+{
+    throw;
+}
+
+void PVBaseImpl::write(const timespec& /* pTimestamp */, const std::uint32_t& /* value */)
 {
     throw;
 }

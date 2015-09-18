@@ -1,3 +1,5 @@
+#ifdef NDS3_EPICS
+
 #include "ndsepicsinterfaceimpl.h"
 #include "ndspvbaseimpl.h"
 #include "ndsportImpl.h"
@@ -597,3 +599,5 @@ EpicsInterfaceImpl::errorAndSize_t EpicsInterfaceImpl::getErrorString(const std:
 }
 
 }
+
+#endif

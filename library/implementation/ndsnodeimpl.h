@@ -31,9 +31,9 @@ public:
 
     virtual void initialize();
 
-    virtual state_t getLocalState();
-    virtual state_t getGlobalState();
-    state_t getChildrenState();
+    virtual state_t getLocalState() const;
+    virtual state_t getGlobalState() const;
+    state_t getChildrenState() const;
 
 private:
 

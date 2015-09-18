@@ -1,6 +1,7 @@
 #ifndef NDS3_DEFINITIONS_H
 #define NDS3_DEFINITIONS_H
 
+
 /**
  * @file definitions.h
  * @brief Defines all the enumeration and common types used across the NDS library.
@@ -78,26 +79,29 @@ enum class scanType_t
  *
  * PVs that have the record type set to notSpecified will not be included in the
  *  auto generated db file.
+ *
+ * Input records have the bit 7 set to 1, output records have the bit 6 set to
+ *  1.
  */
 enum class recordType_t
 {
-    notSpecified, ///< The PV's type is not specified
-    aai,          ///< Array analog input
-    aao,          ///< Array analog output
-    ai,           ///< Analog input
-    ao,           ///< Analog output
-    bi,           ///< Binary input
-    bo,           ///< Binary output
-    longin,       ///< Long input
-    longout,      ///< Long output
-    mbbi,         ///< Multi-bit binary input
-    mbbo,         ///< Multi-bit binary output
-    mbbiDirect,   ///< Multi-bit binary input direct
-    mbboDirect,   ///< Multi-bit binary output direct
-    stringIn,     ///< String input
-    stringOut,    ///< String output
-    waveformIn,   ///< Waveworm input. On EPICS db files "waveform" together with an input array type will be used
-    waveformOut   ///< Waveform output. On EPICS db files "waveform" together with an output array type will be used
+    notSpecified = 0,  ///< The PV's type is not specified
+    aao         = 64,  ///< Array analog output
+    ao          = 65,  ///< Analog output
+    bo          = 66,  ///< Binary output
+    mbbo        = 68,  ///< Multi-bit binary output
+    longout     = 67,  ///< Long output
+    mbboDirect  = 69,  ///< Multi-bit binary output direct
+    stringOut   = 70,  ///< String output
+    waveformOut = 71,  ///< Waveform output. On EPICS db files "waveform" together with an output array type will be used
+    aai         = 128, ///< Array analog input
+    ai          = 129, ///< Analog input
+    bi          = 130, ///< Binary input
+    longin      = 131, ///< Long input
+    mbbi        = 132, ///< Multi-bit binary input
+    mbbiDirect  = 133, ///< Multi-bit binary input direct
+    stringIn    = 134, ///< String input
+    waveformIn  = 135  ///< Waveworm input. On EPICS db files "waveform" together with an input array type will be used
 };
 
 /**
