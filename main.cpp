@@ -29,12 +29,12 @@ class Oscilloscope
 public:
 
     nds::Node root;
-    Oscilloscope()
+    Oscilloscope(const std::string& rootName)
     {
         // We create a device. We could use directly a port here, but for fun this device will have
         //  more than one Asyn port
         ///////////////////////////////////////////////////////////////////////////////////////////
-        root = nds::Node("Dev");
+        root = nds::Node(rootName);
 
         // We add the first port that will be registered as "Dev-MyPort".
         //////////////////////////////////////////////////////////////////////////
@@ -179,7 +179,7 @@ private:
 
 void* allocateDevice(const std::string& parameter)
 {
-    return new Oscilloscope();
+    return new Oscilloscope(parameter);
 }
 
 void deallocateDevice(void* device)
@@ -189,7 +189,7 @@ void deallocateDevice(void* device)
 
 int main(int argc,char *argv[])
 {
-    nds::Factory factory(nds::controlSystem_t::tango);
+    nds::Factory factory(nds::controlSystem_t::defaultSystem);
     factory.registerDriver("Oscilloscope", std::bind(&allocateDevice, std::placeholders::_1), std::bind(&deallocateDevice, std::placeholders::_1));
 
     //iocshCmd("dbLoadDatabase ndsTest.dbd /home/codac-dev/Documents/m-nds-test/target/main/epics/dbd");

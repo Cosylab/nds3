@@ -1,3 +1,5 @@
+#ifdef NDS3_TANGO
+
 #include "ndstangointerfaceimpl.h"
 #include "ndstangofactoryimpl.h"
 #include "ndspvbaseimpl.h"
@@ -332,5 +334,6 @@ void NdsDeviceClass::device_factory(const Tango::DevVarStringArray* dev_list)
 
 }
 
-
 }
+
+#endif

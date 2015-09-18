@@ -6,7 +6,7 @@ QMAKE_CXXFLAGS += -std=c++11 -O0 -rdynamic -fvisibility=hidden -fvisibility-inli
 DEFINES += GOINGTHERE_DLL
 DEFINES += GOINGTHERE_DLL_EXPORTS
 
-DEFINES += NDS3_TANGO
+DEFINES += NDS3_EPICS
 
 EPICS_BASE = $$(EPICS_BASE)
 EPICS_HOST_ARCH = $$(EPICS_HOST_ARCH)
@@ -15,13 +15,13 @@ LIBS_BASE = $$EPICS_BASE/lib/$$EPICS_HOST_ARCH
 LIBS_ASYN = $$EPICS_BASE/../modules/asyn/lib/$$EPICS_HOST_ARCH
 
 #EPICS libraries
-//LIBS += -L$$LIBS_BASE \
-//    -L$$LIBS_ASYN \
-//    -ldbCore -ldbRecStd -lgdd -lasyn \
-//    -lca -lcas -lCom -ldl -pthread
+LIBS += -L$$LIBS_BASE \
+    -L$$LIBS_ASYN \
+    -ldbCore -ldbRecStd -lgdd -lasyn \
+    -lca -lcas -lCom -ldl -pthread
 
 #Tango libraries
-LIBS += -L/usr/local/lib -ltango -llog4tango -lomniORB4 -lomnithread -lomniDynamic4
+//LIBS += -L/usr/local/lib -ltango -llog4tango -lomniORB4 -lomnithread -lomniDynamic4
 
 #EPICS include path
 INCLUDEPATH += $$EPICS_BASE/include \

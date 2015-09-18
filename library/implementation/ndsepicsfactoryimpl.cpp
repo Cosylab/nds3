@@ -36,8 +36,13 @@ void EpicsFactoryImpl::createNdsDevice(const iocshArgBuf * arguments)
     {
         throw;
     }
+    std::string parameter;
+    if(arguments[1].sval != 0)
+    {
+        parameter = arguments[1].sval;
+    }
     EpicsFactoryImpl::getInstance().registerRecordTypes(*iocshPpdbbase);
-    EpicsFactoryImpl::getInstance().createDriver(arguments[0].sval, "");
+    EpicsFactoryImpl::getInstance().createDriver(arguments[0].sval, parameter);
 }
 
 }
@@ -53,9 +58,9 @@ EpicsFactoryImpl::EpicsFactoryImpl()
 {
     iocshRegisterCommon();
 
-    static const iocshArg nameArgument = {"name", iocshArgString};
-    //static const iocshArg pdbbaseArgument = {"pdbbase", iocshArgPdbbase};
-    static const iocshArg* commandArguments[] = {&nameArgument};
+    static const iocshArg nameArgument = {"driver", iocshArgString};
+    static const iocshArg parameterArgument = {"parameter", iocshArgString};
+    static const iocshArg* commandArguments[] = {&nameArgument, &parameterArgument};
 
     static const std::string commandName("createNdsDevice");
     m_commandDefinition.arg = commandArguments;
@@ -72,7 +77,6 @@ InterfaceBaseImpl* EpicsFactoryImpl::getNewInterface(const std::string& fullName
 
 void EpicsFactoryImpl::run(int argc,char *argv[])
 {
-    iocshCmd("iocInit");
     iocsh(0);
 }
 

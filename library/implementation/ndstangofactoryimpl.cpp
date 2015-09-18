@@ -1,3 +1,5 @@
+#ifdef NDS3_TANGO
+
 #include "ndstangofactoryimpl.h"
 #include "ndstangointerfaceimpl.h"
 
@@ -51,5 +53,7 @@ void TangoFactoryImpl::registerDriversWithTango(Tango::DServer* pDServer)
 
 
 }
+
 }
 
+#endif
