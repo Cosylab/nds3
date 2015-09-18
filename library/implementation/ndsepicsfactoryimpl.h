@@ -1,3 +1,5 @@
+#ifdef NDS3_EPICS
+
 #ifndef NDSFACTORYIMPL_CPP
 #define NDSFACTORYIMPL_CPP
 
@@ -31,7 +33,7 @@ public:
 
     virtual InterfaceBaseImpl* getNewInterface(const std::string& fullName);
 
-    virtual void run();
+    virtual void run(int argc,char *argv[]);
 
 private:
     void registerRecordTypes(DBBASE* pDatabase);
@@ -83,3 +85,5 @@ public:
 
 }
 #endif // NDSFACTORYIMPL_CPP
+
+#endif // NDS3_EPICS

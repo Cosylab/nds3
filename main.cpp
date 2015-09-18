@@ -10,9 +10,7 @@
 #include <unistd.h>
 
 #include "library/include/nds3/nds3.h"
-#include "iocsh.h"
-
-//using namespace std;
+//#include "iocsh.h"
 
 
 /**
@@ -189,14 +187,14 @@ void deallocateDevice(void* device)
     delete (Oscilloscope*)device;
 }
 
-int main()
+int main(int argc,char *argv[])
 {
-    nds::Factory factory(nds::controlSystem_t::epics);
+    nds::Factory factory(nds::controlSystem_t::tango);
     factory.registerDriver("Oscilloscope", std::bind(&allocateDevice, std::placeholders::_1), std::bind(&deallocateDevice, std::placeholders::_1));
 
-    iocshCmd("dbLoadDatabase ndsTest.dbd /home/codac-dev/Documents/m-nds-test/target/main/epics/dbd");
-    iocshCmd("createNdsDevice Oscilloscope");
+    //iocshCmd("dbLoadDatabase ndsTest.dbd /home/codac-dev/Documents/m-nds-test/target/main/epics/dbd");
+    //iocshCmd("createNdsDevice Oscilloscope");
 
-    factory.run();
+    factory.run(argc, argv);
 }
 

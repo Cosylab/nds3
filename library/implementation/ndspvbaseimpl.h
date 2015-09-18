@@ -24,10 +24,12 @@ public:
     // will function correctly.
     ////////////////////////////////////////////////////////////
     virtual void read(timespec* pTimestamp, std::int32_t* pValue);
+    virtual void read(timespec* pTimestamp, std::uint32_t* pValue);
     virtual void read(timespec* pTimestamp, double* pValue);
     virtual void read(timespec* pTimestamp, std::vector<std::int32_t>* pValue);
 
     virtual void write(const timespec& timestamp, const std::int32_t& value);
+    virtual void write(const timespec& timestamp, const std::uint32_t& value);
     virtual void write(const timespec& timestamp, const double& value);
     virtual void write(const timespec& timestamp, const std::vector<std::int32_t>& value);
 

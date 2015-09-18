@@ -4,7 +4,7 @@ namespace nds
 {
 
 template <typename T>
-PVVariableImpl<T>::PVVariableImpl(const std::string& name): PVBaseImpl(name)
+PVVariableImpl<T>::PVVariableImpl(const std::string& name): PVBaseImpl(name), m_value()
 {
     m_timestamp.tv_sec = 0;
     m_timestamp.tv_nsec = 0;
@@ -20,7 +20,7 @@ void PVVariableImpl<T>::read(timespec* pTimestamp, T* pValue)
 }
 
 template <typename T>
-void PVVariableImpl<T>::write(const timespec timestamp, const T& value)
+void PVVariableImpl<T>::write(const timespec& timestamp, const T& value)
 {
     std::unique_lock<std::mutex> lock(m_pvMutex);
     m_value =value;

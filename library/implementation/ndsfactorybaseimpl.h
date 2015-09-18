@@ -13,6 +13,7 @@ class InterfaceBaseImpl;
 
 class FactoryBaseImpl
 {
+    friend class InterfaceBaseImpl;
 public:
     virtual ~FactoryBaseImpl();
 
@@ -20,12 +21,13 @@ public:
 
     virtual InterfaceBaseImpl* getNewInterface(const std::string& fullName) = 0;
 
-    virtual void run() = 0;
+    virtual void run(int argc,char *argv[]) = 0;
+
+    void* createDriver(const std::string& name, const std::string& parameter);
+
+
 
 protected:
-    void createDriver(const std::string& name, const std::string& parameter);
-
-private:
 
     typedef std::map<std::string, std::pair<allocateDriver_t, deallocateDriver_t> > driverAllocDeallocMap_t;
     driverAllocDeallocMap_t m_driversAllocDealloc;

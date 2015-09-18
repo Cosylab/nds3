@@ -1,3 +1,5 @@
+#ifdef NDS3_EPICS
+
 #include <epicsStdlib.h>
 #include <iocshRegisterCommon.h>
 #include <registryCommon.h>
@@ -68,7 +70,7 @@ InterfaceBaseImpl* EpicsFactoryImpl::getNewInterface(const std::string& fullName
 }
 
 
-void EpicsFactoryImpl::run()
+void EpicsFactoryImpl::run(int argc,char *argv[])
 {
     iocshCmd("iocInit");
     iocsh(0);
@@ -265,7 +267,6 @@ void* DynamicModule::getAddress(const std::string& name)
 }
 
 
-
-
-
 }
+
+#endif // NDS3_EPICS
