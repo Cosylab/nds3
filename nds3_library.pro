@@ -1,7 +1,21 @@
-TEMPLATE = app
+TEMPLATE = lib
 QT -= qt
 
+CONFIG += dll
+
+# Target that includes the dbd file into a cpp file
+# Define how to create version.h
+#dbd.target = dbd.h
+#dbd.commands = sed "s/\"/\\\"/g" < dbd/dbdfile.dbd > dbd/tempdbdfile.dbd && \
+#               sed "s/\"/\\\"/g" < dbd/dbdfile.dbd > dbd/tempdbdfile.dbd && \
+#dbd.depends = FORCE
+
+#QMAKE_EXTRA_TARGETS += dbd
+
+#PRE_TARGETDEPS += dbd.h
+
 QMAKE_CXXFLAGS += -std=c++0x -O0 -rdynamic -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -pedantic
+QMAKE_LFLAGS += -Wl,-rpath,$$LIBS_BASE|$$LIBS_ASYN
 
 DEFINES += NDS3_DLL
 DEFINES += NDS3_DLL_EXPORTS
@@ -29,7 +43,7 @@ epics:INCLUDEPATH += $$EPICS_BASE/include \
 
 tango:INCLUDEPATH += /usr/local/include/tango /usr/include/omniORB4
 
-SOURCES += main.cpp \
+SOURCES +=\
     library/implementation/ndsbaseimpl.cpp \
     library/implementation/ndsnodeimpl.cpp \
     library/implementation/ndsbase.cpp \
