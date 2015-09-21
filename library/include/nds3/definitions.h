@@ -65,11 +65,14 @@ enum class dataType_t
     dataString
 };
 
+/**
+ * @brief Specify how to get the PV value.
+ */
 enum class scanType_t
 {
-    periodic,
-    passive,
-    interrupt
+    periodic, ///< The control system polls the value with a specified frequency
+    passive,  ///< The control system polls the value only when needed
+    interrupt ///< The device server pushes the value to the control system when it changes
 };
 
 /**
@@ -104,6 +107,7 @@ enum class recordType_t
     waveformIn  = 135  ///< Waveworm input. On EPICS db files "waveform" together with an input array type will be used
 };
 
+
 /**
  * @brief Definition for the function executed to allocate a driver.
  *
@@ -113,7 +117,15 @@ enum class recordType_t
  */
 typedef std::function<void*(const std::string& parameter)> allocateDriver_t;
 
+
+/**
+ * @brief Definition for the function executed to deallocate a driver.
+ *
+ * Takes a pointer to the allocated driver.
+ *
+ */
 typedef std::function<void (void*)> deallocateDriver_t;
+
 
 /**
  * @brief Definition for the function executed during the state transition.
@@ -123,6 +135,7 @@ typedef std::function<void (void*)> deallocateDriver_t;
  *  is thrown which cause a rollback to the previous state.
  */
 typedef std::function<void ()> stateChange_t;
+
 
 /**
  * @brief Definition for a function called to allow or deny a state transition.
@@ -140,12 +153,14 @@ typedef std::function<void ()> stateChange_t;
  */
 typedef std::function<bool (const state_t, const state_t, const state_t)> allowChange_t;
 
+
 /**
  * @brief Definition for a function called to retrieve a time.
  *
  * The function should return the UNIX epoch (seconds and nanoseconds).
  */
 typedef std::function<timespec ()> getTimestampPlugin_t;
+
 
 /**
  * @brief List of strings used for enumeration in PVs that support

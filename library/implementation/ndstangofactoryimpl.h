@@ -14,7 +14,7 @@ class InterfaceBaseImpl;
 class NdsDevice;
 
 /**
- * @brief Takes care of registering everything with EPICS
+ * @brief Takes care of registering everything with Tango
  *
  */
 class TangoFactoryImpl: public FactoryBaseImpl

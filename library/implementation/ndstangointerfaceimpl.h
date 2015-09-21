@@ -18,14 +18,12 @@ class NdsDevice;
 
 /**
  * @internal
- * @brief The AsynInterface class. Allocated by AsynPort
- *        to communicate with the AsynDriver
+ * @brief Tango interface class: used by Port objects to communicate
+ *        with Tango
  */
 class TangoInterfaceImpl: public InterfaceBaseImpl
 {
 public:
-    typedef std::list<std::shared_ptr<PVBaseImpl> > PVList_t;
-
     TangoInterfaceImpl(const std::string& portName, NdsDevice* pDevice);
 
     virtual void registerPV(std::shared_ptr<PVBaseImpl> pv);
@@ -37,14 +35,15 @@ public:
     virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int32_t> & value);
 
 private:
-    PVList_t m_registeredPVs;
-
     NdsDevice* m_pDevice;
 
-    std::shared_ptr<PVBaseImpl> m_lastRegisteredPV;
 };
 
 
+/**
+ * @internal
+ * @brief Describes a Tango device and takes care of allocating it.
+ */
 class NdsDeviceClass: public Tango::DeviceClass
 {
 public:
@@ -62,6 +61,13 @@ protected:
 };
 
 
+/**
+ * @internal
+ * @brief Overwrites the Tango Device class and implements the necessary virtual
+ *        functions.
+ *
+ * Used by TangoInterfaceImpl to communicate with Tango.
+ */
 class NdsDevice: public TANGO_BASE_CLASS
 {
 public:
@@ -80,8 +86,29 @@ protected:
 };
 
 
+/**
+ * @internal
+ * @brief Base class for NdsAttributeScalar and NdsAttributeSpectrum.
+ *
+ */
 class NdsAttributeBase
 {
+public:
+
+    /**
+     * @brief Convert the NDS timestamp to a Tango timestamp.
+     * @param time  timestamp in NDS format
+     * @return      timestamp in Tango format
+     */
+    static timeval NDSTimeToTangoTime(const timespec& time);
+
+    /**
+     * @brief Convert the Tango timestamp to NDS timestamp.
+     * @param time  timestamp in Tango format
+     * @return      timestamp in NDS format
+     */
+    static timespec TangoTimeToNDSTime(const timeval& time);
+
 protected:
     NdsAttributeBase(std::shared_ptr<PVBaseImpl> pv);
 
@@ -89,14 +116,14 @@ protected:
 
     std::shared_ptr<PVBaseImpl> m_pPV;
 
-    static timeval NDSTimeToTangoTime(const timespec& time);
-    static timespec TangoTimeToNDSTime(const timeval& time);
 };
 
+
 /**
- * @brief NDS<->Tango attribute proxy
+ * @brief NDS to Tango attribute proxy for scalar values
  *
  */
+template <typename ndsType_t, typename tangoType_t>
 class NdsAttributeScalar: public NdsAttributeBase, public Tango::Attr
 {
 public:
@@ -107,14 +134,19 @@ public:
     virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty);
 
 private:
-    template<typename NdsType_t, typename TangoType_t>
     void readValue(Tango::Attribute &att);
 
-    template<typename NdsType_t, typename TangoType_t>
-    void writeValue(Tango::Attribute &att, const TangoType_t& value);
+    void writeValue(Tango::Attribute &att, const tangoType_t& value);
+
+    tangoType_t m_value;
 };
 
 
+/**
+ * @brief NDS to Tango attribute proxy for spectrum values
+ *
+ */
+template <typename ndsType_t, typename tangoType_t>
 class NdsAttributeSpectrum: public NdsAttributeBase, public Tango::SpectrumAttr
 {
 public:
@@ -125,11 +157,11 @@ public:
     virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty);
 
 private:
-    template<typename NdsType_t, typename TangoType_t>
     void readValue(Tango::Attribute &att);
 
-    template<typename NdsType_t, typename TangoType_t>
-    void writeValue(Tango::Attribute &att, const TangoType_t& value);
+    void writeValue(Tango::Attribute &att, const tangoType_t& value);
+
+    std::vector<tangoType_t> m_value;
 };
 
 /**

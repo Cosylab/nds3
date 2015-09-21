@@ -10,7 +10,6 @@ namespace nds
 
 class FactoryBaseImpl;
 
-
 /**
  * @brief Communicates with a static instance of the control system.
  *
@@ -55,6 +54,9 @@ public:
      * @brief Launches a loop that communicate with the control system.
      *
      * The loop terminates only when the application must exit.
+     *
+     * @param argc  the argc parameter received by the main() function
+     * @param argv  the argv parameter received by the main() function
      */
     virtual void run(int argc,char *argv[]);
 

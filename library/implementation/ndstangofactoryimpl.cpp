@@ -32,8 +32,20 @@ void TangoFactoryImpl::run(int argc,char *argv[])
     m_pTangoUtil = Tango::Util::init(argc, argv);
 
     Tango::DServer::register_class_factory(class_factory);
-    m_pTangoUtil->server_init(false);
-    m_pTangoUtil->server_run();
+    try
+    {
+        m_pTangoUtil->server_init(false);
+        m_pTangoUtil->server_run();
+    }
+    catch(const Tango::DevFailed& exception)
+    {
+        Tango::DevErrorList errors = exception.errors;
+        for(int scanErrors(0); scanErrors != errors.length(); ++scanErrors)
+        {
+            Tango::DevError error = errors[scanErrors];
+            std::cout << errors[scanErrors].reason << std::endl;
+        }
+    }
 }
 
 void TangoFactoryImpl::class_factory(Tango::DServer* pDServer)

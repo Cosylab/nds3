@@ -23,6 +23,8 @@ public:
     // Only the overwritten ones in the AsynPV or AsynDelegatePV
     // will function correctly.
     ////////////////////////////////////////////////////////////
+    virtual void read(timespec* pTimestamp, std::uint8_t* pValue);
+    virtual void read(timespec* pTimestamp, std::int8_t* pValue);
     virtual void read(timespec* pTimestamp, std::int32_t* pValue);
     virtual void read(timespec* pTimestamp, std::uint32_t* pValue);
     virtual void read(timespec* pTimestamp, double* pValue);
