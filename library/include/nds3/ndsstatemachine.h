@@ -32,6 +32,8 @@ class NDS3_API StateMachine: public Node
 {
 
 public:
+    StateMachine();
+
     /**
      * @brief Construct the state machine.
      *

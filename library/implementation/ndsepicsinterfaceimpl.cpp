@@ -273,6 +273,9 @@ void EpicsInterfaceImpl::registrationTerminated()
     std::string command("dbLoadDatabase ");
     command += tmpFileName;
     iocshCmd(command.c_str());
+
+    iocshCmd("iocInit");
+
 }
 
 void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int32_t& value)

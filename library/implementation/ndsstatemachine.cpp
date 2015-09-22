@@ -3,6 +3,10 @@
 
 namespace nds
 {
+StateMachine::StateMachine()
+{
+
+}
 
 StateMachine::StateMachine(bool bAsync,
                            stateChange_t switchOnFunction,

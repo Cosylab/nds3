@@ -20,6 +20,7 @@
 #include "ndspvvariable.h"
 #include "ndsdataacquisition.h"
 #include "ndsfactory.h"
+#include "ndsstatemachine.h"
 
 
 #endif // NDS3_H

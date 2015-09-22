@@ -1,30 +1,42 @@
 TEMPLATE = lib
 QT -= qt
-
 CONFIG += dll
+TARGET = nds3
 
 # Target that includes the dbd file into a cpp file
-# Define how to create version.h
-#dbd.target = dbd.h
-#dbd.commands = sed "s/\"/\\\"/g" < dbd/dbdfile.dbd > dbd/tempdbdfile.dbd && \
-#               sed "s/\"/\\\"/g" < dbd/dbdfile.dbd > dbd/tempdbdfile.dbd && \
-#dbd.depends = FORCE
+# Define how to create dbd.h
+dbd.target = dbd.h
+dbd.commands = echo \'static const char dbdfile[] = {\' > $$PWD/library/dbd/dbdfile.h && \
+               xxd -i < $$PWD/library/dbd/dbdfile.dbd >> $$PWD/library/dbd/dbdfile.h && \
+               echo \'};\' >> $$PWD/library/dbd/dbdfile.h
+dbd.depends = FORCE
 
-#QMAKE_EXTRA_TARGETS += dbd
+QMAKE_EXTRA_TARGETS += dbd
 
-#PRE_TARGETDEPS += dbd.h
+PRE_TARGETDEPS += dbd.h
 
-QMAKE_CXXFLAGS += -std=c++0x -O0 -rdynamic -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -pedantic
-QMAKE_LFLAGS += -Wl,-rpath,$$LIBS_BASE|$$LIBS_ASYN
-
-DEFINES += NDS3_DLL
-DEFINES += NDS3_DLL_EXPORTS
-
+# Find EPICS libraries position
+#------------------------------
 epics:EPICS_BASE = $$(EPICS_BASE)
 epics:EPICS_HOST_ARCH = $$(EPICS_HOST_ARCH)
 
 epics:LIBS_BASE = $$EPICS_BASE/lib/$$EPICS_HOST_ARCH
 epics:LIBS_ASYN = $$EPICS_BASE/../modules/asyn/lib/$$EPICS_HOST_ARCH
+
+# Library flags
+#--------------
+QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic -fPIC -pthread -fvisibility=hidden -fvisibility-inlines-hidden
+QMAKE_LFLAGS += -fPIC -Wl,-as-needed
+
+# Epics only library flags
+#-------------------------
+epics: QMAKE_LFLAGS += -Wl,-rpath,$$LIBS_BASE
+epics: QMAKE_LFLAGS += -Wl,-rpath,$$LIBS_ASYN
+
+# We are building the library, export symbols
+#--------------------------------------------
+DEFINES += NDS3_DLL
+DEFINES += NDS3_DLL_EXPORTS
 
 epics:DEFINES += NDS3_EPICS
 tango:DEFINES += NDS3_TANGO
@@ -32,7 +44,7 @@ tango:DEFINES += NDS3_TANGO
 epics:LIBS += -L$$LIBS_BASE \
     -L$$LIBS_ASYN \
     -ldbCore -ldbRecStd -lgdd -lasyn \
-    -lca -lcas -lCom -ldl -pthread
+    -lca -lcas -lCom -ldl
 
 tango:LIBS += -L/usr/local/lib -ltango -llog4tango -lomniORB4 -lomnithread -lomniDynamic4
 

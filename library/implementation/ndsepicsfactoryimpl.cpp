@@ -10,6 +10,7 @@
 #include "../include/nds3/ndsbase.h"
 
 #include <iostream>
+#include <fstream>
 #include "/usr/include/link.h"
 #include <elf.h>
 #include <dlfcn.h>
@@ -17,6 +18,9 @@
 #include <set>
 #include <string>
 #include "scansymbols.h"
+
+// Include embedded dbd file
+#include "../dbd/dbdfile.h"
 
 typedef void (*reg_func)(void);
 epicsShareExtern reg_func pvar_func_arrInitialize, pvar_func_asSub,
@@ -41,7 +45,6 @@ void EpicsFactoryImpl::createNdsDevice(const iocshArgBuf * arguments)
     {
         parameter = arguments[1].sval;
     }
-    EpicsFactoryImpl::getInstance().registerRecordTypes(*iocshPpdbbase);
     EpicsFactoryImpl::getInstance().createDriver(arguments[0].sval, parameter);
 }
 
@@ -56,8 +59,6 @@ EpicsFactoryImpl& EpicsFactoryImpl::getInstance()
 
 EpicsFactoryImpl::EpicsFactoryImpl()
 {
-    iocshRegisterCommon();
-
     static const iocshArg nameArgument = {"driver", iocshArgString};
     static const iocshArg parameterArgument = {"parameter", iocshArgString};
     static const iocshArg* commandArguments[] = {&nameArgument, &parameterArgument};
@@ -77,6 +78,24 @@ InterfaceBaseImpl* EpicsFactoryImpl::getNewInterface(const std::string& fullName
 
 void EpicsFactoryImpl::run(int argc,char *argv[])
 {
+    iocshRegisterCommon();
+
+    // Save and load the dbd file
+    /////////////////////////////
+    char tmpBuffer[L_tmpnam];
+
+    std::string tmpFileName(tmpnam_r(tmpBuffer));
+
+    std::string fileName(tmpFileName);
+    std::ofstream outputStream(fileName.c_str());
+    outputStream.write(dbdfile, sizeof(dbdfile));
+
+    std::string command("dbLoadDatabase ");
+    command += tmpFileName;
+    iocshCmd(command.c_str());
+
+    registerRecordTypes(*iocshPpdbbase);
+
     iocsh(0);
 }
 
