@@ -29,7 +29,7 @@ public:
 
     void addChild(std::shared_ptr<BaseImpl> pChild);
 
-    virtual void initialize();
+    virtual void initialize(FactoryBaseImpl& controlSystem);
 
     virtual state_t getLocalState() const;
     virtual state_t getGlobalState() const;

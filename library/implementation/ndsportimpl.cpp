@@ -7,7 +7,7 @@ namespace nds
 {
 
 
-PortImpl::PortImpl(const std::string& name, FactoryBaseImpl& controlSystem): NodeImpl(name), m_pFactory(&controlSystem)
+PortImpl::PortImpl(const std::string& name): NodeImpl(name)
 {
 }
 
@@ -27,13 +27,13 @@ std::string PortImpl::getFullNameFromPort() const
     return "";
 }
 
-void PortImpl::initialize()
+void PortImpl::initialize(FactoryBaseImpl& controlSystem)
 {
     if(m_pInterface.get() == 0)
     {
-        m_pInterface.reset(m_pFactory->getNewInterface(getFullName()));
+        m_pInterface.reset(controlSystem.getNewInterface(getFullName()));
     }
-    NodeImpl::initialize();
+    NodeImpl::initialize(controlSystem);
 
     m_pInterface->registrationTerminated();
 }

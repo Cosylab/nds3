@@ -146,7 +146,7 @@ const enumerationStrings_t& PVBaseImpl::getEnumerations()
     return m_enumeration;
 }
 
-void PVBaseImpl::initialize()
+void PVBaseImpl::initialize(FactoryBaseImpl& controlSystem)
 {
     getPort()->registerPV(std::static_pointer_cast<PVBaseImpl>(shared_from_this()));
 }

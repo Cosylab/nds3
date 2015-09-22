@@ -1,6 +1,8 @@
 #include "../include/nds3/ndsbase.h"
 #include "../include/nds3/ndsport.h"
+#include "../include/nds3/ndsfactory.h"
 #include "ndsbaseimpl.h"
+#include "ndsfactorybaseimpl.h"
 
 namespace nds
 {
@@ -50,9 +52,17 @@ std::string Base::getFullNameFromPort() const
     return m_pImplementation->getFullNameFromPort();
 }
 
-void Base::initialize()
+void Base::initialize(void* pDeviceObject, const controlSystem_t controlSystem /*  = controlSystem_t::default */)
 {
-    m_pImplementation->initialize();
+    if(m_pImplementation->getParent().get() != 0)
+    {
+        throw std::logic_error("You can initialize only the root nodes");
+    }
+
+    FactoryBaseImpl* pFactory = Factory(controlSystem).m_pFactory;
+    m_pImplementation->initialize(*pFactory);
+
+    pFactory->holdNode(pDeviceObject, m_pImplementation);
 }
 
 timespec Base::getTimestamp() const

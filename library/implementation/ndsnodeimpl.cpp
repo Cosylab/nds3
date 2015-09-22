@@ -27,7 +27,7 @@ void NodeImpl::addChild(std::shared_ptr<BaseImpl> pChild)
     }
 }
 
-void NodeImpl::initialize()
+void NodeImpl::initialize(FactoryBaseImpl& controlSystem)
 {
     for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
     {
@@ -35,7 +35,7 @@ void NodeImpl::initialize()
     }
     for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
     {
-        scanChildren->second->initialize();
+        scanChildren->second->initialize(controlSystem);
     }
 }
 

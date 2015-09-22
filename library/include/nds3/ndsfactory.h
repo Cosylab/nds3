@@ -20,7 +20,7 @@ class FactoryBaseImpl;
  */
 class NDS3_API Factory
 {
-    friend class Port;
+    friend class Base;
 public:
     /**
      * @brief Allocate a factory object that communicates with the control system

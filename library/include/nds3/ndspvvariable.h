@@ -19,10 +19,10 @@ namespace nds
 template <typename T>
 class NDS3_API PVVariable: public PVBase
 {
-protected:
+public:
+
     PVVariable();
 
-public:
     /**
      * @brief Construct the PVVariable object.
      *

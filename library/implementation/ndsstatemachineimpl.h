@@ -29,7 +29,7 @@ public:
 
     ~StateMachineImpl();
 
-    virtual void initialize();
+    virtual void initialize(FactoryBaseImpl& controlSystem);
 
     /**
      * @brief Instructs the state machine to start the transition to another state.

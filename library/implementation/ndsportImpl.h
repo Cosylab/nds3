@@ -24,7 +24,7 @@ public:
      *
      * @param port's name. Used also as port name in the AsynDriver
      */
-    PortImpl(const std::string& name, FactoryBaseImpl& controlSystem);
+    PortImpl(const std::string& name);
 
     virtual ~PortImpl();
 
@@ -37,7 +37,7 @@ public:
 
     virtual std::string getFullNameFromPort() const;
 
-    virtual void initialize();
+    virtual void initialize(FactoryBaseImpl& controlSystem);
 
     void registerPV(std::shared_ptr<PVBaseImpl> pv);
 
@@ -49,8 +49,6 @@ private:
 
     typedef std::map<int, std::shared_ptr<PVBaseImpl> > tRecords;
     tRecords m_records;
-
-    FactoryBaseImpl* m_pFactory;
 };
 
 }

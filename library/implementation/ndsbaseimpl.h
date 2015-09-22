@@ -15,6 +15,7 @@ namespace nds
 
 class NodeImpl;
 class PortImpl;
+class FactoryBaseImpl;
 
 /**
  * @internal
@@ -82,7 +83,7 @@ public:
      * On EPICS it will create all the PVs and register them with the AsynDriver,
      * on Tango will create the dynamic attributes.
      */
-    virtual void initialize() = 0;
+    virtual void initialize(FactoryBaseImpl& controlSystem) = 0;
 
     /**
      * @brief Return the current time.

@@ -4,6 +4,11 @@
 namespace nds
 {
 
+PVBase::PVBase()
+{
+
+}
+
 PVBase::PVBase(std::shared_ptr<PVBaseImpl> pvImpl): Base(std::static_pointer_cast<BaseImpl>(pvImpl))
 {
 

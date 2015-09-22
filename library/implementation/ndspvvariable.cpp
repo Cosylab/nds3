@@ -8,6 +8,12 @@ namespace nds
 {
 
 template <typename T>
+PVVariable<T>::PVVariable()
+{
+
+}
+
+template <typename T>
 PVVariable<T>::PVVariable(const std::string& name):
     PVBase(std::shared_ptr<PVBaseImpl>(new PVVariableImpl<T>(name)))
 {}

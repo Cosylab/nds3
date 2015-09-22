@@ -17,10 +17,9 @@ class PVBaseImpl;
  */
 class NDS3_API PVBase: public Base
 {
-protected:
+public:
     PVBase();
 
-public:
 #ifndef SWIG
     PVBase(std::shared_ptr<PVBaseImpl> pvImpl);
 #endif

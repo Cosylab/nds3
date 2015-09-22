@@ -4,12 +4,13 @@
 #include "../include/nds3/definitions.h"
 #include <map>
 #include <mutex>
-
+#include <memory>
 
 namespace nds
 {
 
 class InterfaceBaseImpl;
+class BaseImpl;
 
 class FactoryBaseImpl
 {
@@ -25,6 +26,8 @@ public:
 
     void* createDriver(const std::string& name, const std::string& parameter);
 
+    void holdNode(void* pDeviceObject, std::shared_ptr<BaseImpl> pHoldNode);
+
 
 
 protected:
@@ -32,10 +35,13 @@ protected:
     typedef std::map<std::string, std::pair<allocateDriver_t, deallocateDriver_t> > driverAllocDeallocMap_t;
     driverAllocDeallocMap_t m_driversAllocDealloc;
 
-    typedef std::multimap<std::string, void*> allocatedDrivers_t;
-    allocatedDrivers_t m_allocatedDrivers;
+    typedef std::multimap<std::string, void*> allocatedDevices_t;
+    allocatedDevices_t m_allocatedDevices;
 
-    std::mutex m_mutex;
+    typedef std::map<void*, std::list<std::shared_ptr<BaseImpl> > > heldNodes_t;
+    heldNodes_t m_heldNodes;
+
+    std::recursive_mutex m_mutex;
 
 };
 

@@ -76,7 +76,7 @@ InterfaceBaseImpl* EpicsFactoryImpl::getNewInterface(const std::string& fullName
 }
 
 
-void EpicsFactoryImpl::run(int argc,char *argv[])
+void EpicsFactoryImpl::run(int argc,char * argv[])
 {
     iocshRegisterCommon();
 

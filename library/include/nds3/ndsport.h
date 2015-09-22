@@ -28,9 +28,8 @@ public:
      *
      * @param port's name. The port name is linked to the parents' names to form
      *        the identifier used to register the AsynPort.
-     * @param the type of control system to which this port must communicate
      */
-    Port(const std::string& name, const controlSystem_t controlSystemType = controlSystem_t::defaultSystem);
+    Port(const std::string& name);
 
 };
 

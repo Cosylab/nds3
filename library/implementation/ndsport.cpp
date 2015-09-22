@@ -10,8 +10,8 @@ Port::Port(std::shared_ptr<PortImpl> portImpl): Node(std::static_pointer_cast<No
 {
 }
 
-Port::Port(const std::string &name, const controlSystem_t controlSystem /*  = controlSystem_t::default */):
-    Node(std::shared_ptr<NodeImpl>(new PortImpl(name, *(Factory(controlSystem).m_pFactory))))
+Port::Port(const std::string &name):
+    Node(std::shared_ptr<NodeImpl>(new PortImpl(name)))
 {
 }
 

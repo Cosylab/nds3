@@ -38,7 +38,7 @@ public:
     template<typename T>
     void push(const timespec& timestamp, const T& value);
 
-    virtual void initialize();
+    virtual void initialize(FactoryBaseImpl& controlSystem);
 
     /**
      * @brief Return the PV's data type.

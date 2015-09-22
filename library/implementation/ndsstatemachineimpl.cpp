@@ -73,9 +73,9 @@ StateMachineImpl::~StateMachineImpl()
     }
 }
 
-void StateMachineImpl::initialize()
+void StateMachineImpl::initialize(FactoryBaseImpl& controlSystem)
 {
-    NodeImpl::initialize();
+    NodeImpl::initialize(controlSystem);
 
     std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
     m_localState = state_t::off;
