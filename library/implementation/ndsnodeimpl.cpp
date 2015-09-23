@@ -39,6 +39,14 @@ void NodeImpl::initialize(FactoryBaseImpl& controlSystem)
     }
 }
 
+void NodeImpl::deinitialize()
+{
+    for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
+    {
+        scanChildren->second->deinitialize();
+    }
+}
+
 state_t NodeImpl::getLocalState() const
 {
     if(m_pStateMachine.get() == 0)

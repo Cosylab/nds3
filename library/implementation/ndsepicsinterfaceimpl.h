@@ -27,6 +27,8 @@ public:
 
     virtual void registerPV(std::shared_ptr<PVBaseImpl> pv);
 
+    virtual void deregisterPV(std::shared_ptr<PVBaseImpl> pv);
+
     virtual void registrationTerminated();
 
     virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int32_t& value);

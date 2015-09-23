@@ -254,6 +254,11 @@ void EpicsInterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
     }
 }
 
+void EpicsInterfaceImpl::deregisterPV(std::shared_ptr<PVBaseImpl> pv)
+{
+    // TODO
+}
+
 
 /*
  * Called after the registration of the PVs has been performed

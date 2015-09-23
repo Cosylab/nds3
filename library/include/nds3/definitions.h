@@ -15,6 +15,7 @@
 #include <time.h>
 #include <string>
 #include <list>
+#include <vector>
 
 namespace nds
 {

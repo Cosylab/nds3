@@ -38,6 +38,13 @@ public:
     virtual void registerPV(std::shared_ptr<PVBaseImpl> pv) = 0;
 
     /**
+     * @brief Deregister a PV (attribute) from the control system.
+     *
+     * @param pv the PV to be deregistered
+     */
+    virtual void deregisterPV(std::shared_ptr<PVBaseImpl> pv) = 0;
+
+    /**
      * @brief Called by the nodes after all the PVs have been registered.
      *        The interface may commit all the registered PV at this point or
      *        perform additional tasks.

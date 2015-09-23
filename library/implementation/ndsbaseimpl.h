@@ -86,6 +86,12 @@ public:
     virtual void initialize(FactoryBaseImpl& controlSystem) = 0;
 
     /**
+     * @brief Deregister all the records from the control system. Call this from the root node
+     *        which will take care of traversing its children and deinitialize them.
+     */
+    virtual void deinitialize() = 0;
+
+    /**
      * @brief Return the current time.
      *
      * If a delegate function has been defined with setTimestampDelegate() then call

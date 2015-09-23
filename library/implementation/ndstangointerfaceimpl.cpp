@@ -76,14 +76,32 @@ void TangoInterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
         tangoType = Tango::DEV_STRING;
         break;
     }
-    std::cout << pv->getFullName() << std::endl;
-
 
     // Find the root node and store it in the device
     std::shared_ptr<NodeImpl> rootNode;
     for(rootNode = pv->getParent(); rootNode->getParent() != 0; rootNode = rootNode->getParent())
     {}
     m_pDevice->setRootNode(rootNode);
+
+}
+
+void TangoInterfaceImpl::deregisterPV(std::shared_ptr<PVBaseImpl> pv)
+{
+    try
+    {
+        std::string attributeName(pv->getFullName());
+        std::cout << "Deregistering " << attributeName << std::endl;
+        m_pDevice->remove_attribute(attributeName, true, true);
+    }
+    catch(const Tango::DevFailed& exception)
+    {
+        Tango::DevErrorList errors = exception.errors;
+        for(int scanErrors(0); scanErrors != errors.length(); ++scanErrors)
+        {
+            Tango::DevError error = errors[scanErrors];
+            std::cout << errors[scanErrors].reason << std::endl;
+        }
+    }
 
 }
 
@@ -110,15 +128,29 @@ void TangoInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& ti
     m_pDevice->push_change_event(pv->getFullName(), (Tango::DevLong*)value.data(), tangoTimestamp, Tango::ATTR_VALID, value.size(), 0, false);
 }
 
-NdsDevice::NdsDevice(Tango::DeviceClass* pClass, string &parameter): TANGO_BASE_CLASS(pClass, parameter.c_str()), m_pClass(pClass), m_parameter(m_pClass->get_name())
+NdsDevice::NdsDevice(Tango::DeviceClass* pClass, string &parameter):
+    TANGO_BASE_CLASS(pClass, parameter.c_str()),
+    m_pClass(pClass),
+    m_parameter(m_pClass->get_name()),
+    m_pDevice(0)
 {
     init_device();
+}
+
+NdsDevice::~NdsDevice()
+{
+    delete_device();
 }
 
 void NdsDevice::init_device()
 {
     TangoFactoryImpl::getInstance().setLastCreatedDevice(this);
-    TangoFactoryImpl::getInstance().createDriver(m_pClass->get_name(), m_parameter);
+    m_pDevice = TangoFactoryImpl::getInstance().createDriver(m_pClass->get_name(), m_parameter);
+}
+
+void NdsDevice::delete_device()
+{
+    TangoFactoryImpl::getInstance().destroyDriver(m_pDevice);
 }
 
 void NdsDevice::setRootNode(std::shared_ptr<NodeImpl> pRootNode)

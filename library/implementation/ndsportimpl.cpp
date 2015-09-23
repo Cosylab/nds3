@@ -38,9 +38,23 @@ void PortImpl::initialize(FactoryBaseImpl& controlSystem)
     m_pInterface->registrationTerminated();
 }
 
+void PortImpl::deinitialize()
+{
+    if(m_pInterface.get() == 0)
+    {
+        throw std::logic_error("deinitialize called on non initialized port");
+    }
+    NodeImpl::deinitialize();
+}
+
 void PortImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
 {
     m_pInterface->registerPV(pv);
+}
+
+void PortImpl::deregisterPV(std::shared_ptr<PVBaseImpl> pv)
+{
+    m_pInterface->deregisterPV(pv);
 }
 
 template<typename T>

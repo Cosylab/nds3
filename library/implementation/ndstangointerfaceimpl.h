@@ -27,6 +27,7 @@ public:
     TangoInterfaceImpl(const std::string& portName, NdsDevice* pDevice);
 
     virtual void registerPV(std::shared_ptr<PVBaseImpl> pv);
+    virtual void deregisterPV(std::shared_ptr<PVBaseImpl> pv);
 
     virtual void registrationTerminated();
 
@@ -72,8 +73,11 @@ class NdsDevice: public TANGO_BASE_CLASS
 {
 public:
     NdsDevice(Tango::DeviceClass* pClass, string &name);
+    ~NdsDevice();
 
-    void init_device();
+    virtual void init_device();
+
+    virtual void delete_device();
 
     void setRootNode(std::shared_ptr<NodeImpl> pRootNode);
 
@@ -83,6 +87,8 @@ protected:
     Tango::DeviceClass* m_pClass;
     std::string m_parameter;
     std::shared_ptr<NodeImpl> m_pRootNode;
+
+    void* m_pDevice;
 };
 
 

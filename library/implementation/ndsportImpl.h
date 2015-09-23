@@ -39,7 +39,11 @@ public:
 
     virtual void initialize(FactoryBaseImpl& controlSystem);
 
+    virtual void deinitialize();
+
     void registerPV(std::shared_ptr<PVBaseImpl> pv);
+
+    void deregisterPV(std::shared_ptr<PVBaseImpl> pv);
 
     template<typename T>
     void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const T& value);

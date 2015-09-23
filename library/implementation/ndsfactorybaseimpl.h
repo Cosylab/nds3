@@ -26,6 +26,8 @@ public:
 
     void* createDriver(const std::string& name, const std::string& parameter);
 
+    void destroyDriver(void* pDevice);
+
     void holdNode(void* pDeviceObject, std::shared_ptr<BaseImpl> pHoldNode);
 
 
@@ -38,7 +40,8 @@ protected:
     typedef std::multimap<std::string, void*> allocatedDevices_t;
     allocatedDevices_t m_allocatedDevices;
 
-    typedef std::map<void*, std::list<std::shared_ptr<BaseImpl> > > heldNodes_t;
+    typedef std::list<std::shared_ptr<BaseImpl> > nodesList_t;
+    typedef std::map<void*, nodesList_t> heldNodes_t;
     heldNodes_t m_heldNodes;
 
     std::recursive_mutex m_mutex;

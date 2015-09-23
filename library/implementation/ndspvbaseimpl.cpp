@@ -151,5 +151,11 @@ void PVBaseImpl::initialize(FactoryBaseImpl& controlSystem)
     getPort()->registerPV(std::static_pointer_cast<PVBaseImpl>(shared_from_this()));
 }
 
+void PVBaseImpl::deinitialize()
+{
+    getPort()->deregisterPV(std::static_pointer_cast<PVBaseImpl>(shared_from_this()));
+}
+
+
 
 }

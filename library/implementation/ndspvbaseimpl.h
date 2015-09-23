@@ -40,6 +40,8 @@ public:
 
     virtual void initialize(FactoryBaseImpl& controlSystem);
 
+    virtual void deinitialize();
+
     /**
      * @brief Return the PV's data type.
      *
