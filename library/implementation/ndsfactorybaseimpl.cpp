@@ -29,7 +29,7 @@ void* FactoryBaseImpl::createDriver(const std::string& name, const std::string& 
 
     void* driver = m_driversAllocDealloc[name].first(parameter);
 
-    m_allocatedDevices.emplace(std::pair<std::string, void*> (name, driver));
+    m_allocatedDevices.insert(std::pair<std::string, void*> (name, driver));
 
     return driver;
 }
