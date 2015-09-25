@@ -6,9 +6,9 @@ TARGET = nds3
 # Target that includes the dbd file into a cpp file
 # Define how to create dbd.h
 dbd.target = dbd.h
-dbd.commands = echo \'static const char dbdfile[] = {\' > $$PWD/library/dbd/dbdfile.h && \
-               xxd -i < $$PWD/library/dbd/dbdfile.dbd >> $$PWD/library/dbd/dbdfile.h && \
-               echo \'};\' >> $$PWD/library/dbd/dbdfile.h
+dbd.commands = echo \'static const char dbdfile[] = {\' > $$PWD/dbd/dbdfile.h && \
+               xxd -i < $$PWD/dbd/dbdfile.dbd >> $$PWD/dbd/dbdfile.h && \
+               echo \'};\' >> $$PWD/dbd/dbdfile.h
 dbd.depends = FORCE
 
 QMAKE_EXTRA_TARGETS += dbd
@@ -56,64 +56,64 @@ epics:INCLUDEPATH += $$EPICS_BASE/include \
 tango:INCLUDEPATH += /usr/local/include/tango /usr/include/omniORB4
 
 SOURCES +=\
-    library/src/ndsbaseimpl.cpp \
-    library/src/ndsnodeimpl.cpp \
-    library/src/ndsbase.cpp \
-    library/src/ndsnode.cpp \
-    library/src/ndsport.cpp \
-    library/src/ndsportimpl.cpp \
-    library/src/ndspvbaseimpl.cpp \
-    library/src/ndspvbase.cpp \
-    library/src/scansymbols.cpp \
-    library/src/ndspvdelegateimpl.cpp \
-    library/src/ndspvdelegate.cpp \
-    library/src/ndsdelegate.cpp \
-    library/src/ndspvholddelegateimpl.cpp \
-    library/src/ndspvholddelegate.cpp \
-    library/src/ndsfactory.cpp \
-    library/src/ndsstatemachine.cpp \
-    library/src/ndsstatemachineimpl.cpp \
-    library/src/ndsexceptions.cpp \
-    library/src/ndsepicsinterfaceimpl.cpp \
-    library/src/ndsinterfacebaseimpl.cpp \
-    library/src/ndsdataacquisitionimpl.cpp \
-    library/src/ndspvvariableimpl.cpp \
-    library/src/ndspvvariable.cpp \
-    library/src/ndsdataacquisition.cpp \
-    library/src/ndsepicsfactoryimpl.cpp \
-    library/src/ndsfactorybaseimpl.cpp \
-    library/src/ndstangofactoryimpl.cpp \
-    library/src/ndstangointerfaceimpl.cpp
+    src/ndsbaseimpl.cpp \
+    src/ndsnodeimpl.cpp \
+    src/ndsbase.cpp \
+    src/ndsnode.cpp \
+    src/ndsport.cpp \
+    src/ndsportimpl.cpp \
+    src/ndspvbaseimpl.cpp \
+    src/ndspvbase.cpp \
+    src/scansymbols.cpp \
+    src/ndspvdelegateimpl.cpp \
+    src/ndspvdelegate.cpp \
+    src/ndsdelegate.cpp \
+    src/ndspvholddelegateimpl.cpp \
+    src/ndspvholddelegate.cpp \
+    src/ndsfactory.cpp \
+    src/ndsstatemachine.cpp \
+    src/ndsstatemachineimpl.cpp \
+    src/ndsexceptions.cpp \
+    src/ndsepicsinterfaceimpl.cpp \
+    src/ndsinterfacebaseimpl.cpp \
+    src/ndsdataacquisitionimpl.cpp \
+    src/ndspvvariableimpl.cpp \
+    src/ndspvvariable.cpp \
+    src/ndsdataacquisition.cpp \
+    src/ndsepicsfactoryimpl.cpp \
+    src/ndsfactorybaseimpl.cpp \
+    src/ndstangofactoryimpl.cpp \
+    src/ndstangointerfaceimpl.cpp
 
 HEADERS += \
-    library/src/scansymbols.h \
-    library/include/nds3/definitions.h \
-    library/include/nds3/nds.h \
-    library/include/nds3/base.h \
-    library/include/nds3/dataAcquisition.h \
-    library/include/nds3/delegate.h \
-    library/include/nds3/exceptions.h \
-    library/include/nds3/factory.h \
-    library/include/nds3/node.h \
-    library/include/nds3/port.h \
-    library/include/nds3/pvBase.h \
-    library/include/nds3/pvDelegate.h \
-    library/include/nds3/pvHoldDelegate.h \
-    library/include/nds3/pvVariable.h \
-    library/include/nds3/stateMachine.h \
-    library/src/epicsFactoryImpl.h \
-    library/src/dataAcquisitionImpl.h \
-    library/src/epicsInterfaceImpl.h \
-    library/src/factoryBaseImpl.h \
-    library/src/interfaceBaseImpl.h \
-    library/src/nodeImpl.h \
-    library/src/portImpl.h \
-    library/src/pvBaseImpl.h \
-    library/src/pvDelegateImpl.h \
-    library/src/pvHoldDelegateImpl.h \
-    library/src/pvVariableImpl.h \
-    library/src/stateMachineImpl.h \
-    library/src/tangoFactoryImpl.h \
-    library/src/tangoInterfaceImpl.h \
-    library/src/baseImpl.h
+    src/scansymbols.h \
+    include/nds3/definitions.h \
+    include/nds3/nds.h \
+    include/nds3/base.h \
+    include/nds3/dataAcquisition.h \
+    include/nds3/delegate.h \
+    include/nds3/exceptions.h \
+    include/nds3/factory.h \
+    include/nds3/node.h \
+    include/nds3/port.h \
+    include/nds3/pvBase.h \
+    include/nds3/pvDelegate.h \
+    include/nds3/pvHoldDelegate.h \
+    include/nds3/pvVariable.h \
+    include/nds3/stateMachine.h \
+    src/epicsFactoryImpl.h \
+    src/dataAcquisitionImpl.h \
+    src/epicsInterfaceImpl.h \
+    src/factoryBaseImpl.h \
+    src/interfaceBaseImpl.h \
+    src/nodeImpl.h \
+    src/portImpl.h \
+    src/pvBaseImpl.h \
+    src/pvDelegateImpl.h \
+    src/pvHoldDelegateImpl.h \
+    src/pvVariableImpl.h \
+    src/stateMachineImpl.h \
+    src/tangoFactoryImpl.h \
+    src/tangoInterfaceImpl.h \
+    src/baseImpl.h
 
