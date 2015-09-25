@@ -484,11 +484,40 @@ asynStatus EpicsInterfaceImpl::writeArray(asynUser *pasynUser, T* pValue, size_t
 
 
 
+asynStatus EpicsInterfaceImpl::readInt8(asynUser *pasynUser, epicsInt8 *pValue)
+{
+    return readOneValue(pasynUser, (std::int8*)pValue);
+}
 
+asynStatus EpicsInterfaceImpl::readUint8(asynUser *pasynUser, epicsUint8 *pValue)
+{
+    return readOneValue(pasynUser, (std::uint8_t*)pValue);
+}
 
 asynStatus EpicsInterfaceImpl::readInt32(asynUser *pasynUser, epicsInt32 *pValue)
 {
     return readOneValue(pasynUser, (std::int32_t*)pValue);
+}
+
+asynStatus EpicsInterfaceImpl::readUint32(asynUser *pasynUser, epicsUint32 *pValue)
+{
+    return readOneValue(pasynUser, (std::uint32_t*)pValue);
+}
+
+asynStatus EpicsInterfaceImpl::readFloat64(asynUser *pasynUser, epicsFloat64 *pValue)
+{
+    return readOneValue(pasynUser, (double*)pValue);
+}
+
+
+asynStatus EpicsInterfaceImpl::writeInt8(asynUser *pasynUser, epicsInt8 value)
+{
+    return writeOneValue(pasynUser, (std::int8_t)value);
+}
+
+asynStatus EpicsInterfaceImpl::writeUint8(asynUser *pasynUser, epicsUint8 value)
+{
+    return writeOneValue(pasynUser, (std::uint8_t)value);
 }
 
 asynStatus EpicsInterfaceImpl::writeInt32(asynUser *pasynUser, epicsInt32 value)
@@ -496,15 +525,27 @@ asynStatus EpicsInterfaceImpl::writeInt32(asynUser *pasynUser, epicsInt32 value)
     return writeOneValue(pasynUser, (std::int32_t)value);
 }
 
-
-asynStatus EpicsInterfaceImpl::readFloat64(asynUser *pasynUser, epicsFloat64 *pValue)
+asynStatus EpicsInterfaceImpl::writeUint32(asynUser *pasynUser, epicsUint32 value)
 {
-    return readOneValue(pasynUser, (double*)pValue);
+    return writeOneValue(pasynUser, (std::uint32_t)value);
 }
+
 
 asynStatus EpicsInterfaceImpl::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 {
     return writeOneValue(pasynUser, (double)value);
+}
+
+asynStatus EpicsInterfaceImpl::readInt8Array(asynUser *pasynUser, epicsInt8* pValue,
+                                              size_t nElements, size_t *nIn)
+{
+    return readArray(pasynUser, (std::int8_t*)pValue, nElements, nIn);
+}
+
+asynStatus EpicsInterfaceImpl::readUint8Array(asynUser *pasynUser, epicsUint8* pValue,
+                                              size_t nElements, size_t *nIn)
+{
+    return readArray(pasynUser, (std::uint8_t*)pValue, nElements, nIn);
 }
 
 asynStatus EpicsInterfaceImpl::readInt32Array(asynUser *pasynUser, epicsInt32* pValue,
@@ -513,7 +554,32 @@ asynStatus EpicsInterfaceImpl::readInt32Array(asynUser *pasynUser, epicsInt32* p
     return readArray(pasynUser, (std::int32_t*)pValue, nElements, nIn);
 }
 
+
+asynStatus EpicsInterfaceImpl::readFloat64Array(asynUser *pasynUser, epicsFloat64* pValue,
+                                              size_t nElements, size_t *nIn)
+{
+    return readArray(pasynUser, (double*)pValue, nElements, nIn);
+}
+
+
+asynStatus EpicsInterfaceImpl::writeInt8Array(asynUser *pasynUser, epicsInt8* pValue,
+                                               size_t nElements)
+{
+    return writeArray(pasynUser, pValue, nElements);
+}
+
+asynStatus EpicsInterfaceImpl::writeUint8Array(asynUser *pasynUser, epicsUint8* pValue,
+                                               size_t nElements)
+{
+    return writeArray(pasynUser, pValue, nElements);
+}
 asynStatus EpicsInterfaceImpl::writeInt32Array(asynUser *pasynUser, epicsInt32* pValue,
+                                               size_t nElements)
+{
+    return writeArray(pasynUser, pValue, nElements);
+}
+
+asynStatus EpicsInterfaceImpl::writeFloat64Array(asynUser *pasynUser, epicsFloat64* pValue,
                                                size_t nElements)
 {
     return writeArray(pasynUser, pValue, nElements);

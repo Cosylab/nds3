@@ -41,11 +41,13 @@ public:
     Base(std::shared_ptr<BaseImpl> impl);
 #endif
 
+protected:
     /**
      * @brief Initializes an empty base class.
      */
     Base();
 
+public:
     /**
      * @brief Copy constructor. The copy will refer to the same
      *        implementation object referenced in the copied object.

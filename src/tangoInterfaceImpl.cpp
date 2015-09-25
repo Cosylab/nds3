@@ -29,7 +29,6 @@ void TangoInterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
     }
 
     Tango::CmdArgType tangoType;
-    bool bArray(false);
     switch(pv->getDataType())
     {
     case dataType_t::dataInt8:
@@ -55,22 +54,18 @@ void TangoInterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
     case dataType_t::dataInt8Array:
         tangoType = Tango::DEV_UCHAR;
         m_pDevice->add_attribute(new NdsAttributeSpectrum<std::uint8_t, Tango::DevUChar>(pv->getFullName(), pv, tangoType, writeType, pv->getMaxElements()));
-        bArray = true;
         break;
     case dataType_t::dataUint8Array:
         tangoType = Tango::DEV_UCHAR;
         m_pDevice->add_attribute(new NdsAttributeSpectrum<std::uint8_t, Tango::DevUChar>(pv->getFullName(), pv, tangoType, writeType, pv->getMaxElements()));
-        bArray = true;
         break;
     case dataType_t::dataInt32Array:
         tangoType = Tango::DEV_LONG;
         m_pDevice->add_attribute(new NdsAttributeSpectrum<std::int32_t, Tango::DevLong>(pv->getFullName(), pv, tangoType, writeType, pv->getMaxElements()));
-        bArray = true;
         break;
     case dataType_t::dataFloat64Array:
         tangoType = Tango::DEV_DOUBLE;
         m_pDevice->add_attribute(new NdsAttributeSpectrum<double, Tango::DevDouble>(pv->getFullName(), pv, tangoType, writeType, pv->getMaxElements()));
-        bArray = true;
         break;
     case dataType_t::dataString:
         tangoType = Tango::DEV_STRING;
@@ -96,9 +91,8 @@ void TangoInterfaceImpl::deregisterPV(std::shared_ptr<PVBaseImpl> pv)
     catch(const Tango::DevFailed& exception)
     {
         Tango::DevErrorList errors = exception.errors;
-        for(int scanErrors(0); scanErrors != errors.length(); ++scanErrors)
+        for(size_t scanErrors(0); scanErrors != errors.length(); ++scanErrors)
         {
-            Tango::DevError error = errors[scanErrors];
             std::cout << errors[scanErrors].reason << std::endl;
         }
     }
@@ -110,10 +104,28 @@ void TangoInterfaceImpl::registrationTerminated()
 
 }
 
+void TangoInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int8_t& value)
+{
+    timeval tangoTimestamp = NdsAttributeBase::NDSTimeToTangoTime(timestamp);
+    m_pDevice->push_change_event(pv->getFullName(), (Tango::DevUChar*)&value, tangoTimestamp, Tango::ATTR_VALID, 1, 0, false);
+}
+
+void TangoInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::uint8_t& value)
+{
+    timeval tangoTimestamp = NdsAttributeBase::NDSTimeToTangoTime(timestamp);
+    m_pDevice->push_change_event(pv->getFullName(), (Tango::DevUChar*)&value, tangoTimestamp, Tango::ATTR_VALID, 1, 0, false);
+}
+
 void TangoInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int32_t& value)
 {
     timeval tangoTimestamp = NdsAttributeBase::NDSTimeToTangoTime(timestamp);
     m_pDevice->push_change_event(pv->getFullName(), (Tango::DevLong*)&value, tangoTimestamp, Tango::ATTR_VALID, 1, 0, false);
+}
+
+void TangoInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::uint32_t& value)
+{
+    timeval tangoTimestamp = NdsAttributeBase::NDSTimeToTangoTime(timestamp);
+    m_pDevice->push_change_event(pv->getFullName(), (Tango::DevULong*)&value, tangoTimestamp, Tango::ATTR_VALID, 1, 0, false);
 }
 
 void TangoInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const double& value)
@@ -122,10 +134,29 @@ void TangoInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& ti
     m_pDevice->push_change_event(pv->getFullName(), (Tango::DevDouble*)&value, tangoTimestamp, Tango::ATTR_VALID, 1, 0, false);
 }
 
+
+void TangoInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int8_t> & value)
+{
+    timeval tangoTimestamp = NdsAttributeBase::NDSTimeToTangoTime(timestamp);
+    m_pDevice->push_change_event(pv->getFullName(), (Tango::DevUChar*)value.data(), tangoTimestamp, Tango::ATTR_VALID, value.size(), 0, false);
+}
+
+void TangoInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::uint8_t> & value)
+{
+    timeval tangoTimestamp = NdsAttributeBase::NDSTimeToTangoTime(timestamp);
+    m_pDevice->push_change_event(pv->getFullName(), (Tango::DevUChar*)value.data(), tangoTimestamp, Tango::ATTR_VALID, value.size(), 0, false);
+}
+
 void TangoInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int32_t> & value)
 {
     timeval tangoTimestamp = NdsAttributeBase::NDSTimeToTangoTime(timestamp);
     m_pDevice->push_change_event(pv->getFullName(), (Tango::DevLong*)value.data(), tangoTimestamp, Tango::ATTR_VALID, value.size(), 0, false);
+}
+
+void TangoInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<double> & value)
+{
+    timeval tangoTimestamp = NdsAttributeBase::NDSTimeToTangoTime(timestamp);
+    m_pDevice->push_change_event(pv->getFullName(), (Tango::DevDouble*)value.data(), tangoTimestamp, Tango::ATTR_VALID, value.size(), 0, false);
 }
 
 NdsDevice::NdsDevice(Tango::DeviceClass* pClass, string &parameter):
@@ -162,7 +193,6 @@ Tango::DevState NdsDevice::get_state()
 {
     state_t deviceState = m_pRootNode->getGlobalState();
 
-
     switch(deviceState)
     {
     case state_t::unknown:
@@ -183,21 +213,26 @@ Tango::DevState NdsDevice::get_state()
         return Tango::ON;
     case state_t::switchingOff:
         return Tango::OFF;
+    case state_t::MAX_STATE_NUM:
+        throw std::logic_error("The state MAX_STATE_NUM is used internally to count the number of available states and should not be used.");
     }
 }
 
 /*
  *
- * TANGO ATTRIBUTE
+ * Base Tango Attribute class
  *
  *
- *****************/
+ ****************************/
 
 NdsAttributeBase::NdsAttributeBase(std::shared_ptr<PVBaseImpl> pv): m_pPV(pv)
 {
-
 }
 
+/*
+ * Copies the attribute properties from the NDS PV to the Tango attribute
+ *
+ ************************************************************************/
 void NdsAttributeBase::setAttributeProperties(Tango::Attr& attr)
 {
     Tango::UserDefaultAttrProp properties;
@@ -216,9 +251,10 @@ void NdsAttributeBase::setAttributeProperties(Tango::Attr& attr)
 }
 
 /*
- * Constructor
+ * Tango scalar attribute
  *
- *************/
+ ************************/
+
 template<typename ndsType_t, typename tangoType_t>
 NdsAttributeScalar<ndsType_t, tangoType_t>::NdsAttributeScalar(const std::string& name, std::shared_ptr<PVBaseImpl> pPV, Tango::CmdArgType dataType, Tango::AttrWriteType writeType) :
     NdsAttributeBase(pPV), Tango::Attr(name.c_str(), dataType, writeType)
@@ -226,46 +262,26 @@ NdsAttributeScalar<ndsType_t, tangoType_t>::NdsAttributeScalar(const std::string
     setAttributeProperties(*this);
 }
 
-/*
- * Read a scalar value
- *
- *********************/
 template<typename ndsType_t, typename tangoType_t>
-void NdsAttributeScalar<ndsType_t, tangoType_t>::readValue(Tango::Attribute &att)
+void NdsAttributeScalar<ndsType_t, tangoType_t>::read(Tango::DeviceImpl* /* dev */,Tango::Attribute &att)
 {
     timespec timestamp;
     m_pPV->read(&timestamp, (ndsType_t*) &m_value);
     timeval tangoTime(NDSTimeToTangoTime(timestamp));
     att.set_value_date_quality(&m_value, tangoTime, Tango::ATTR_VALID, 1, 0, false);
-
-    std::cout << m_pPV->getFullName() << " " << att.get_name() << " " << m_value << "\n";
 }
 
 template<typename ndsType_t, typename tangoType_t>
-void NdsAttributeScalar<ndsType_t, tangoType_t>::writeValue(Tango::Attribute &att, const tangoType_t& value)
-{
-    std::cout << "WRITE " << m_pPV->getFullName() << " " << att.get_name() << " " << value << "\n";
-    Tango::TimeVal timestamp(att.get_date());
-    timespec ndsTime;
-    ndsTime.tv_sec = timestamp.tv_sec;
-    ndsTime.tv_nsec = timestamp.tv_nsec;
-
-    m_pPV->write(ndsTime, (ndsType_t)value);
-}
-
-template<typename ndsType_t, typename tangoType_t>
-void NdsAttributeScalar<ndsType_t, tangoType_t>::read(Tango::DeviceImpl *dev,Tango::Attribute &att)
-{
-    readValue(att);
-}
-
-template<typename ndsType_t, typename tangoType_t>
-void NdsAttributeScalar<ndsType_t, tangoType_t>::write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+void NdsAttributeScalar<ndsType_t, tangoType_t>::write(Tango::DeviceImpl* /* dev */,Tango::WAttribute &att)
 {
     try
     {
         att.get_write_value(m_value);
-        writeValue(att, m_value);
+        Tango::TimeVal timestamp(att.get_date());
+        timespec ndsTime;
+        ndsTime.tv_sec = timestamp.tv_sec;
+        ndsTime.tv_nsec = timestamp.tv_nsec;
+        m_pPV->write(ndsTime, (ndsType_t)m_value);
     }
     catch(const NdsError& error)
     {
@@ -279,6 +295,12 @@ bool NdsAttributeScalar<ndsType_t, tangoType_t>::is_allowed(Tango::DeviceImpl* /
     return true;
 }
 
+
+/*
+ * Tango spectrum attribute
+ *
+ **************************/
+
 template<typename ndsType_t, typename tangoType_t>
 NdsAttributeSpectrum<ndsType_t, tangoType_t>::NdsAttributeSpectrum(const string &name, std::shared_ptr<PVBaseImpl> pPV, Tango::CmdArgType dataType, Tango::AttrWriteType writeType, size_t maxLength):
     NdsAttributeBase(pPV), Tango::SpectrumAttr(name.c_str(), dataType, writeType, maxLength)
@@ -287,13 +309,18 @@ NdsAttributeSpectrum<ndsType_t, tangoType_t>::NdsAttributeSpectrum(const string 
 }
 
 template<typename ndsType_t, typename tangoType_t>
-void NdsAttributeSpectrum<ndsType_t, tangoType_t>::read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+void NdsAttributeSpectrum<ndsType_t, tangoType_t>::read(Tango::DeviceImpl* /* dev */,Tango::Attribute &att)
 {
+    timespec timestamp;
+    m_pPV->read(&timestamp, (ndsType_t*) &m_value);
+    timeval tangoTime(NDSTimeToTangoTime(timestamp));
+    att.set_value_date_quality(m_value.data(), tangoTime, Tango::ATTR_VALID, 1, 0, false);
 }
 
 template<typename ndsType_t, typename tangoType_t>
-void NdsAttributeSpectrum<ndsType_t, tangoType_t>::write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+void NdsAttributeSpectrum<ndsType_t, tangoType_t>::write(Tango::DeviceImpl* /* dev */,Tango::WAttribute &att)
 {
+    // TODO
 }
 
 template<typename ndsType_t, typename tangoType_t>

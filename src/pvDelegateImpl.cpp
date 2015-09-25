@@ -37,10 +37,15 @@ void PVDelegateImpl<T>::dontWrite(const timespec&, const T&)
 
 }
 
-
+template class PVDelegateImpl<std::int8_t>;
+template class PVDelegateImpl<std::uint8_t>;
 template class PVDelegateImpl<std::int32_t>;
+template class PVDelegateImpl<std::uint32_t>;
 template class PVDelegateImpl<double>;
+template class PVDelegateImpl<std::vector<std::int8_t> >;
+template class PVDelegateImpl<std::vector<std::uint8_t> >;
 template class PVDelegateImpl<std::vector<std::int32_t> >;
+template class PVDelegateImpl<std::vector<double> >;
 
 }
 

@@ -20,20 +20,27 @@ public:
     PVBaseImpl(const std::string& name);
 
     // All the base versions throw.
-    // Only the overwritten ones in the AsynPV or AsynDelegatePV
-    // will function correctly.
-    ////////////////////////////////////////////////////////////
-    virtual void read(timespec* pTimestamp, std::uint8_t* pValue);
+    // Only the overwritten ones in the derived classes will function correctly.
+    ////////////////////////////////////////////////////////////////////////////
     virtual void read(timespec* pTimestamp, std::int8_t* pValue);
+    virtual void read(timespec* pTimestamp, std::uint8_t* pValue);
     virtual void read(timespec* pTimestamp, std::int32_t* pValue);
     virtual void read(timespec* pTimestamp, std::uint32_t* pValue);
     virtual void read(timespec* pTimestamp, double* pValue);
+    virtual void read(timespec* pTimestamp, std::vector<std::int8_t>* pValue);
+    virtual void read(timespec* pTimestamp, std::vector<std::uint8_t>* pValue);
     virtual void read(timespec* pTimestamp, std::vector<std::int32_t>* pValue);
+    virtual void read(timespec* pTimestamp, std::vector<double>* pValue);
 
+    virtual void write(const timespec& timestamp, const std::int8_t& value);
+    virtual void write(const timespec& timestamp, const std::uint8_t& value);
     virtual void write(const timespec& timestamp, const std::int32_t& value);
     virtual void write(const timespec& timestamp, const std::uint32_t& value);
     virtual void write(const timespec& timestamp, const double& value);
+    virtual void write(const timespec& timestamp, const std::vector<std::int8_t>& value);
+    virtual void write(const timespec& timestamp, const std::vector<std::uint8_t>& value);
     virtual void write(const timespec& timestamp, const std::vector<std::int32_t>& value);
+    virtual void write(const timespec& timestamp, const std::vector<double>& value);
 
     template<typename T>
     void push(const timespec& timestamp, const T& value);
@@ -69,20 +76,21 @@ public:
 
 protected:
     template<typename T>
-    dataType_t getDataTypeForCPPType()
+    constexpr dataType_t getDataTypeForCPPType() const
     {
-        if(std::is_same<T, std::int32_t>::value)
-        {
-            return dataType_t::dataInt32;
-        }
-        if(std::is_same<T, double>::value)
-        {
-            return dataType_t::dataFloat64;
-        }
-        if(std::is_same<T, std::vector<std::int32_t> >::value)
-        {
-            return dataType_t::dataInt32Array;
-        }
+        const int type =
+                int(std::is_same<T, std::int8_t>::value) * (int)dataType_t::dataInt8 +
+                int(std::is_same<T, std::uint8_t>::value) * (int)dataType_t::dataUint8 +
+                int(std::is_same<T, std::int32_t>::value) * (int)dataType_t::dataInt32 +
+                int(std::is_same<T, std::uint32_t>::value) * (int)dataType_t::dataUint32 +
+                int(std::is_same<T, double>::value) * (int)dataType_t::dataFloat64 +
+                int(std::is_same<T, std::vector<std::int8_t> >::value) * (int)dataType_t::dataInt8Array +
+                int(std::is_same<T, std::vector<std::uint8_t> >::value) * (int)dataType_t::dataUint8Array +
+                int(std::is_same<T, std::vector<std::int32_t> >::value) * (int)dataType_t::dataInt32Array +
+                int(std::is_same<T, std::vector<double> >::value) * (int)dataType_t::dataFloat64Array;
+
+        static_assert(type != 0, "Undefined data type");
+        return(dataType_t)type;
     }
 
     recordType_t m_type;

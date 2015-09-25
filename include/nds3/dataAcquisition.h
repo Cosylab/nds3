@@ -27,6 +27,10 @@ class NDS3_API DataAcquisition: public Node
 public:
     DataAcquisition();
 
+    DataAcquisition(const DataAcquisition<T>& right);
+
+    DataAcquisition& operator=(const DataAcquisition<T>& right);
+
     /**
      * @brief Constructs the data acquisition node.
      *

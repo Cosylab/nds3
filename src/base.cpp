@@ -31,6 +31,10 @@ Base::~Base()
 
 Port Base::getPort()
 {
+    if(m_pImplementation == 0)
+    {
+        throw std::logic_error("The NDS object has not been allocated");
+    }
     return Port(m_pImplementation->getPort());
 }
 

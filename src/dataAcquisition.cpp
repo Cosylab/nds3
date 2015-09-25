@@ -37,9 +37,9 @@ DataAcquisition<T>::DataAcquisition(const std::string& name,
                                                                              allowStateChangeFunction)))
 {
 }
-/*
+
 template <typename T>
-DataAcquisition<T>::DataAcquisition(const DataAcquisition<T>& right): Node(right.m_pImplementation)
+DataAcquisition<T>::DataAcquisition(const DataAcquisition<T>& right): Node(std::static_pointer_cast<NodeImpl>(right.m_pImplementation))
 {
 }
 
@@ -49,7 +49,7 @@ DataAcquisition<T>& DataAcquisition<T>::operator=(const DataAcquisition<T>& righ
     m_pImplementation = right.m_pImplementation;
     return *this;
 }
-*/
+
 
 template <typename T>
 void DataAcquisition<T>::pushData(const timespec& timestamp, const T& data)
@@ -87,9 +87,15 @@ timespec DataAcquisition<T>::getStartTimestamp()
     return std::static_pointer_cast<DataAcquisitionImpl<T> >(m_pImplementation)->getStartTimestamp();
 }
 
+template class DataAcquisition<std::int8_t>;
+template class DataAcquisition<std::uint8_t>;
 template class DataAcquisition<std::int32_t>;
+template class DataAcquisition<std::uint32_t>;
 template class DataAcquisition<double>;
+template class DataAcquisition<std::vector<std::int8_t> >;
+template class DataAcquisition<std::vector<std::uint8_t> >;
 template class DataAcquisition<std::vector<std::int32_t> >;
+template class DataAcquisition<std::vector<double> >;
 
 
 }

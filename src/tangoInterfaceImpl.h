@@ -31,9 +31,15 @@ public:
 
     virtual void registrationTerminated();
 
+    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int8_t& value);
+    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::uint8_t& value);
     virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int32_t& value);
+    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::uint32_t& value);
     virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const double& value);
+    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int8_t> & value);
+    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::uint8_t> & value);
     virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int32_t> & value);
+    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<double> & value);
 
 private:
     NdsDevice* m_pDevice;
@@ -140,10 +146,6 @@ public:
     virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty);
 
 private:
-    void readValue(Tango::Attribute &att);
-
-    void writeValue(Tango::Attribute &att, const tangoType_t& value);
-
     tangoType_t m_value;
 };
 
@@ -163,10 +165,6 @@ public:
     virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty);
 
 private:
-    void readValue(Tango::Attribute &att);
-
-    void writeValue(Tango::Attribute &att, const tangoType_t& value);
-
     std::vector<tangoType_t> m_value;
 };
 

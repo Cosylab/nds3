@@ -40,9 +40,8 @@ void TangoFactoryImpl::run(int argc,char *argv[])
     catch(const Tango::DevFailed& exception)
     {
         Tango::DevErrorList errors = exception.errors;
-        for(int scanErrors(0); scanErrors != errors.length(); ++scanErrors)
+        for(size_t scanErrors(0); scanErrors != errors.length(); ++scanErrors)
         {
-            Tango::DevError error = errors[scanErrors];
             std::cout << errors[scanErrors].reason << std::endl;
         }
     }

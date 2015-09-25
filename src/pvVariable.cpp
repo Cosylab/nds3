@@ -19,9 +19,15 @@ PVVariable<T>::PVVariable(const std::string& name):
 {}
 
 
+template class PVVariable<std::int8_t>;
+template class PVVariable<std::uint8_t>;
 template class PVVariable<std::int32_t>;
+template class PVVariable<std::uint32_t>;
 template class PVVariable<double>;
+template class PVVariable<std::vector<std::int8_t> >;
+template class PVVariable<std::vector<std::uint8_t> >;
 template class PVVariable<std::vector<std::int32_t> >;
+template class PVVariable<std::vector<double> >;
 
 
 }
