@@ -56,34 +56,34 @@ epics:INCLUDEPATH += $$EPICS_BASE/include \
 tango:INCLUDEPATH += /usr/local/include/tango /usr/include/omniORB4
 
 SOURCES +=\
-    src/ndsbaseimpl.cpp \
-    src/ndsnodeimpl.cpp \
-    src/ndsbase.cpp \
-    src/ndsnode.cpp \
-    src/ndsport.cpp \
-    src/ndsportimpl.cpp \
-    src/ndspvbaseimpl.cpp \
-    src/ndspvbase.cpp \
     src/scansymbols.cpp \
-    src/ndspvdelegateimpl.cpp \
-    src/ndspvdelegate.cpp \
-    src/ndsdelegate.cpp \
-    src/ndspvholddelegateimpl.cpp \
-    src/ndspvholddelegate.cpp \
-    src/ndsfactory.cpp \
-    src/ndsstatemachine.cpp \
-    src/ndsstatemachineimpl.cpp \
-    src/ndsexceptions.cpp \
-    src/ndsepicsinterfaceimpl.cpp \
-    src/ndsinterfacebaseimpl.cpp \
-    src/ndsdataacquisitionimpl.cpp \
-    src/ndspvvariableimpl.cpp \
-    src/ndspvvariable.cpp \
-    src/ndsdataacquisition.cpp \
-    src/ndsepicsfactoryimpl.cpp \
-    src/ndsfactorybaseimpl.cpp \
-    src/ndstangofactoryimpl.cpp \
-    src/ndstangointerfaceimpl.cpp
+    src/base.cpp \
+    src/baseImpl.cpp \
+    src/dataAcquisition.cpp \
+    src/dataAcquisitionImpl.cpp \
+    src/delegate.cpp \
+    src/epicsFactoryImpl.cpp \
+    src/epicsInterfaceImpl.cpp \
+    src/exceptions.cpp \
+    src/factory.cpp \
+    src/factoryBaseImpl.cpp \
+    src/interfaceBaseImpl.cpp \
+    src/node.cpp \
+    src/nodeImpl.cpp \
+    src/port.cpp \
+    src/portImpl.cpp \
+    src/pvBase.cpp \
+    src/pvBaseImpl.cpp \
+    src/pvDelegate.cpp \
+    src/pvDelegateImpl.cpp \
+    src/pvHoldDelegate.cpp \
+    src/pvHoldDelegateImpl.cpp \
+    src/pvVariable.cpp \
+    src/pvVariableImpl.cpp \
+    src/stateMachine.cpp \
+    src/stateMachineImpl.cpp \
+    src/tangoFactoryImpl.cpp \
+    src/tangoInterfaceImpl.cpp
 
 HEADERS += \
     src/scansymbols.h \
