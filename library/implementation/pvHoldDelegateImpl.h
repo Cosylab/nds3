@@ -2,7 +2,7 @@
 #define NDSPVHOLDDELEGATEIMPL_H
 
 #include <memory>
-#include "ndspvbaseimpl.h"
+#include "pvBaseImpl.h"
 #include "../include/nds3/definitions.h"
 
 namespace nds

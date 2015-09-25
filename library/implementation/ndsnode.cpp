@@ -1,8 +1,8 @@
-#include "../include/nds3/ndsnode.h"
-#include "../include/nds3/ndspvbase.h"
-#include "../include/nds3/ndsstatemachine.h"
+#include "../include/nds3/node.h"
+#include "../include/nds3/pvBase.h"
+#include "../include/nds3/stateMachine.h"
 
-#include "ndsnodeimpl.h"
+#include "nodeImpl.h"
 
 namespace nds
 {

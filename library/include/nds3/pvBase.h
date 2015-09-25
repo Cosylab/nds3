@@ -2,7 +2,7 @@
 #define NDSPVBASE_H
 
 #include "definitions.h"
-#include "ndsbase.h"
+#include "base.h"
 #include <cstdint>
 #include <time.h>
 #include <string>

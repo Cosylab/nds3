@@ -2,7 +2,7 @@
 #define NDSPVIMPL_H
 
 #include <mutex>
-#include "ndspvbaseimpl.h"
+#include "pvBaseImpl.h"
 
 namespace nds
 {

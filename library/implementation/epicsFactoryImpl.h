@@ -4,7 +4,7 @@
 #define NDSFACTORYIMPL_CPP
 
 #include "../include/nds3/definitions.h"
-#include "ndsfactorybaseimpl.h"
+#include "factorybaseimpl.h"
 #include <dbStaticLib.h>
 #include <vector>
 #include <list>

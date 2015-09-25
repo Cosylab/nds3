@@ -2,7 +2,7 @@
 #define NDSPVVARIABLE_H
 
 #include "definitions.h"
-#include "ndspvbase.h"
+#include "pvBase.h"
 
 namespace nds
 {

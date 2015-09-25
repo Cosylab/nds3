@@ -1,7 +1,7 @@
 #ifdef NDS3_TANGO
 
-#include "ndstangofactoryimpl.h"
-#include "ndstangointerfaceimpl.h"
+#include "tangoFactoryImpl.h"
+#include "tangoInterfaceImpl.h"
 
 namespace nds
 {

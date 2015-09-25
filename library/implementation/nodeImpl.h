@@ -1,7 +1,7 @@
 #ifndef NDSNODEIMPL_H
 #define NDSNODEIMPL_H
 
-#include "ndsbaseimpl.h"
+#include "baseImpl.h"
 #include "../include/nds3/definitions.h"
 #include <list>
 

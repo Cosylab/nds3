@@ -1,7 +1,7 @@
-#include "ndsstatemachineimpl.h"
-#include "ndspvdelegateimpl.h"
-#include "ndspvbaseimpl.h"
-#include "../include/nds3/ndsexceptions.h"
+#include "stateMachineImpl.h"
+#include "pvDelegateImpl.h"
+#include "pvBaseImpl.h"
+#include "../include/nds3/exceptions.h"
 #include <cstdint>
 #include <mutex>
 #include <sstream>

@@ -1,5 +1,5 @@
-#include "ndsfactorybaseimpl.h"
-#include "ndsbaseimpl.h"
+#include "factoryBaseImpl.h"
+#include "baseImpl.h"
 
 namespace nds
 {

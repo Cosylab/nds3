@@ -1,5 +1,5 @@
-#include "ndsbaseimpl.h"
-#include "ndsnodeimpl.h"
+#include "baseImpl.h"
+#include "nodeImpl.h"
 
 namespace nds
 {

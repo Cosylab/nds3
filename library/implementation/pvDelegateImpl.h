@@ -1,7 +1,7 @@
 #ifndef NDSDELEGATEPVIMPL_H
 #define NDSDELEGATEPVIMPL_H
 
-#include "ndspvbaseimpl.h"
+#include "pvBaseImpl.h"
 #include "../include/nds3/definitions.h"
 
 namespace nds

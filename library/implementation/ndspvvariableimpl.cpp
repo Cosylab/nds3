@@ -1,4 +1,4 @@
-#include "ndspvvariableimpl.h"
+#include "pvVariableImpl.h"
 
 namespace nds
 {

@@ -1,4 +1,4 @@
-#include "../include/nds3/ndsexceptions.h"
+#include "../include/nds3/exceptions.h"
 
 namespace nds
 {

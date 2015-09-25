@@ -1,4 +1,4 @@
-#include "ndspvdelegateimpl.h"
+#include "pvDelegateImpl.h"
 #include <type_traits>
 namespace nds
 {

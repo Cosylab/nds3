@@ -2,7 +2,7 @@
 #define NDSPVDELEGATE_H
 
 #include "definitions.h"
-#include "ndspvbase.h"
+#include "pvBase.h"
 
 #ifndef SWIG // PVDelegate will not be present in SWIG generated files
 

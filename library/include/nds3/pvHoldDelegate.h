@@ -1,7 +1,7 @@
 #ifndef NDSPVHOLDDELEGATE_H
 #define NDSPVHOLDDELEGATE_H
 
-#include "ndspvbase.h"
+#include "pvBase.h"
 #include <memory>
 
 namespace nds

@@ -1,8 +1,8 @@
 #ifndef NDSDATAACQUISITIONIMPL_H
 #define NDSDATAACQUISITIONIMPL_H
 
-#include "ndsnodeimpl.h"
-#include "ndspvvariableimpl.h"
+#include "nodeImpl.h"
+#include "pvVariableImpl.h"
 #include "../include/nds3/definitions.h"
 #include <memory>
 namespace nds

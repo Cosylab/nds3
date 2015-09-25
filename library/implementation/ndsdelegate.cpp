@@ -1,4 +1,4 @@
-#include "../include/nds3/ndsdelegate.h"
+#include "../include/nds3/delegate.h"
 
 namespace nds
 {

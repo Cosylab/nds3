@@ -3,7 +3,7 @@
 
 #include <list>
 #include <memory>
-#include "ndspvbaseimpl.h"
+#include "pvBaseImpl.h"
 
 namespace nds
 {

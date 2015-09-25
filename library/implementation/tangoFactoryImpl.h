@@ -4,7 +4,7 @@
 #define NDSTANGOFACTORYIMPL_H
 
 #include <tango.h>
-#include "ndsfactorybaseimpl.h"
+#include "factoryBaseImpl.h"
 
 namespace nds
 {

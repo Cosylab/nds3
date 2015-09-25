@@ -1,7 +1,7 @@
-#include "../include/nds3/ndsport.h"
-#include "../include/nds3/ndspvbase.h"
-#include "../include/nds3/ndsfactory.h"
-#include "ndsportImpl.h"
+#include "../include/nds3/port.h"
+#include "../include/nds3/pvBase.h"
+#include "../include/nds3/factory.h"
+#include "portImpl.h"
 
 namespace nds
 {

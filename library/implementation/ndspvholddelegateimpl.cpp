@@ -1,5 +1,5 @@
-#include "ndspvholddelegateimpl.h"
-#include "../include/nds3/ndsdelegate.h"
+#include "pvHoldDelegateImpl.h"
+#include "../include/nds3/delegate.h"
 
 namespace nds
 {

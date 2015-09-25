@@ -1,5 +1,5 @@
-#include "ndsdataacquisitionimpl.h"
-#include "ndsstatemachineimpl.h"
+#include "dataAcquisitionImpl.h"
+#include "stateMachineImpl.h"
 #include "../include/nds3/definitions.h"
 namespace nds
 {

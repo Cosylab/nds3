@@ -1,10 +1,10 @@
 #ifdef NDS3_EPICS
 
-#include "ndsepicsinterfaceimpl.h"
-#include "ndspvbaseimpl.h"
-#include "ndsportImpl.h"
-#include "../include/nds3/ndspvbase.h"
-#include "../include/nds3/ndsexceptions.h"
+#include "epicsInterfaceImpl.h"
+#include "pvBaseImpl.h"
+#include "portImpl.h"
+#include "../include/nds3/pvBase.h"
+#include "../include/nds3/exceptions.h"
 #include <cstdint>
 #include <sstream>
 #include <ostream>

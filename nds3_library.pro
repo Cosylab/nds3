@@ -86,35 +86,34 @@ SOURCES +=\
     library/implementation/ndstangointerfaceimpl.cpp
 
 HEADERS += \
-    library/implementation/ndsbaseimpl.h \
-    library/implementation/ndsnodeimpl.h \
-    library/implementation/ndsportImpl.h \
-    library/implementation/ndspvbaseimpl.h \
-    library/include/nds3/ndsbase.h \
-    library/include/nds3/ndsnode.h \
-    library/include/nds3/ndsport.h \
-    library/include/nds3/ndspvbase.h \
-    library/include/nds3/ndspvdelegate.h \
     library/implementation/scansymbols.h \
-    library/implementation/ndspvdelegateimpl.h \
-    library/implementation/ndspvdelegateimpl.h \
-    library/include/nds3/nds3.h \
     library/include/nds3/definitions.h \
-    library/include/nds3/ndsdelegate.h \
-    library/include/nds3/ndspvholddelegate.h \
-    library/implementation/ndspvholddelegateimpl.h \
-    library/include/nds3/ndsfactory.h \
-    library/include/nds3/ndsstatemachine.h \
-    library/implementation/ndsstatemachineimpl.h \
-    library/include/nds3/ndsexceptions.h \
-    library/implementation/ndsepicsinterfaceimpl.h \
-    library/implementation/ndsinterfacebaseimpl.h \
-    library/include/nds3/ndsdataacquisition.h \
-    library/implementation/ndsdataacquisitionimpl.h \
-    library/implementation/ndspvvariableimpl.h \
-    library/include/nds3/ndspvvariable.h \
-    library/implementation/ndsepicsfactoryimpl.h \
-    library/implementation/ndsfactorybaseimpl.h \
-    library/implementation/ndstangofactoryimpl.h \
-    library/implementation/ndstangointerfaceimpl.h
+    library/include/nds3/nds.h \
+    library/include/nds3/base.h \
+    library/include/nds3/dataAcquisition.h \
+    library/include/nds3/delegate.h \
+    library/include/nds3/exceptions.h \
+    library/include/nds3/factory.h \
+    library/include/nds3/node.h \
+    library/include/nds3/port.h \
+    library/include/nds3/pvBase.h \
+    library/include/nds3/pvDelegate.h \
+    library/include/nds3/pvHoldDelegate.h \
+    library/include/nds3/pvVariable.h \
+    library/include/nds3/stateMachine.h \
+    library/implementation/epicsFactoryImpl.h \
+    library/implementation/dataAcquisitionImpl.h \
+    library/implementation/epicsInterfaceImpl.h \
+    library/implementation/factoryBaseImpl.h \
+    library/implementation/interfaceBaseImpl.h \
+    library/implementation/nodeImpl.h \
+    library/implementation/portImpl.h \
+    library/implementation/pvBaseImpl.h \
+    library/implementation/pvDelegateImpl.h \
+    library/implementation/pvHoldDelegateImpl.h \
+    library/implementation/pvVariableImpl.h \
+    library/implementation/stateMachineImpl.h \
+    library/implementation/tangoFactoryImpl.h \
+    library/implementation/tangoInterfaceImpl.h \
+    library/implementation/baseImpl.h
 

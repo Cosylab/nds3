@@ -1,5 +1,5 @@
-#include "../include/nds3/ndsstatemachine.h"
-#include "ndsstatemachineimpl.h"
+#include "../include/nds3/stateMachine.h"
+#include "stateMachineImpl.h"
 
 namespace nds
 {

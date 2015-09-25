@@ -1,5 +1,5 @@
-#include "../include/nds3/ndspvdelegate.h"
-#include "ndspvdelegateimpl.h"
+#include "../include/nds3/pvDelegate.h"
+#include "pvDelegateImpl.h"
 
 #include <cstdint>
 #include <vector>

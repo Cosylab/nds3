@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-#include "ndsnode.h"
+#include "node.h"
 #include "definitions.h"
 
 namespace nds

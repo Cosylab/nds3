@@ -1,4 +1,4 @@
-#include "ndsinterfacebaseimpl.h"
+#include "interfaceBaseImpl.h"
 
 namespace nds
 {

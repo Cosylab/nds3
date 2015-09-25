@@ -1,8 +1,8 @@
-#include "../include/nds3/ndsbase.h"
-#include "../include/nds3/ndsport.h"
-#include "../include/nds3/ndsfactory.h"
-#include "ndsbaseimpl.h"
-#include "ndsfactorybaseimpl.h"
+#include "../include/nds3/base.h"
+#include "../include/nds3/port.h"
+#include "../include/nds3/factory.h"
+#include "baseImpl.h"
+#include "factoryBaseImpl.h"
 
 namespace nds
 {

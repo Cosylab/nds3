@@ -1,7 +1,7 @@
-#include "../include/nds3/ndsfactory.h"
-#include "ndsepicsfactoryimpl.h"
-#include "ndstangofactoryimpl.h"
-#include "ndsfactorybaseimpl.h"
+#include "../include/nds3/factory.h"
+#include "epicsFactoryImpl.h"
+#include "tangoFactoryImpl.h"
+#include "factoryBaseImpl.h"
 
 namespace nds
 {

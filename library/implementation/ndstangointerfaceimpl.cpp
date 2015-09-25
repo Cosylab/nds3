@@ -1,10 +1,10 @@
 #ifdef NDS3_TANGO
 
-#include "ndstangointerfaceimpl.h"
-#include "ndstangofactoryimpl.h"
-#include "ndspvbaseimpl.h"
-#include "ndsnodeimpl.h"
-#include "../include/nds3/ndsexceptions.h"
+#include "tangoInterfaceImpl.h"
+#include "tangoFactoryImpl.h"
+#include "pvBaseImpl.h"
+#include "nodeImpl.h"
+#include "../include/nds3/exceptions.h"
 
 #include <cstdio>
 namespace nds

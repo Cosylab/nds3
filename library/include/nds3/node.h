@@ -2,7 +2,7 @@
 #define NDSNODE_H
 
 #include "definitions.h"
-#include "ndsbase.h"
+#include "base.h"
 
 namespace nds
 {

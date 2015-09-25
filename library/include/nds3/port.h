@@ -2,7 +2,7 @@
 #define NDSPORT_H
 
 #include "definitions.h"
-#include "ndsnode.h"
+#include "node.h"
 
 namespace nds
 {

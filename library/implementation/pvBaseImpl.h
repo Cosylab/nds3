@@ -1,7 +1,7 @@
 #ifndef NDSPVBASEIMPL_H
 #define NDSPVBASEIMPL_H
 
-#include "ndsbaseimpl.h"
+#include "baseImpl.h"
 #include "../include/nds3/definitions.h"
 
 #include <string>

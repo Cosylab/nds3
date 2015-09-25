@@ -5,9 +5,9 @@
 #include <registryCommon.h>
 #include <dbStaticPvt.h>
 
-#include "ndsepicsfactoryimpl.h"
-#include "ndsepicsinterfaceimpl.h"
-#include "../include/nds3/ndsbase.h"
+#include "epicsFactoryImpl.h"
+#include "epicsInterfaceImpl.h"
+#include "../include/nds3/base.h"
 
 #include <iostream>
 #include <fstream>

@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 #include <set>
-#include "ndspvbaseimpl.h"
-#include "ndsinterfacebaseimpl.h"
+#include "pvbaseimpl.h"
+#include "interfacebaseimpl.h"
 
 namespace nds
 {
