@@ -2,7 +2,7 @@
 #define NDSEXCEPTIONS_H
 
 /**
- * @file ndsexceptions.h
+ * @file exceptions.h
  *
  * @brief Defines all the exceptions that may be thrown by the library or
  *        recognized and processed by the library.

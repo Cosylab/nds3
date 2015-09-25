@@ -2,7 +2,7 @@
 #define NDS3_H
 
 /**
- * @file nds3.h
+ * @file nds.h
  *
  * Projects that use the NDS3 library can include this file which takes care
  * of including all the other necessary files.

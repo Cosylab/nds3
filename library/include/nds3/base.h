@@ -2,7 +2,7 @@
 #define NDSBASE_H
 
 /**
- * @file ndsbase.h
+ * @file base.h
  * @brief Defines the base class used for nodes, PVs, state machines and acquisition
  *        devices.
  *

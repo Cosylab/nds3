@@ -56,37 +56,37 @@ epics:INCLUDEPATH += $$EPICS_BASE/include \
 tango:INCLUDEPATH += /usr/local/include/tango /usr/include/omniORB4
 
 SOURCES +=\
-    library/implementation/ndsbaseimpl.cpp \
-    library/implementation/ndsnodeimpl.cpp \
-    library/implementation/ndsbase.cpp \
-    library/implementation/ndsnode.cpp \
-    library/implementation/ndsport.cpp \
-    library/implementation/ndsportimpl.cpp \
-    library/implementation/ndspvbaseimpl.cpp \
-    library/implementation/ndspvbase.cpp \
-    library/implementation/scansymbols.cpp \
-    library/implementation/ndspvdelegateimpl.cpp \
-    library/implementation/ndspvdelegate.cpp \
-    library/implementation/ndsdelegate.cpp \
-    library/implementation/ndspvholddelegateimpl.cpp \
-    library/implementation/ndspvholddelegate.cpp \
-    library/implementation/ndsfactory.cpp \
-    library/implementation/ndsstatemachine.cpp \
-    library/implementation/ndsstatemachineimpl.cpp \
-    library/implementation/ndsexceptions.cpp \
-    library/implementation/ndsepicsinterfaceimpl.cpp \
-    library/implementation/ndsinterfacebaseimpl.cpp \
-    library/implementation/ndsdataacquisitionimpl.cpp \
-    library/implementation/ndspvvariableimpl.cpp \
-    library/implementation/ndspvvariable.cpp \
-    library/implementation/ndsdataacquisition.cpp \
-    library/implementation/ndsepicsfactoryimpl.cpp \
-    library/implementation/ndsfactorybaseimpl.cpp \
-    library/implementation/ndstangofactoryimpl.cpp \
-    library/implementation/ndstangointerfaceimpl.cpp
+    library/src/ndsbaseimpl.cpp \
+    library/src/ndsnodeimpl.cpp \
+    library/src/ndsbase.cpp \
+    library/src/ndsnode.cpp \
+    library/src/ndsport.cpp \
+    library/src/ndsportimpl.cpp \
+    library/src/ndspvbaseimpl.cpp \
+    library/src/ndspvbase.cpp \
+    library/src/scansymbols.cpp \
+    library/src/ndspvdelegateimpl.cpp \
+    library/src/ndspvdelegate.cpp \
+    library/src/ndsdelegate.cpp \
+    library/src/ndspvholddelegateimpl.cpp \
+    library/src/ndspvholddelegate.cpp \
+    library/src/ndsfactory.cpp \
+    library/src/ndsstatemachine.cpp \
+    library/src/ndsstatemachineimpl.cpp \
+    library/src/ndsexceptions.cpp \
+    library/src/ndsepicsinterfaceimpl.cpp \
+    library/src/ndsinterfacebaseimpl.cpp \
+    library/src/ndsdataacquisitionimpl.cpp \
+    library/src/ndspvvariableimpl.cpp \
+    library/src/ndspvvariable.cpp \
+    library/src/ndsdataacquisition.cpp \
+    library/src/ndsepicsfactoryimpl.cpp \
+    library/src/ndsfactorybaseimpl.cpp \
+    library/src/ndstangofactoryimpl.cpp \
+    library/src/ndstangointerfaceimpl.cpp
 
 HEADERS += \
-    library/implementation/scansymbols.h \
+    library/src/scansymbols.h \
     library/include/nds3/definitions.h \
     library/include/nds3/nds.h \
     library/include/nds3/base.h \
@@ -101,19 +101,19 @@ HEADERS += \
     library/include/nds3/pvHoldDelegate.h \
     library/include/nds3/pvVariable.h \
     library/include/nds3/stateMachine.h \
-    library/implementation/epicsFactoryImpl.h \
-    library/implementation/dataAcquisitionImpl.h \
-    library/implementation/epicsInterfaceImpl.h \
-    library/implementation/factoryBaseImpl.h \
-    library/implementation/interfaceBaseImpl.h \
-    library/implementation/nodeImpl.h \
-    library/implementation/portImpl.h \
-    library/implementation/pvBaseImpl.h \
-    library/implementation/pvDelegateImpl.h \
-    library/implementation/pvHoldDelegateImpl.h \
-    library/implementation/pvVariableImpl.h \
-    library/implementation/stateMachineImpl.h \
-    library/implementation/tangoFactoryImpl.h \
-    library/implementation/tangoInterfaceImpl.h \
-    library/implementation/baseImpl.h
+    library/src/epicsFactoryImpl.h \
+    library/src/dataAcquisitionImpl.h \
+    library/src/epicsInterfaceImpl.h \
+    library/src/factoryBaseImpl.h \
+    library/src/interfaceBaseImpl.h \
+    library/src/nodeImpl.h \
+    library/src/portImpl.h \
+    library/src/pvBaseImpl.h \
+    library/src/pvDelegateImpl.h \
+    library/src/pvHoldDelegateImpl.h \
+    library/src/pvVariableImpl.h \
+    library/src/stateMachineImpl.h \
+    library/src/tangoFactoryImpl.h \
+    library/src/tangoInterfaceImpl.h \
+    library/src/baseImpl.h
 
