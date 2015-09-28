@@ -87,7 +87,8 @@ protected:
                 int(std::is_same<T, std::vector<std::int8_t> >::value) * (int)dataType_t::dataInt8Array +
                 int(std::is_same<T, std::vector<std::uint8_t> >::value) * (int)dataType_t::dataUint8Array +
                 int(std::is_same<T, std::vector<std::int32_t> >::value) * (int)dataType_t::dataInt32Array +
-                int(std::is_same<T, std::vector<double> >::value) * (int)dataType_t::dataFloat64Array;
+                int(std::is_same<T, std::vector<double> >::value) * (int)dataType_t::dataFloat64Array +
+                int(std::is_same<T, std::string>::value) * (int)dataType_t::dataString;
 
         static_assert(type != 0, "Undefined data type");
         return(dataType_t)type;
