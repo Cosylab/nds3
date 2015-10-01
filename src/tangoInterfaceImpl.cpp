@@ -176,7 +176,7 @@ NdsDevice::~NdsDevice()
 void NdsDevice::init_device()
 {
     TangoFactoryImpl::getInstance().setLastCreatedDevice(this);
-    m_pDevice = TangoFactoryImpl::getInstance().createDriver(m_pClass->get_name(), m_parameter);
+    m_pDevice = TangoFactoryImpl::getInstance().createDevice(m_pClass->get_name(), m_parameter);
 }
 
 void NdsDevice::delete_device()

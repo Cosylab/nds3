@@ -79,5 +79,20 @@ void Base::setTimestampDelegate(getTimestampPlugin_t timestampDelegate)
     m_pImplementation->setTimestampDelegate(timestampDelegate);
 }
 
+std::ostream& Base::getLogger(const logLevel_t logLevel)
+{
+    return m_pImplementation->getLogger(logLevel);
+}
+
+bool Base::isLogLevelEnabled(const logLevel_t logLevel) const
+{
+    return m_pImplementation->isLogLevelEnabled(logLevel);
+}
+
+void Base::setLogLevel(const logLevel_t logLevel)
+{
+    m_pImplementation->setLogLevel(logLevel);
+}
+
 
 }

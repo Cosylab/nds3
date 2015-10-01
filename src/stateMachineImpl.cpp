@@ -96,6 +96,12 @@ bool StateMachineImpl::canChange(state_t newState) const
     return isAllowedTransition(localState, newState) &&  m_allowChange(localState, globalState, newState);
 }
 
+/*
+ * Changes the state. First check if the change is allowed, then execute the
+ *  state transition.
+ * The state transition may be executed in a secondary thread
+ *
+ ***************************************************************************/
 void StateMachineImpl::setState(const state_t newState)
 {
     state_t localState;
@@ -107,6 +113,9 @@ void StateMachineImpl::setState(const state_t newState)
         localState = getLocalState();
         globalState = getGlobalState();
 
+        // Find the transitional state that we have to set and
+        //  the function to call to perform the transition
+        //////////////////////////////////////////////////////
         if(localState == state_t::off && newState == state_t::on)
         {
             transitionFunction = m_switchOn;
@@ -151,6 +160,9 @@ void StateMachineImpl::setState(const state_t newState)
         m_stateTimestamp = getTimestamp();
         m_pGetStatePV->push(m_stateTimestamp, (std::int32_t)m_localState);
     }
+
+    // Execute the state transition. Launch a secondary thread if necessary
+    ///////////////////////////////////////////////////////////////////////
     if(m_bAsync)
     {
         if(m_transitionThread.joinable())
@@ -161,10 +173,19 @@ void StateMachineImpl::setState(const state_t newState)
     }
     else
     {
+        ndsInfoStream(*this) << "Switching state from " << getStateName(localState) << "to " << getStateName(newState) << std::endl;
+
         executeTransition(localState, newState, transitionFunction);
+
+        ndsInfoStream(*this) << "State switching successful" << std::endl;
     }
 }
 
+/*
+ * Execute the transition from a state to another. It may get executed
+ *  in a secondary thread
+ *
+ *********************************************************************/
 void StateMachineImpl::executeTransition(const state_t initialState, const state_t finalState, stateChange_t transitionFunction)
 {
     try

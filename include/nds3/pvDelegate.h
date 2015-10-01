@@ -24,6 +24,7 @@ protected:
 
 public:
     /**
+     * @ingroup datareadwrite
      * @brief Definition of the method used to read.
      *
      * The read function will receive a pointer to a timespec and a pointer to
@@ -33,6 +34,7 @@ public:
     typedef std::function<void (timespec*, T*)> read_t;
 
     /**
+     * @ingroup datareadwrite
      * @brief Definition of the method used to write.
      */
     typedef std::function<void (const timespec&, const T&)> write_t;

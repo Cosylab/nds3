@@ -29,6 +29,8 @@ void NodeImpl::addChild(std::shared_ptr<BaseImpl> pChild)
 
 void NodeImpl::initialize(FactoryBaseImpl& controlSystem)
 {
+    BaseImpl::initialize(controlSystem);
+
     for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
     {
         scanChildren->second->setParent(std::static_pointer_cast<NodeImpl>(shared_from_this()) );
@@ -84,6 +86,17 @@ state_t NodeImpl::getChildrenState() const
         }
     }
     return returnState;
+}
+
+void NodeImpl::setLogLevel(const logLevel_t logLevel)
+{
+    BaseImpl::setLogLevel(logLevel);
+
+    for(tChildren::const_iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
+    {
+        scanChildren->second->setLogLevel(logLevel);
+    }
+
 }
 
 }

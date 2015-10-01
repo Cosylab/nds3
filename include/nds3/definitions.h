@@ -112,6 +112,84 @@ enum class recordType_t
 
 
 /**
+ * @defgroup logging Logging
+ *
+ * The Logging methods can be used to send debug, information, warning or errors to the control system.
+ *
+ * The logging interface is control-system agnostic.
+ *
+ * Each logged information is tied to a node, and the log level of each node can be set separately.
+ * For instance, it is possible to have the whole device (root node) with a log level set to "warning"
+ *  and only a specific state machine set to "debug".
+ *
+ * The logging level of each node can be set with Base::setLogLevel().
+ *
+ * Each node provides a different std::ostream object for each severity level and for each thread.
+ * Your application can retrieve the std::ostream object by using Base::getLogger().
+ *
+ * @warning Altought it is possible to use directly Base::getLogger() in order to perform the log
+ *          operations, the suggested method is the usage of the logging macros ndsDebugStream,
+ *          ndsInfoStream, ndsWarningStream and ndsErrorStream.\n
+ *          \n
+ *          The loggin macros boost the performances by avoiding the log altogheter when it is not
+ *          necessary
+ */
+
+/**
+ * @ingroup logging
+ * @brief Defines the severities of the log information.
+ */
+enum class logLevel_t: std::uint8_t
+{
+    debug,   ///< Debug information
+    info,    ///< Non critical information
+    warning, ///< Warning
+    error,   ///< Error
+    none     ///< Nothing is logger
+};
+
+/**
+ * @ingroup logging
+ * @brief If the logging is enabled for the specified severity level then the
+ *        macro returns the proper logging stream, otherwise it skips the logging
+ *        operation.
+ */
+#define ndsLogStream(node, logLevel) \
+    if(!(node).isLogLevelEnabled(logLevel)) {} else (node).getLogger(logLevel)
+
+/**
+ * @ingroup logging
+ * @brief Log to the debug stream if the debug log level is enabled on the
+ *        selected node.
+ *
+ * The last logged element must be std::endl.
+ *
+ * Example:
+ * @code
+ * ndsDebugStream(node) << "The value has been changed from " << value0 << " to value " << value1 << std::endl
+ * @endcode
+ */
+#define ndsDebugStream(node) ndsLogStream(node, nds::logLevel_t::debug)
+
+/**
+ * @ingroup logging
+ * @brief Log to the info stream if the info log level is enabled on the
+ *        selected node.
+ *
+ * The last logged element must be std::endl.
+ *
+ * Example:
+ * @code
+ * ndsInfoStream(node) << "The value has been changed from " << value0 << " to value " << value1 << std::endl
+ * @endcode
+ */
+#define ndsInfoStream(node) ndsLogStream(node, nds::logLevel_t::info)
+#define ndsWarningStream(node) ndsLogStream(node, nds::logLevel_t::warning)
+#define ndsErrorStream(node) ndsLogStream(node, nds::logLevel_t::error)
+
+
+
+/**
  * @brief Definition for the function executed to allocate a driver.
  *
  * Returns a pointer to the allocated driver: the pointer will be passed
@@ -156,13 +234,15 @@ typedef std::function<void ()> stateChange_t;
  */
 typedef std::function<bool (const state_t, const state_t, const state_t)> allowChange_t;
 
-
 /**
+ * @ingroup timing
  * @brief Definition for a function called to retrieve a time.
  *
  * The function should return the UNIX epoch (seconds and nanoseconds).
  */
 typedef std::function<timespec ()> getTimestampPlugin_t;
+
+typedef std::function<void ()> threadFunction_t;
 
 
 /**

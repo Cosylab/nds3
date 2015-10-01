@@ -1,6 +1,15 @@
 #ifndef NDSDATAACQUISITION_H
 #define NDSDATAACQUISITION_H
 
+/**
+ * @file dataAcquisition.h
+ * @brief Defines the DataAcquisition node, which provides basic services for data
+ *        acquisition.
+ *
+ * Include nds3.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include "definitions.h"
 #include "node.h"
 
@@ -47,6 +56,7 @@ public:
                     );
 
     /**
+     * @ingroup datareadwrite
      * @brief Push acquired data to the control system.
      *
      * Usually your device implementation will call this function from the
@@ -87,6 +97,7 @@ public:
     size_t getDecimation();
 
     /**
+     * @ingroup timing
      * @brief Returns the timestamp at the moment of the start of the acquisition.
      *
      * This value is set by the state machine when the state switches to running.

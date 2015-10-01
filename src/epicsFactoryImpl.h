@@ -4,12 +4,14 @@
 #define NDSFACTORYIMPL_CPP
 
 #include "../include/nds3/definitions.h"
-#include "factorybaseimpl.h"
+#include "factoryBaseImpl.h"
+#include "logStreamGetterImpl.h"
 #include <dbStaticLib.h>
 #include <vector>
 #include <list>
 #include <string>
 #include <set>
+#include <sstream>
 
 #include <iocsh.h>
 
@@ -22,8 +24,9 @@ namespace nds
  * @brief Takes care of registering everything with EPICS
  *
  */
-class EpicsFactoryImpl: public FactoryBaseImpl
+class EpicsFactoryImpl: public FactoryBaseImpl, public LogStreamGetterImpl
 {
+    friend class EpicsLogStreamBufferImpl;
 public:
     static EpicsFactoryImpl& getInstance();
 
@@ -31,9 +34,18 @@ public:
 
     static void createNdsDevice(const iocshArgBuf * arguments);
 
+    virtual std::thread createThread(const std::string &name, threadFunction_t function);
+
     virtual InterfaceBaseImpl* getNewInterface(const std::string& fullName);
 
     virtual void run(int argc,char *argv[]);
+
+    virtual std::ostream* getLogStream(const BaseImpl& baseImpl, const logLevel_t logLevel);
+
+    virtual LogStreamGetterImpl* getLogStreamGetter();
+
+    void log(const std::string& nodeName, const std::string& logString, logLevel_t logLevel);
+
 
 private:
     void registerRecordTypes(DBBASE* pDatabase);
@@ -59,6 +71,29 @@ private:
 
     std::vector<iocshVarDef> m_variableFunctions;
     std::list<std::string> m_variableNames;
+};
+
+class EpicsLogStreamBufferImpl: public std::stringbuf
+{
+public:
+    EpicsLogStreamBufferImpl(const std::string& nodeName, const logLevel_t logLevel, EpicsFactoryImpl* pEpicsFactory);
+
+protected:
+    virtual int sync();
+
+    std::string m_nodeName;
+    logLevel_t m_logLevel;
+    EpicsFactoryImpl* m_pFactory;
+};
+
+class EpicsLogStream: public std::ostream
+{
+public:
+    EpicsLogStream(const std::string& nodeName, const logLevel_t logLevel, EpicsFactoryImpl* pEpicsFactory);
+
+protected:
+    EpicsLogStreamBufferImpl m_buffer;
+
 };
 
 

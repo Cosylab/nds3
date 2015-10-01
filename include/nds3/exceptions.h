@@ -6,6 +6,9 @@
  *
  * @brief Defines all the exceptions that may be thrown by the library or
  *        recognized and processed by the library.
+ *
+ * Include nds3.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
  */
 
 #include "definitions.h"

@@ -36,6 +36,8 @@ public:
     virtual state_t getGlobalState() const;
     state_t getChildrenState() const;
 
+    virtual void setLogLevel(const logLevel_t logLevel);
+
 private:
 
     typedef std::map<std::string, std::shared_ptr<BaseImpl> > tChildren;

@@ -10,10 +10,10 @@
  * necessary header files (including this one).
  */
 
-
 #include "definitions.h"
 #include <memory>
 #include <string>
+#include <ostream>
 
 /**
  * @namespace nds
@@ -77,6 +77,7 @@ public:
     virtual Port getPort();
 
     /**
+     * @ingroup naming
      * @brief Return the node's name.
      *
      * @return the node's name.
@@ -84,6 +85,7 @@ public:
     std::string getComponentName() const;
 
     /**
+     * @ingroup naming
      * @brief Return the full node's name, prepending the parents' names if necessary
      *        (e.g. "ROOT-CHANNEL1-THISNODE")
      *
@@ -92,6 +94,7 @@ public:
     std::string getFullName() const;
 
     /**
+     * @ingroup naming
      * @brief Return the node's name as seen by the parent Port node (the node that communicates
      *        with the device).
      *
@@ -113,6 +116,7 @@ public:
     void initialize(void* pDeviceObject, const controlSystem_t controlSystemType = controlSystem_t::defaultSystem);
 
     /**
+     * @ingroup timestamp
      * @brief Get the current time.
      *
      * - if a custom time function has been declared with setTimestampDelegate() then the
@@ -125,6 +129,7 @@ public:
     timespec getTimestamp() const;
 
     /**
+     * @ingroup timestamp
      * @brief Specify the delegate function to call to get the timestamp.
      *
      * If this method is not called then an internal function is called, which traverses
@@ -134,6 +139,54 @@ public:
      * @param timestampDelegate the delegate function to call to get the timestamp
      */
     void setTimestampDelegate(getTimestampPlugin_t timestampDelegate);
+
+    /**
+     * @ingroup logging
+     * @brief Retrieve a logging stream for the specified log level.
+     *
+     * You should use the NDS macros ndsDebugStream, ndsInfoStream, ndsWarningStream
+     *  and ndsErrorStream in order to perform log operations: this increases the
+     *  performances by avoiding non-necessary operations if the log has been disabled.
+     *
+     * The log information must be terminated by std::endl.
+     *
+     * Log streams are specific for each running thread in order to avoid multithreading
+     *  related issues.
+     *
+     * Example of usage:
+     * @code
+     * node.getLogger(nds::logLevel_t::warning) << "This is a warning message" << std::endl;
+     * @endcode
+     *
+     * or
+     * @code
+     * ndsWarningStream(node) << "This is the warning n." << 10 << std::endl;
+     * @endcode
+     *
+     * @param logLevel the level of the messages that will be logged to the stream
+     * @return a stream to which your application can send log messages.
+     *         Log messages must be terminated by std::endl
+     */
+    std::ostream& getLogger(const logLevel_t logLevel);
+
+    /**
+     * @ingroup logging
+     * @brief Returns true if the logging for a particular severity level has been enabled.
+     *
+     * @param logLevel the severity level for which the status is required
+     * @return true if the logging for the specified severity level is enabled
+     */
+    bool isLogLevelEnabled(const logLevel_t logLevel) const;
+
+    /**
+     * @ingroup logging
+     * @brief Enable the logging for a particular severity level.
+     *
+     * The logging severity level will be set also on the node's children.
+     *
+     * @param logLevel the severity level for which the logging is enabled.
+     */
+    void setLogLevel(const logLevel_t logLevel);
 
 #ifndef SWIG
 protected:

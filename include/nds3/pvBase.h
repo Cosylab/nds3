@@ -25,6 +25,7 @@ public:
 #endif
 
     /**
+     * @ingroup datareadwrite
      * @brief Call to read the value of the PV.
      *
      * If this object manages a delegated PV then the delegated function
@@ -40,6 +41,7 @@ public:
     void read(timespec* pTimestamp, T* pValue);
 
     /**
+     * @ingroup datareadwrite
      * @brief Call to write the value into the PV.
      *
      * If this object manages a delegated PV then the delegated function
@@ -53,6 +55,7 @@ public:
     void write(const timespec& timestamp, const T& value);
 
     /**
+     * @ingroup datareadwrite
      * @brief Pushes a value to the control system.
      *
      * The control system will receive the value immediately, regardless of

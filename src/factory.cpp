@@ -50,4 +50,9 @@ void Factory::run(int argc,char *argv[])
     m_pFactory->run(argc, argv);
 }
 
+std::thread Factory::createThread(const std::string &name, threadFunction_t function)
+{
+    return m_pFactory->createThread(name, function);
+}
+
 }

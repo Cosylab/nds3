@@ -1,5 +1,6 @@
 #include "factoryBaseImpl.h"
 #include "baseImpl.h"
+#include <thread>
 
 namespace nds
 {
@@ -24,7 +25,7 @@ void FactoryBaseImpl::registerDriver(const std::string& driverName, allocateDriv
     m_driversAllocDealloc[driverName] = std::pair<allocateDriver_t, deallocateDriver_t>(allocateFunction, deallocateFunction);
 }
 
-void* FactoryBaseImpl::createDriver(const std::string& name, const std::string& parameter)
+void* FactoryBaseImpl::createDevice(const std::string& name, const std::string& parameter)
 {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
@@ -33,6 +34,13 @@ void* FactoryBaseImpl::createDriver(const std::string& name, const std::string& 
     m_allocatedDevices.insert(std::pair<std::string, void*> (name, driver));
 
     return driver;
+}
+
+std::thread FactoryBaseImpl::createThread(const std::string &name, threadFunction_t function)
+{
+    std::thread newThread(function);
+    pthread_setname_np(newThread.native_handle(), name.c_str());
+    return newThread;
 }
 
 void FactoryBaseImpl::destroyDriver(void* pDevice)

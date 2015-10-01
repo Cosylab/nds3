@@ -4,6 +4,8 @@
 #include <iocshRegisterCommon.h>
 #include <registryCommon.h>
 #include <dbStaticPvt.h>
+#include <epicsThread.h>
+#include <errlog.h>
 
 #include "epicsFactoryImpl.h"
 #include "epicsInterfaceImpl.h"
@@ -45,8 +47,34 @@ void EpicsFactoryImpl::createNdsDevice(const iocshArgBuf * arguments)
     {
         parameter = arguments[1].sval;
     }
-    EpicsFactoryImpl::getInstance().createDriver(arguments[0].sval, parameter);
+    EpicsFactoryImpl::getInstance().createDevice(arguments[0].sval, parameter);
 }
+
+}
+
+std::thread EpicsFactoryImpl::createThread(const std::string &name, threadFunction_t function)
+{
+    std::thread thread = FactoryBaseImpl::createThread(name, function);
+/*
+    epicsThreadOSD * pThreadInfo = ::calloc(sizeof(epicsThreadOSD) + name.size());
+
+    ::memcpy(&(pThreadInfo->name[0]), name.c_str(), name.size());
+    pThreadInfo->suspendEvent = epicsEventCreate(epicsEventEmpty);
+    pThreadInfo->tid = thread.native_handle();
+    pthreadInfo->osiPriority = 0;
+
+    struct sched_param param;
+    int policy;
+    if(pthread_getschedparam(pThreadInfo->tid, &policy, &param) == 0)
+    {
+        pthreadInfo->osiPriority =
+                 (param.sched_priority - pcommonAttr->minPriority) * 100.0 /
+                    (pcommonAttr->maxPriority - pcommonAttr->minPriority + 1);
+    }
+
+    pthread_setspecific(getpthreadInfo ,(void *)pThreadInfo);
+*/
+    return thread;
 
 }
 
@@ -68,6 +96,7 @@ EpicsFactoryImpl::EpicsFactoryImpl()
     m_commandDefinition.nargs = sizeof(commandArguments) / sizeof(commandArguments[0]);
     m_commandDefinition.name = commandName.c_str();
     iocshRegister(&m_commandDefinition, createNdsDevice);
+
 }
 
 InterfaceBaseImpl* EpicsFactoryImpl::getNewInterface(const std::string& fullName)
@@ -261,6 +290,61 @@ std::string EpicsFactoryImpl::compareString(const std::string& string, const std
 
     return "";
 }
+
+void EpicsFactoryImpl::log(const std::string &nodeName, const std::string &logString, logLevel_t logLevel)
+{
+    switch(logLevel)
+    {
+    case logLevel_t::debug:
+        errlogSevPrintf(errlogInfo, "Node %s : %s", nodeName.c_str(), logString.c_str());
+        break;
+    case logLevel_t::info:
+        errlogSevPrintf(errlogInfo, "Node %s : %s", nodeName.c_str(), logString.c_str());
+        break;
+    case logLevel_t::warning:
+        errlogSevPrintf(errlogMinor, "Node %s : %s", nodeName.c_str(), logString.c_str());
+        break;
+    case logLevel_t::error:
+        errlogSevPrintf(errlogMajor, "Node %s : %s", nodeName.c_str(), logString.c_str());
+        break;
+    default:
+        throw std::logic_error("Cannot log with severity level set to none");
+    }
+}
+
+LogStreamGetterImpl* EpicsFactoryImpl::getLogStreamGetter()
+{
+    return this;
+}
+
+std::ostream* EpicsFactoryImpl::getLogStream(const BaseImpl& baseImpl, const logLevel_t logLevel)
+{
+    return new EpicsLogStream(baseImpl.getFullName(), logLevel, this);
+}
+
+
+EpicsLogStreamBufferImpl::EpicsLogStreamBufferImpl(const std::string& nodeName, const logLevel_t logLevel, EpicsFactoryImpl* pEpicsFactory):
+    m_nodeName(nodeName), m_logLevel(logLevel), m_pFactory(pEpicsFactory)
+{
+}
+
+int EpicsLogStreamBufferImpl::sync()
+{
+    std::string string(std::string(pbase(), pptr() - pbase()));
+    m_pFactory->log(m_nodeName, string, m_logLevel);
+    seekpos(0);
+    return 0;
+}
+
+EpicsLogStream::EpicsLogStream(const std::string& nodeName, const logLevel_t logLevel, EpicsFactoryImpl* pEpicsFactory):
+    std::ostream(&m_buffer), m_buffer(nodeName, logLevel, pEpicsFactory)
+{
+
+}
+
+
+
+
 
 DBEntry::DBEntry(DBBASE* pDatabase)
 {

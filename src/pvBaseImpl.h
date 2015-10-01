@@ -76,7 +76,10 @@ public:
 
 protected:
     template<typename T>
-    constexpr dataType_t getDataTypeForCPPType() const
+#if !defined(__GNUC__) || __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+    constexpr
+#endif
+    dataType_t getDataTypeForCPPType() const
     {
         const int type =
                 int(std::is_same<T, std::int8_t>::value) * (int)dataType_t::dataInt8 +

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <thread>
 #include "definitions.h"
 
 namespace nds
@@ -58,7 +59,9 @@ public:
      * @param argc  the argc parameter received by the main() function
      * @param argv  the argv parameter received by the main() function
      */
-    virtual void run(int argc,char *argv[]);
+    void run(int argc,char *argv[]);
+
+    std::thread createThread(const std::string& name, threadFunction_t function);
 
 #ifndef SWIG
 private:

@@ -1,3 +1,9 @@
+/**
+ * @file epicsInterfaceImpl.cpp
+ *
+ * Contains the implementation of the interface to the EPICS system.
+ *
+ */
 #ifdef NDS3_EPICS
 
 #include "epicsInterfaceImpl.h"
@@ -17,6 +23,10 @@
 namespace nds
 {
 
+/*
+ * Constructor
+ *
+ *************/
 EpicsInterfaceImpl::EpicsInterfaceImpl(const std::string& portName): InterfaceBaseImpl(portName), asynPortDriver(
                                                                portName.c_str(),
                                                                256,    /* maxAddr */
@@ -28,22 +38,22 @@ EpicsInterfaceImpl::EpicsInterfaceImpl(const std::string& portName): InterfaceBa
                                                                //asynUInt32DigitalMask |
                                                                asynFloat64Mask  |
                                                                //asynOctetMask |
-                                                               //asynInt8ArrayMask |
+                                                               asynInt8ArrayMask |
                                                                //asynInt16ArrayMask |
-                                                               asynInt32ArrayMask //|
+                                                               asynInt32ArrayMask |
                                                                //asynFloat32ArrayMask |
-                                                               //asynFloat64ArrayMask |
+                                                               asynFloat64ArrayMask
                                                                //asynGenericPointerMask,   /* Interface mask */
                                               ,
                                                                asynInt32Mask |
                                                                //asynUInt32DigitalMask |
                                                                asynFloat64Mask |
                                                                //asynOctetMask |
-                                                               //asynInt8ArrayMask |
+                                                               asynInt8ArrayMask |
                                                                //asynInt16ArrayMask |
-                                                               asynInt32ArrayMask //|
+                                                               asynInt32ArrayMask |
                                                                //asynFloat32ArrayMask |
-                                                               //asynFloat64ArrayMask |
+                                                               asynFloat64ArrayMask
                                                                //asynGenericPointerMask,            /* Interrupt mask */
                                                                , ASYN_CANBLOCK | ASYN_MULTIDEVICE,  /* asynFlags. */
                                                                1,                                 /* Autoconnect */
@@ -283,6 +293,37 @@ void EpicsInterfaceImpl::registrationTerminated()
 
 }
 
+
+void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::uint32_t& value)
+{
+
+}
+
+void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int8_t> & value)
+{
+
+}
+
+void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::uint8_t> & value)
+{
+
+}
+
+void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<double> & value)
+{
+
+}
+
+void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int8_t& value)
+{
+    //pushOneValue<epicsInt8, asynInt32Interrupt>(pv, timestamp, (epicsInt32)value, asynStdInterfaces.int32InterruptPvt);
+}
+
+void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::uint8_t& value)
+{
+    //pushOneValue<epicsUInt8, asynInt32Interrupt>(pv, timestamp, (epicsInt32)value, asynStdInterfaces.int32InterruptPvt);
+}
+
 void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int32_t& value)
 {
     pushOneValue<epicsInt32, asynInt32Interrupt>(pv, timestamp, (epicsInt32)value, asynStdInterfaces.int32InterruptPvt);
@@ -295,6 +336,7 @@ void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& ti
 
 void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int32_t> & value)
 {
+    pv->getLogger(logLevel_t::debug) << "Pushing data" << std::endl;
     pushArray<epicsInt32, asynInt32ArrayInterrupt>(pv, timestamp, (epicsInt32*)value.data(), value.size(), asynStdInterfaces.int32ArrayInterruptPvt);
 }
 
@@ -411,7 +453,6 @@ asynStatus EpicsInterfaceImpl::readOneValue(asynUser* pasynUser, T* pValue)
 
 }
 
-
 /*
  * Called to read an array from a PV
  *
@@ -422,11 +463,6 @@ asynStatus EpicsInterfaceImpl::readArray(asynUser *pasynUser, T* pValue, size_t 
     try
     {
         timespec timestamp = convertEpicsTimeToUnixTime(pasynUser->timestamp);
-
-        if(pasynUser->timestamp.secPastEpoch == 0 && pasynUser->timestamp.nsec == 0)
-        {
-            clock_gettime(CLOCK_REALTIME, &timestamp);
-        }
 
         std::vector<T> vector(nElements);
         m_pvs[pasynUser->reason]->read(&timestamp, &vector);
@@ -483,109 +519,71 @@ asynStatus EpicsInterfaceImpl::writeArray(asynUser *pasynUser, T* pValue, size_t
 }
 
 
+/*********************************************************
+ *
+ * OVERWRITTEN METHODS FROm asynPortDriver
+ *
+ *********************************************************/
 
-asynStatus EpicsInterfaceImpl::readInt8(asynUser *pasynUser, epicsInt8 *pValue)
-{
-    return readOneValue(pasynUser, (std::int8*)pValue);
-}
-
-asynStatus EpicsInterfaceImpl::readUint8(asynUser *pasynUser, epicsUint8 *pValue)
-{
-    return readOneValue(pasynUser, (std::uint8_t*)pValue);
-}
 
 asynStatus EpicsInterfaceImpl::readInt32(asynUser *pasynUser, epicsInt32 *pValue)
 {
-    return readOneValue(pasynUser, (std::int32_t*)pValue);
-}
-
-asynStatus EpicsInterfaceImpl::readUint32(asynUser *pasynUser, epicsUint32 *pValue)
-{
-    return readOneValue(pasynUser, (std::uint32_t*)pValue);
+    return readOneValue<std::int32_t>(pasynUser, (std::int32_t*)pValue);
 }
 
 asynStatus EpicsInterfaceImpl::readFloat64(asynUser *pasynUser, epicsFloat64 *pValue)
 {
-    return readOneValue(pasynUser, (double*)pValue);
+    return readOneValue<double>(pasynUser, (double*)pValue);
 }
 
-
-asynStatus EpicsInterfaceImpl::writeInt8(asynUser *pasynUser, epicsInt8 value)
-{
-    return writeOneValue(pasynUser, (std::int8_t)value);
-}
-
-asynStatus EpicsInterfaceImpl::writeUint8(asynUser *pasynUser, epicsUint8 value)
-{
-    return writeOneValue(pasynUser, (std::uint8_t)value);
-}
 
 asynStatus EpicsInterfaceImpl::writeInt32(asynUser *pasynUser, epicsInt32 value)
 {
-    return writeOneValue(pasynUser, (std::int32_t)value);
+    return writeOneValue<std::int32_t>(pasynUser, (std::int32_t)value);
 }
-
-asynStatus EpicsInterfaceImpl::writeUint32(asynUser *pasynUser, epicsUint32 value)
-{
-    return writeOneValue(pasynUser, (std::uint32_t)value);
-}
-
 
 asynStatus EpicsInterfaceImpl::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 {
-    return writeOneValue(pasynUser, (double)value);
+    return writeOneValue<double>(pasynUser, (double)value);
 }
 
 asynStatus EpicsInterfaceImpl::readInt8Array(asynUser *pasynUser, epicsInt8* pValue,
                                               size_t nElements, size_t *nIn)
 {
-    return readArray(pasynUser, (std::int8_t*)pValue, nElements, nIn);
-}
-
-asynStatus EpicsInterfaceImpl::readUint8Array(asynUser *pasynUser, epicsUint8* pValue,
-                                              size_t nElements, size_t *nIn)
-{
-    return readArray(pasynUser, (std::uint8_t*)pValue, nElements, nIn);
+    return readArray<std::int8_t>(pasynUser, (std::int8_t*)pValue, nElements, nIn);
 }
 
 asynStatus EpicsInterfaceImpl::readInt32Array(asynUser *pasynUser, epicsInt32* pValue,
                                               size_t nElements, size_t *nIn)
 {
-    return readArray(pasynUser, (std::int32_t*)pValue, nElements, nIn);
+    return readArray<std::int32_t>(pasynUser, (std::int32_t*)pValue, nElements, nIn);
 }
 
 
 asynStatus EpicsInterfaceImpl::readFloat64Array(asynUser *pasynUser, epicsFloat64* pValue,
                                               size_t nElements, size_t *nIn)
 {
-    return readArray(pasynUser, (double*)pValue, nElements, nIn);
+    return readArray<double>(pasynUser, (double*)pValue, nElements, nIn);
 }
 
 
 asynStatus EpicsInterfaceImpl::writeInt8Array(asynUser *pasynUser, epicsInt8* pValue,
                                                size_t nElements)
 {
-    return writeArray(pasynUser, pValue, nElements);
+    return writeArray<std::int8_t>(pasynUser, (std::int8_t*)pValue, nElements);
 }
 
-asynStatus EpicsInterfaceImpl::writeUint8Array(asynUser *pasynUser, epicsUint8* pValue,
-                                               size_t nElements)
-{
-    return writeArray(pasynUser, pValue, nElements);
-}
 asynStatus EpicsInterfaceImpl::writeInt32Array(asynUser *pasynUser, epicsInt32* pValue,
                                                size_t nElements)
 {
-    return writeArray(pasynUser, pValue, nElements);
+    return writeArray<std::int32_t>(pasynUser, (std::int32_t*)pValue, nElements);
 }
 
 asynStatus EpicsInterfaceImpl::writeFloat64Array(asynUser *pasynUser, epicsFloat64* pValue,
                                                size_t nElements)
 {
-    return writeArray(pasynUser, pValue, nElements);
+    return writeArray<double>(pasynUser, (double*)pValue, nElements);
 }
-
-
 
 
 

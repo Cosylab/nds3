@@ -4,8 +4,10 @@
 #include <string>
 #include <map>
 #include <memory>
-#include <vector>
-
+#include <array>
+#include <set>
+#include <mutex>
+#include <ostream>
 #include "../include/nds3/definitions.h"
 
 
@@ -16,6 +18,8 @@ namespace nds
 class NodeImpl;
 class PortImpl;
 class FactoryBaseImpl;
+class LogStreamBufferImpl;
+class LogStreamGetterImpl;
 
 /**
  * @internal
@@ -24,16 +28,13 @@ class FactoryBaseImpl;
  */
 class BaseImpl: public std::enable_shared_from_this<BaseImpl>
 {
-    friend class NodeImpl;
-    friend class PortImpl;
-
 protected:
     BaseImpl(const std::string& name);
 
 public:
     BaseImpl(const BaseImpl& right) = delete;
 
-    virtual ~BaseImpl(){}
+    virtual ~BaseImpl();
 
     /**
      * @brief Get the Node that holds an ASYN port. Query the parent nodes if necessary.
@@ -43,14 +44,12 @@ public:
      */
     virtual std::shared_ptr<PortImpl> getPort();
 
-
     /**
      * @brief Return the node's name.
      *
      * @return the node's name.
      */
     std::string getComponentName() const;
-
 
     /**
      * @brief Return the full node's name, prepending the parents' names if necessary
@@ -83,7 +82,7 @@ public:
      * On EPICS it will create all the PVs and register them with the AsynDriver,
      * on Tango will create the dynamic attributes.
      */
-    virtual void initialize(FactoryBaseImpl& controlSystem) = 0;
+    virtual void initialize(FactoryBaseImpl& controlSystem);
 
     /**
      * @brief Deregister all the records from the control system. Call this from the root node
@@ -105,14 +104,50 @@ public:
 
     void setTimestampDelegate(getTimestampPlugin_t timestampDelegate);
 
+    std::ostream& getLogger(const logLevel_t logLevel);
+
+    /**
+     * @brief Returns true if the logging for a particular severity level has been enabled.
+     *
+     * @param logLevel the severity level for which the status is required
+     * @return true if the logging for the specified severity level is enabled
+     */
+    bool isLogLevelEnabled(const logLevel_t logLevel) const;
+
+    /**
+     * @brief Enable the logging for a particular severity level.
+     *
+     * @param logLevel the severity level for which the logging is enabled.
+     */
+    virtual void setLogLevel(const logLevel_t logLevel);
+
+
 protected:
     timespec getLocalTimestamp() const;
+
+    /**
+     * @brief This method is registered with pthread_create_key(&m_removeLoggersKey, this)
+     *        to remove the loggers that are specific to the running thread
+     */
+    static void deleteLogger(void* logger);
 
     std::string m_name;
     std::weak_ptr<NodeImpl> m_pParent;
 
     getTimestampPlugin_t m_timestampFunction;
 
+    logLevel_t m_logLevel;
+
+    /**
+     * @brief Point to a LogStreamGetterImpl that is used every time a new log stream
+     *        is needed.
+     */
+    LogStreamGetterImpl* m_logStreamGetter;
+
+    /**
+     * @brief Used to gain access to the node's loggers (they are different for each thread)
+     */
+    std::array<pthread_key_t, (size_t)logLevel_t::none> m_loggersKeys;
 };
 
 

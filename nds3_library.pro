@@ -83,7 +83,8 @@ SOURCES +=\
     src/stateMachine.cpp \
     src/stateMachineImpl.cpp \
     src/tangoFactoryImpl.cpp \
-    src/tangoInterfaceImpl.cpp
+    src/tangoInterfaceImpl.cpp \
+    src/logStreamGetterImpl.cpp
 
 HEADERS += \
     src/scansymbols.h \
@@ -115,5 +116,6 @@ HEADERS += \
     src/stateMachineImpl.h \
     src/tangoFactoryImpl.h \
     src/tangoInterfaceImpl.h \
-    src/baseImpl.h
+    src/baseImpl.h \
+    src/logStreamGetterImpl.h
 
