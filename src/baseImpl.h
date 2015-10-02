@@ -136,7 +136,7 @@ protected:
 
     getTimestampPlugin_t m_timestampFunction;
 
-    logLevel_t m_logLevel;
+    volatile logLevel_t m_logLevel;
 
     /**
      * @brief Point to a LogStreamGetterImpl that is used every time a new log stream
