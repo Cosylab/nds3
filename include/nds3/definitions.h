@@ -112,30 +112,6 @@ enum class recordType_t
 
 
 /**
- * @defgroup logging Logging
- *
- * The Logging methods can be used to send debug, information, warning or errors to the control system.
- *
- * The logging interface is control-system agnostic.
- *
- * Each logged information is tied to a node, and the log level of each node can be set separately.
- * For instance, it is possible to have the whole device (root node) with a log level set to "warning"
- *  and only a specific state machine set to "debug".
- *
- * The logging level of each node can be set with Base::setLogLevel().
- *
- * Each node provides a different std::ostream object for each severity level and for each thread.
- * Your application can retrieve the std::ostream object by using Base::getLogger().
- *
- * @warning Altought it is possible to use directly Base::getLogger() in order to perform the log
- *          operations, the suggested method is the usage of the logging macros ndsDebugStream,
- *          ndsInfoStream, ndsWarningStream and ndsErrorStream.\n
- *          \n
- *          The loggin macros boost the performances by avoiding the log altogheter when it is not
- *          necessary
- */
-
-/**
  * @ingroup logging
  * @brief Defines the severities of the log information.
  */

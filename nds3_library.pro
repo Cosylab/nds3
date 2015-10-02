@@ -117,5 +117,6 @@ HEADERS += \
     src/tangoFactoryImpl.h \
     src/tangoInterfaceImpl.h \
     src/baseImpl.h \
-    src/logStreamGetterImpl.h
+    src/logStreamGetterImpl.h \
+    doc/groups.h
 
