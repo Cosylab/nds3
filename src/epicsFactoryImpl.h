@@ -34,6 +34,8 @@ public:
 
     static void createNdsDevice(const iocshArgBuf * arguments);
 
+    static void ndsUserCommand(const iocshArgBuf * arguments);
+
     virtual std::thread createThread(const std::string &name, threadFunction_t function);
 
     virtual InterfaceBaseImpl* getNewInterface(const std::string& fullName);
@@ -43,6 +45,14 @@ public:
     virtual std::ostream* getLogStream(const BaseImpl& baseImpl, const logLevel_t logLevel);
 
     virtual LogStreamGetterImpl* getLogStreamGetter();
+
+    virtual void registerCommand(const BaseImpl& node,
+                                 const std::string& command,
+                                 const std::string& usage,
+                                 const size_t numParameters, command_t commandFunction);
+
+    virtual void deregisterCommand(const BaseImpl& node,
+                                   const std::string& command);
 
     void log(const std::string& nodeName, const std::string& logString, logLevel_t logLevel);
 
@@ -71,6 +81,17 @@ private:
 
     std::vector<iocshVarDef> m_variableFunctions;
     std::list<std::string> m_variableNames;
+
+    struct nodeCommand_t
+    {
+        nodeCommand_t() {}
+        std::string m_commandName;
+        std::string m_usage;
+        size_t m_argumentsNumber;
+        std::map<std::string, command_t> m_delegates;
+    };
+    typedef std::map<std::string, nodeCommand_t> nodeCommands_t;
+    nodeCommands_t m_nodeCommands;
 };
 
 class EpicsLogStreamBufferImpl: public std::stringbuf

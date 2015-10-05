@@ -88,7 +88,7 @@ public:
      * @brief Deregister all the records from the control system. Call this from the root node
      *        which will take care of traversing its children and deinitialize them.
      */
-    virtual void deinitialize() = 0;
+    virtual void deinitialize();
 
     /**
      * @brief Return the current time.
@@ -104,9 +104,19 @@ public:
 
     void setTimestampDelegate(getTimestampPlugin_t timestampDelegate);
 
+    /**
+     * @ingroup logging
+     * @brief Retrieve a stream that can be used for logging.
+     *
+     * Logging streams are specific for the requested log level and the current thread.
+     *
+     * @param logLevel the severity level of the messages that will be logged througn the stream
+     * @return a logging stream for the requested log level in the current thread
+     */
     std::ostream& getLogger(const logLevel_t logLevel);
 
     /**
+     * @ingroup logging
      * @brief Returns true if the logging for a particular severity level has been enabled.
      *
      * @param logLevel the severity level for which the status is required
@@ -115,11 +125,22 @@ public:
     bool isLogLevelEnabled(const logLevel_t logLevel) const;
 
     /**
+     * @ingroup logging
      * @brief Enable the logging for a particular severity level.
      *
      * @param logLevel the severity level for which the logging is enabled.
      */
     virtual void setLogLevel(const logLevel_t logLevel);
+
+    /**
+     * @ingroup commands
+     * @brief Define a command bound to the node.
+     *
+     * @param command
+     * @param usage
+     * @param numParameters
+     */
+    void defineCommand(const std::string& command, const std::string& usage, const size_t numParameters, const command_t function);
 
 
 protected:
@@ -131,8 +152,17 @@ protected:
      */
     static void deleteLogger(void* logger);
 
+    /**
+     * @brief The node name
+     */
     std::string m_name;
+
+    /**
+     * @brief Pointer to the parent node.
+     */
     std::weak_ptr<NodeImpl> m_pParent;
+
+    FactoryBaseImpl* m_pFactory;
 
     getTimestampPlugin_t m_timestampFunction;
 
@@ -148,6 +178,22 @@ protected:
      * @brief Used to gain access to the node's loggers (they are different for each thread)
      */
     std::array<pthread_key_t, (size_t)logLevel_t::none> m_loggersKeys;
+
+    struct commandDefinition_t
+    {
+        commandDefinition_t(const std::string& command, const std::string& usage, const size_t numParameters, command_t function):
+            m_command(command), m_usage(usage), m_numParameters(numParameters), m_function(function)
+        {
+        }
+
+        std::string m_command;
+        std::string m_usage;
+        size_t m_numParameters;
+        command_t m_function;
+    };
+
+    typedef std::list<commandDefinition_t> commands_t;
+    commands_t m_commands;
 };
 
 

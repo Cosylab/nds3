@@ -36,6 +36,13 @@ class FactoryBaseImpl
 public:
     virtual ~FactoryBaseImpl();
 
+    /**
+     * @brief Called to register the functions that allocate and deallocate a device.
+     *
+     * @param driverName         the name of the device driver
+     * @param allocateFunction   the allocation function.
+     * @param deallocateFunction the deallocation function
+     */
     virtual void registerDriver(const std::string& driverName, allocateDriver_t allocateFunction, deallocateDriver_t deallocateFunction);
 
     virtual std::thread createThread(const std::string& name, threadFunction_t function);
@@ -59,6 +66,35 @@ public:
     virtual void run(int argc,char *argv[]) = 0;
 
     virtual LogStreamGetterImpl* getLogStreamGetter() = 0;
+
+    /**
+     * @brief Called to register a command tied to a specific node.
+     *
+     * The NDS framework guarantees that there are no multi-threading concurrency
+     *  issues when calling this function.
+     *
+     * @param node            the node to which the command has to be tied
+     * @param command         the command
+     * @param usage           command's description
+     * @param numParameters   the number of accepted parameters
+     * @param commandFunction the delegate function to call to execute the command
+     */
+    virtual void registerCommand(const BaseImpl& node,
+                                 const std::string& command,
+                                 const std::string& usage,
+                                 const size_t numParameters, command_t commandFunction) = 0;
+
+    /**
+     * @brief Called to deregister a command tied to a node.
+     *
+     * The NDS framework guarantees that there are no multi-threading concurrency
+     *  issues when calling this function.
+     *
+     * @param node          to node from which the command has to be removed
+     * @param command       the command to remove
+     */
+    virtual void deregisterCommand(const BaseImpl& node,
+                                   const std::string& command) = 0;
 
 protected:
 

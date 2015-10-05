@@ -8,7 +8,7 @@
 namespace nds
 {
 
-BaseImpl::BaseImpl(const std::string& name): m_name(name),
+BaseImpl::BaseImpl(const std::string& name): m_name(name), m_pFactory(0),
     m_timestampFunction(std::bind(&BaseImpl::getLocalTimestamp, this)),
     m_logLevel(logLevel_t::warning)
 {
@@ -16,6 +16,13 @@ BaseImpl::BaseImpl(const std::string& name): m_name(name),
     {
         pthread_key_create(&(m_loggersKeys[scanLevels]), &BaseImpl::deleteLogger);
     }
+
+    // Register the commands for the log level
+    //////////////////////////////////////////
+    defineCommand("setLogLevelDebug", "", 0, std::bind(&BaseImpl::setLogLevel, this, logLevel_t::debug));
+    defineCommand("setLogLevelInfo", "", 0, std::bind(&BaseImpl::setLogLevel, this, logLevel_t::info));
+    defineCommand("setLogLevelWarning", "", 0, std::bind(&BaseImpl::setLogLevel, this, logLevel_t::warning));
+    defineCommand("setLogLevelError", "", 0, std::bind(&BaseImpl::setLogLevel, this, logLevel_t::error));
 }
 
 BaseImpl::~BaseImpl()
@@ -94,7 +101,29 @@ std::string BaseImpl::getFullNameFromPort() const
 
 void BaseImpl::initialize(FactoryBaseImpl &controlSystem)
 {
+    m_pFactory = &controlSystem;
+
+    // Remember where we can go get our logging streams
+    ///////////////////////////////////////////////////
     m_logStreamGetter = controlSystem.getLogStreamGetter();
+
+    // Register all the commands
+    ////////////////////////////
+    for(commands_t::const_iterator scanCommands(m_commands.begin()), endCommands(m_commands.end()); scanCommands != endCommands; ++scanCommands)
+    {
+        controlSystem.registerCommand(*this, scanCommands->m_command, scanCommands->m_usage, scanCommands->m_numParameters, scanCommands->m_function);
+    }
+}
+
+void BaseImpl::deinitialize()
+{
+    // Deregister all the commands
+    //////////////////////////////
+    for(commands_t::const_iterator scanCommands(m_commands.begin()), endCommands(m_commands.end()); scanCommands != endCommands; ++scanCommands)
+    {
+        m_pFactory->deregisterCommand(*this, scanCommands->m_command);
+    }
+
 }
 
 timespec BaseImpl::getTimestamp() const
@@ -150,6 +179,10 @@ void BaseImpl::setLogLevel(const logLevel_t logLevel)
     m_logLevel = logLevel;
 }
 
+void BaseImpl::defineCommand(const std::string& command, const std::string& usage, const size_t numParameters, const command_t function)
+{
+    m_commands.emplace_back(command, usage, numParameters, function);
+}
 
 }
 

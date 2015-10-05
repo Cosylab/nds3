@@ -63,6 +63,13 @@ StateMachineImpl::StateMachineImpl(bool bAsync,
     pGetGlobalStatePV->setType(recordType_t::mbbi);
     pGetGlobalStatePV->setEnumeration(enumerationStrings);
     addChild(pGetGlobalStatePV);
+
+    // Register state transition commands
+    /////////////////////////////////////
+    defineCommand("switchOn", "", 0, std::bind(&StateMachineImpl::setState, this, state_t::on));
+    defineCommand("switchOff", "", 0, std::bind(&StateMachineImpl::setState, this, state_t::off));
+    defineCommand("start", "", 0, std::bind(&StateMachineImpl::setState, this, state_t::running));
+    defineCommand("stop", "", 0, std::bind(&StateMachineImpl::setState, this, state_t::on));
 }
 
 StateMachineImpl::~StateMachineImpl()
@@ -173,11 +180,7 @@ void StateMachineImpl::setState(const state_t newState)
     }
     else
     {
-        ndsInfoStream(*this) << "Switching state from " << getStateName(localState) << "to " << getStateName(newState) << std::endl;
-
         executeTransition(localState, newState, transitionFunction);
-
-        ndsInfoStream(*this) << "State switching successful" << std::endl;
     }
 }
 
@@ -190,7 +193,12 @@ void StateMachineImpl::executeTransition(const state_t initialState, const state
 {
     try
     {
+        ndsInfoStream(*this) << "Switching state from " << getStateName(initialState) << "to " << getStateName(finalState) << std::endl;
+
         transitionFunction();
+
+        ndsInfoStream(*this) << "State switching successful" << std::endl;
+
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
         m_localState = finalState;
         m_stateTimestamp = getTimestamp();

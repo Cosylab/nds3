@@ -2,9 +2,12 @@
 #include "stateMachineImpl.h"
 #include "../include/nds3/definitions.h"
 #include <memory>
+#include <mutex>
 
 namespace nds
 {
+
+static std::recursive_mutex m_initializationMutex;
 
 NodeImpl::NodeImpl(const std::string &name): BaseImpl(name)
 {}
@@ -24,11 +27,21 @@ void NodeImpl::addChild(std::shared_ptr<BaseImpl> pChild)
     if(stateMachine.get() != 0)
     {
         m_pStateMachine = stateMachine;
+
+        // Add the state machine commands also to this node
+        ///////////////////////////////////////////////////
+        defineCommand("switchOn", "", 0, std::bind(&StateMachineImpl::setState, m_pStateMachine, state_t::on));
+        defineCommand("switchOff", "", 0, std::bind(&StateMachineImpl::setState, m_pStateMachine, state_t::off));
+        defineCommand("start", "", 0, std::bind(&StateMachineImpl::setState, m_pStateMachine, state_t::running));
+        defineCommand("stop", "", 0, std::bind(&StateMachineImpl::setState, m_pStateMachine, state_t::on));
+
     }
 }
 
 void NodeImpl::initialize(FactoryBaseImpl& controlSystem)
 {
+    std::lock_guard<std::recursive_mutex> serializeInitialization(m_initializationMutex);
+
     BaseImpl::initialize(controlSystem);
 
     for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
@@ -43,6 +56,9 @@ void NodeImpl::initialize(FactoryBaseImpl& controlSystem)
 
 void NodeImpl::deinitialize()
 {
+    std::lock_guard<std::recursive_mutex> serializeInitialization(m_initializationMutex);
+
+    BaseImpl::deinitialize();
     for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
     {
         scanChildren->second->deinitialize();

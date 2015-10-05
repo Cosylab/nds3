@@ -19,6 +19,7 @@
 
 #include <set>
 #include <string>
+#include <sstream>
 #include "scansymbols.h"
 
 // Include embedded dbd file
@@ -48,6 +49,76 @@ void EpicsFactoryImpl::createNdsDevice(const iocshArgBuf * arguments)
         parameter = arguments[1].sval;
     }
     EpicsFactoryImpl::getInstance().createDevice(arguments[0].sval, parameter);
+}
+
+void EpicsFactoryImpl::ndsUserCommand(const iocshArgBuf * arguments)
+{
+    if(arguments[0].sval == 0 || arguments[1].sval == 0)
+    {
+        errlogSevPrintf(errlogInfo, "Usage of command nds: nds nodeCommand nodeName [parameters]\n");
+        return;
+    }
+
+    EpicsFactoryImpl& epicsFactory = EpicsFactoryImpl::getInstance();
+
+    // Retrieve the command definition
+    //////////////////////////////////
+    nodeCommands_t::const_iterator findCommand = epicsFactory.m_nodeCommands.find(arguments[0].sval);
+    if(findCommand == epicsFactory.m_nodeCommands.end())
+    {
+        std::ostringstream commandsList;
+        commandsList << "Command not found. Registered commands:" << std::endl;
+        for(nodeCommands_t::const_iterator scanCommands(epicsFactory.m_nodeCommands.begin()), endCommands(epicsFactory.m_nodeCommands.end()); scanCommands != endCommands; ++scanCommands)
+        {
+            commandsList << " " << scanCommands->first << std::endl;
+        }
+        errlogSevPrintf(errlogInfo, commandsList.str().c_str());
+        return;
+    }
+
+    // Check the node name
+    //////////////////////
+    std::map<std::string, command_t>::const_iterator findNode = findCommand->second.m_delegates.find(arguments[1].sval);
+    if(findNode == findCommand->second.m_delegates.end())
+    {
+        std::ostringstream nodesList;
+        nodesList << "Node not found. Registered nodes for this command:" << std::endl;
+        for(std::map<std::string, command_t>::const_iterator scanNodes(findCommand->second.m_delegates.begin()), endNodes(findCommand->second.m_delegates.end());
+            scanNodes != endNodes; ++scanNodes)
+        {
+            nodesList << " " << scanNodes->first << std::endl;
+        }
+        errlogSevPrintf(errlogInfo, nodesList.str().c_str());
+        return;
+
+    }
+
+    // Check the number of parameters
+    /////////////////////////////////
+    parameters_t parameters;
+    for(size_t argument(2); arguments[argument].sval != 0; ++argument)
+    {
+        parameters.push_back(arguments[argument].sval);
+    }
+    if(parameters.size() != findCommand->second.m_argumentsNumber)
+    {
+        std::ostringstream errorString;
+        errorString << "Expected " << (findCommand->second.m_argumentsNumber) << " arguments but found " << parameters.size() << " instead" << std::endl;
+        errlogSevPrintf(errlogInfo, errorString.str().c_str());
+        return;
+    }
+
+    try
+    {
+        findNode->second(parameters);
+    }
+    catch(const std::runtime_error& e)
+    {
+        std::ostringstream errorString;
+        errorString << e.what() << std::endl;
+        errlogSevPrintf(errlogInfo, errorString.str().c_str());
+    }
+
 }
 
 }
@@ -96,6 +167,45 @@ EpicsFactoryImpl::EpicsFactoryImpl()
     m_commandDefinition.nargs = sizeof(commandArguments) / sizeof(commandArguments[0]);
     m_commandDefinition.name = commandName.c_str();
     iocshRegister(&m_commandDefinition, createNdsDevice);
+
+    // Register the nds command for the nodes
+    /////////////////////////////////////////
+    static const std::string ndsName("nds");
+    static const iocshArg ndsArguments[] = {
+        {"commandName", iocshArgString},
+        {"nodeName", iocshArgString},
+        {"arg0", iocshArgString},
+        {"arg1", iocshArgString},
+        {"arg2", iocshArgString},
+        {"arg3", iocshArgString},
+        {"arg4", iocshArgString},
+        {"arg5", iocshArgString},
+        {"arg6", iocshArgString},
+        {"arg7", iocshArgString},
+        {"arg8", iocshArgString},
+        {"arg9", iocshArgString} };
+
+    static const iocshArg* argumentPointers[] = {
+        &(ndsArguments[0]),
+        &(ndsArguments[1]),
+        &(ndsArguments[2]),
+        &(ndsArguments[3]),
+        &(ndsArguments[4]),
+        &(ndsArguments[5]),
+        &(ndsArguments[6]),
+        &(ndsArguments[7]),
+        &(ndsArguments[8]),
+        &(ndsArguments[9]),
+        &(ndsArguments[10]),
+        &(ndsArguments[11])
+    };
+
+    static iocshFuncDef m_ndsDefinition;
+    m_ndsDefinition.name = ndsName.c_str();
+    m_ndsDefinition.nargs = 12;
+    m_ndsDefinition.arg = argumentPointers;
+    iocshRegister(&m_ndsDefinition, ndsUserCommand);
+
 
 }
 
@@ -321,6 +431,65 @@ std::ostream* EpicsFactoryImpl::getLogStream(const BaseImpl& baseImpl, const log
 {
     return new EpicsLogStream(baseImpl.getFullName(), logLevel, this);
 }
+
+void EpicsFactoryImpl::registerCommand(const BaseImpl& node,
+                             const std::string& command,
+                             const std::string& usage,
+                             const size_t numParameters, command_t commandFunction)
+{
+    // Find for an already existing command
+    ///////////////////////////////////////
+    nodeCommands_t::iterator findCommand = m_nodeCommands.find(command);
+    if(findCommand != m_nodeCommands.end())
+    {
+        // Check compatibility of the command definition
+        if(findCommand->second.m_argumentsNumber != numParameters)
+        {
+            std::ostringstream errorString;
+            errorString << "The number of parameters for the node " << node.getFullName() << " is different from the number of parameters already defined for the node "
+                        << findCommand->second.m_delegates.begin()->first;
+
+            throw std::logic_error(errorString.str());
+        }
+        findCommand->second.m_delegates[node.getFullName()] = commandFunction;
+        return;
+    }
+
+    std::pair<nodeCommands_t::iterator, bool> commandInsert = m_nodeCommands.insert(std::pair<std::string, nodeCommand_t>(command, nodeCommand_t()));
+    commandInsert.first->second.m_commandName = command;
+    commandInsert.first->second.m_usage = usage;
+    commandInsert.first->second.m_argumentsNumber = numParameters;
+    commandInsert.first->second.m_delegates[node.getFullName()] = commandFunction;
+
+}
+
+void EpicsFactoryImpl::deregisterCommand(const BaseImpl& node,
+                               const std::string& command)
+{
+    // Find the command
+    ///////////////////
+    nodeCommands_t::iterator findCommand = m_nodeCommands.find(command);
+    if(findCommand == m_nodeCommands.end())
+    {
+        throw;
+    }
+
+    // Find the node
+    ////////////////
+    std::map<std::string, command_t>::iterator findNode = findCommand->second.m_delegates.find(node.getFullName());
+    if(findNode == findCommand->second.m_delegates.end())
+    {
+        throw;
+    }
+
+    findCommand->second.m_delegates.erase(findNode);
+
+    if(findCommand->second.m_delegates.empty())
+    {
+        m_nodeCommands.erase(findCommand);
+    }
+}
+
 
 
 EpicsLogStreamBufferImpl::EpicsLogStreamBufferImpl(const std::string& nodeName, const logLevel_t logLevel, EpicsFactoryImpl* pEpicsFactory):

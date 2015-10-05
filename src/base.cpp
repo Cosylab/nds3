@@ -94,5 +94,10 @@ void Base::setLogLevel(const logLevel_t logLevel)
     m_pImplementation->setLogLevel(logLevel);
 }
 
+void Base::defineCommand(const std::string& command, const std::string& usage, const size_t numParameters, const command_t function)
+{
+    m_pImplementation->defineCommand(command, usage, numParameters, function);
+}
+
 
 }

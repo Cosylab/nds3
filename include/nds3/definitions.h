@@ -171,6 +171,9 @@ enum class logLevel_t: std::uint8_t
  * Returns a pointer to the allocated driver: the pointer will be passed
  *  to the function defined by deallocateDriver_t.
  *
+ * The allocation delegate should create the device and call initialize()
+ *  on its root nodes.
+ *
  */
 typedef std::function<void*(const std::string& parameter)> allocateDriver_t;
 
@@ -209,6 +212,23 @@ typedef std::function<void ()> stateChange_t;
  *  the requested transition is legal.
  */
 typedef std::function<bool (const state_t, const state_t, const state_t)> allowChange_t;
+
+/**
+ * @brief List of strings passed as parameters to nodes' commands.
+ */
+typedef std::vector<std::string> parameters_t;
+
+/**
+ * @brief Definition of a function called to execute a node's command.
+ *
+ * It receives a vector of string parameters. It is the responsability of
+ *  the delegate function to convert the strings to the appropriate data
+ *  types.
+ *
+ * The number of parameters is verified by NDS before calling the delegate
+ *  function.
+ */
+typedef std::function<void (const parameters_t& parameters)> command_t;
 
 /**
  * @ingroup timing

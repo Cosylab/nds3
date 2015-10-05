@@ -188,6 +188,27 @@ public:
      */
     void setLogLevel(const logLevel_t logLevel);
 
+    /**
+     * @brief Define a command specific for the node.
+     *
+     * In EPICS the command will be available by typing:
+     * @code
+     * nds commandName nodeName [parameters]
+     * @endcode
+     *
+     * For instance, for a command "switchOn" on a node named "Oscilloscope-ch0"
+     *  you will have to type:
+     * @code
+     * nds switchOn Oscilloscope-ch0
+     * @endcode
+     *
+     * @param command       the command name
+     * @param usage         the command description
+     * @param numParameters the number of parameters (only strings)
+     * @param function      the delegate function to call to execute the command
+     */
+    void defineCommand(const std::string& command, const std::string& usage, const size_t numParameters, const command_t function);
+
 #ifndef SWIG
 protected:
     std::shared_ptr<BaseImpl> m_pImplementation;
