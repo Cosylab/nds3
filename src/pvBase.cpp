@@ -37,22 +37,9 @@ void PVBase::push(const timespec& timestamp, const T& value)
     std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->push(timestamp, value);
 }
 
-template void PVBase::read<std::int8_t>(timespec*, std::int8_t*);
-template void PVBase::write<std::int8_t>(const timespec&, const std::int8_t&);
-template void PVBase::push<std::int8_t>(const timespec&, const std::int8_t&);
-
-template void PVBase::read<std::uint8_t>(timespec*, std::uint8_t*);
-template void PVBase::write<std::uint8_t>(const timespec&, const std::uint8_t&);
-template void PVBase::push<std::uint8_t>(const timespec&, const std::uint8_t&);
-
-
 template void PVBase::read<std::int32_t>(timespec*, std::int32_t*);
 template void PVBase::write<std::int32_t>(const timespec&, const std::int32_t&);
 template void PVBase::push<std::int32_t>(const timespec&, const std::int32_t&);
-
-template void PVBase::read<std::uint32_t>(timespec*, std::uint32_t*);
-template void PVBase::write<std::uint32_t>(const timespec&, const std::uint32_t&);
-template void PVBase::push<std::uint32_t>(const timespec&, const std::uint32_t&);
 
 template void PVBase::read<double>(timespec*, double*);
 template void PVBase::write<double>(const timespec&, const double&);

@@ -41,7 +41,8 @@ void EpicsFactoryImpl::createNdsDevice(const iocshArgBuf * arguments)
 {
     if(arguments[0].sval == 0)
     {
-        throw;
+        errlogSevPrintf(errlogInfo, "Usage of command createNdsDevice: createNdsDevice deviceName [parameters]\n");
+        return;
     }
     std::string parameter;
     if(arguments[1].sval != 0)

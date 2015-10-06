@@ -15,22 +15,7 @@ PVBaseImpl::PVBaseImpl(const std::string& name): BaseImpl(name),
 
 }
 
-void PVBaseImpl::read(timespec* /* pTimestamp */, std::int8_t* /* pValue */)
-{
-    throw;
-}
-
-void PVBaseImpl::read(timespec* /* pTimestamp */, std::uint8_t* /* pValue */)
-{
-    throw;
-}
-
 void PVBaseImpl::read(timespec* /* pTimestamp */, std::int32_t* /* pValue */)
-{
-    throw;
-}
-
-void PVBaseImpl::read(timespec* /* pTimestamp */, std::uint32_t* /* pValue */)
 {
     throw;
 }
@@ -40,9 +25,13 @@ void PVBaseImpl::read(timespec* /* pTimestamp */, double* /* pValue */)
     throw;
 }
 
-void PVBaseImpl::read(timespec* /* pTimestamp */, std::vector<std::int8_t>* /* pValue */)
+void PVBaseImpl::read(timespec* pTimestamp, std::vector<std::int8_t>* pValue)
 {
-    throw;
+    // TODO
+    // Epics calls this also for unsigned-int.
+    // If we arrive here maybe we really wanted to call the unsigned int function.
+    // This is as ugly as it can get: consider modifying this
+    read(pTimestamp, (std::vector<std::uint8_t>*) pValue);
 }
 
 void PVBaseImpl::read(timespec* /* pTimestamp */, std::vector<std::uint8_t>* /* pValue */)
@@ -60,22 +49,7 @@ void PVBaseImpl::read(timespec* /* pTimestamp */, std::vector<double>* /* pValue
     throw;
 }
 
-void PVBaseImpl::write(const timespec& /* pTimestamp */, const std::int8_t& /* value */)
-{
-    throw;
-}
-
-void PVBaseImpl::write(const timespec& /* pTimestamp */, const std::uint8_t& /* value */)
-{
-    throw;
-}
-
 void PVBaseImpl::write(const timespec& /* pTimestamp */, const std::int32_t& /* value */)
-{
-    throw;
-}
-
-void PVBaseImpl::write(const timespec& /* pTimestamp */, const std::uint32_t& /* value */)
 {
     throw;
 }
@@ -85,9 +59,13 @@ void PVBaseImpl::write(const timespec& /* pTimestamp */, const double& /* value 
     throw;
 }
 
-void PVBaseImpl::write(const timespec& /* pTimestamp */, const std::vector<std::int8_t>& /* value */)
+void PVBaseImpl::write(const timespec& pTimestamp, const std::vector<std::int8_t>& value)
 {
-    throw;
+    // TODO
+    // Epics calls this also for unsigned-int.
+    // If we arrive here maybe we really wanted to call the unsigned int function.
+    // This is as ugly as it can get: consider modifying this
+    write(pTimestamp, (const std::vector<std::uint8_t>&) value);
 }
 
 void PVBaseImpl::write(const timespec& /* pTimestamp */, const std::vector<std::uint8_t>& /* value */)
@@ -115,10 +93,7 @@ void PVBaseImpl::push(const timespec& timestamp, const T& value)
     pPort->push(std::static_pointer_cast<PVBaseImpl>(shared_from_this()), timestamp, value);
 }
 
-template void PVBaseImpl::push<std::int8_t>(const timespec&, const std::int8_t&);
-template void PVBaseImpl::push<std::uint8_t>(const timespec&, const std::uint8_t&);
 template void PVBaseImpl::push<std::int32_t>(const timespec&, const std::int32_t&);
-template void PVBaseImpl::push<std::uint32_t>(const timespec&, const std::uint32_t&);
 template void PVBaseImpl::push<double>(const timespec&, const double&);
 template void PVBaseImpl::push<std::vector<std::int8_t> >(const timespec&, const std::vector<std::int8_t>&);
 template void PVBaseImpl::push<std::vector<std::uint8_t> >(const timespec&, const std::vector<std::uint8_t>&);

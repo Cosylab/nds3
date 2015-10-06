@@ -158,7 +158,7 @@ public:
      * node.getLogger(nds::logLevel_t::warning) << "This is a warning message" << std::endl;
      * @endcode
      *
-     * or
+     * or the preferred way:
      * @code
      * ndsWarningStream(node) << "This is the warning n." << 10 << std::endl;
      * @endcode

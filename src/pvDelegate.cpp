@@ -17,10 +17,7 @@ PVDelegate<T>::PVDelegate(const std::string& name, read_t readFunction):
     PVBase(std::shared_ptr<PVBaseImpl>(new PVDelegateImpl<T>(name, readFunction)))
 {}
 
-template class PVDelegate<std::int8_t>;
-template class PVDelegate<std::uint8_t>;
 template class PVDelegate<std::int32_t>;
-template class PVDelegate<std::uint32_t>;
 template class PVDelegate<double>;
 template class PVDelegate<std::vector<std::int8_t> >;
 template class PVDelegate<std::vector<std::uint8_t> >;

@@ -31,10 +31,7 @@ public:
 
     virtual void registrationTerminated();
 
-    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int8_t& value);
-    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::uint8_t& value);
     virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int32_t& value);
-    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::uint32_t& value);
     virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const double& value);
     virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int8_t> & value);
     virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::uint8_t> & value);

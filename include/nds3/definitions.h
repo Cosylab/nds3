@@ -55,11 +55,7 @@ enum class state_t
 enum class dataType_t
 {
     /* The value zero is reserved to static asserts to verify that the correct cpp types are being used */
-
-    dataInt8 = 1,     ///< Signed integer, 8 bits
-    dataUint8,        ///< Unsigned integer, 8 bits
-    dataInt32,        ///< Signed integer, 32 bits
-    dataUint32,       ///< Unsigned integer, 32 bits
+    dataInt32 = 1,    ///< Signed integer, 32 bits
     dataFloat64,      ///< Float, 64 bits
     dataInt8Array,    ///< Array of signed 8 bit integers
     dataUint8Array,   ///< Array of unsigned 8 bit integers

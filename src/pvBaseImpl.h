@@ -22,20 +22,14 @@ public:
     // All the base versions throw.
     // Only the overwritten ones in the derived classes will function correctly.
     ////////////////////////////////////////////////////////////////////////////
-    virtual void read(timespec* pTimestamp, std::int8_t* pValue);
-    virtual void read(timespec* pTimestamp, std::uint8_t* pValue);
     virtual void read(timespec* pTimestamp, std::int32_t* pValue);
-    virtual void read(timespec* pTimestamp, std::uint32_t* pValue);
     virtual void read(timespec* pTimestamp, double* pValue);
     virtual void read(timespec* pTimestamp, std::vector<std::int8_t>* pValue);
     virtual void read(timespec* pTimestamp, std::vector<std::uint8_t>* pValue);
     virtual void read(timespec* pTimestamp, std::vector<std::int32_t>* pValue);
     virtual void read(timespec* pTimestamp, std::vector<double>* pValue);
 
-    virtual void write(const timespec& timestamp, const std::int8_t& value);
-    virtual void write(const timespec& timestamp, const std::uint8_t& value);
     virtual void write(const timespec& timestamp, const std::int32_t& value);
-    virtual void write(const timespec& timestamp, const std::uint32_t& value);
     virtual void write(const timespec& timestamp, const double& value);
     virtual void write(const timespec& timestamp, const std::vector<std::int8_t>& value);
     virtual void write(const timespec& timestamp, const std::vector<std::uint8_t>& value);
@@ -82,10 +76,7 @@ protected:
     dataType_t getDataTypeForCPPType() const
     {
         const int type =
-                int(std::is_same<T, std::int8_t>::value) * (int)dataType_t::dataInt8 +
-                int(std::is_same<T, std::uint8_t>::value) * (int)dataType_t::dataUint8 +
                 int(std::is_same<T, std::int32_t>::value) * (int)dataType_t::dataInt32 +
-                int(std::is_same<T, std::uint32_t>::value) * (int)dataType_t::dataUint32 +
                 int(std::is_same<T, double>::value) * (int)dataType_t::dataFloat64 +
                 int(std::is_same<T, std::vector<std::int8_t> >::value) * (int)dataType_t::dataInt8Array +
                 int(std::is_same<T, std::vector<std::uint8_t> >::value) * (int)dataType_t::dataUint8Array +

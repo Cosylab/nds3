@@ -193,7 +193,7 @@ void StateMachineImpl::executeTransition(const state_t initialState, const state
 {
     try
     {
-        ndsInfoStream(*this) << "Switching state from " << getStateName(initialState) << "to " << getStateName(finalState) << std::endl;
+        ndsInfoStream(*this) << "Switching state from " << getStateName(initialState) << " to " << getStateName(finalState) << std::endl;
 
         transitionFunction();
 
@@ -206,6 +206,8 @@ void StateMachineImpl::executeTransition(const state_t initialState, const state
     }
     catch(StateMachineRollBack& e)
     {
+        ndsWarningStream(*this) << "Warning: " << e.what() << " - Rolling back to state " << getStateName(initialState) << std::endl;
+
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
         m_localState = initialState;
         m_stateTimestamp = getTimestamp();
@@ -214,6 +216,8 @@ void StateMachineImpl::executeTransition(const state_t initialState, const state
     }
     catch(std::runtime_error& e)
     {
+        ndsErrorStream(*this) << "Error: " << e.what() << " - Switching to state " << getStateName(state_t::fault) << std::endl;
+
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
         m_localState = state_t::fault;
         m_stateTimestamp = getTimestamp();

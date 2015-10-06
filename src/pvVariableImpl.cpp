@@ -33,10 +33,7 @@ dataType_t PVVariableImpl<T>::getDataType()
     return getDataTypeForCPPType<T>();
 }
 
-template class PVVariableImpl<std::int8_t>;
-template class PVVariableImpl<std::uint8_t>;
 template class PVVariableImpl<std::int32_t>;
-template class PVVariableImpl<std::uint32_t>;
 template class PVVariableImpl<double>;
 template class PVVariableImpl<std::vector<std::int8_t> >;
 template class PVVariableImpl<std::vector<std::uint8_t> >;

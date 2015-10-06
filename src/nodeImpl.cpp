@@ -3,6 +3,7 @@
 #include "../include/nds3/definitions.h"
 #include <memory>
 #include <mutex>
+#include <sstream>
 
 namespace nds
 {
@@ -19,7 +20,9 @@ void NodeImpl::addChild(std::shared_ptr<BaseImpl> pChild)
 
     if(m_children.find(name) != m_children.end())
     {
-        throw;
+        std::ostringstream errorString;
+        errorString << "A node with the name " << name << " has already been registered into " << getFullName() << std::endl;
+        throw std::logic_error(errorString.str());
     }
     m_children[name] = pChild;
 

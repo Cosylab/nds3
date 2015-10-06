@@ -35,7 +35,7 @@ EpicsInterfaceImpl::EpicsInterfaceImpl(const std::string& portName): InterfaceBa
                                                                asynDrvUserMask |
                                                                //asynOptionMask |
                                                                asynInt32Mask |
-                                                               //asynUInt32DigitalMask |
+                                                               // asynUInt32DigitalMask |
                                                                asynFloat64Mask  |
                                                                //asynOctetMask |
                                                                asynInt8ArrayMask |
@@ -46,7 +46,7 @@ EpicsInterfaceImpl::EpicsInterfaceImpl(const std::string& portName): InterfaceBa
                                                                //asynGenericPointerMask,   /* Interface mask */
                                               ,
                                                                asynInt32Mask |
-                                                               //asynUInt32DigitalMask |
+                                                               // asynUInt32DigitalMask |
                                                                asynFloat64Mask |
                                                                //asynOctetMask |
                                                                asynInt8ArrayMask |
@@ -75,33 +75,28 @@ dataTypeAndFTVL_t dataTypeToEpicsString(dataType_t dataType, bool bInput)
 {
     switch(dataType)
     {
-    case dataType_t::dataInt8:
-        return dataTypeAndFTVL_t("asynOctet", "CHAR");
-    case dataType_t::dataUint8:
-        return dataTypeAndFTVL_t("asynOctet", "UCHAR");
+
     case dataType_t::dataInt32:
         return dataTypeAndFTVL_t("asynInt32", "");
-    case dataType_t::dataUint32:
-        return dataTypeAndFTVL_t("asynUInt32Digital", "");
     case dataType_t::dataFloat64:
         return dataTypeAndFTVL_t("asynFloat64", "");
     case dataType_t::dataInt8Array:
         if(bInput)
         {
-            return dataTypeAndFTVL_t("asynOctetRead", "CHAR");
+            return dataTypeAndFTVL_t("asynInt8ArrayIn", "CHAR");
         }
         else
         {
-            return dataTypeAndFTVL_t("asynOctetWrite", "CHAR");
+            return dataTypeAndFTVL_t("asynInt8ArrayOut", "CHAR");
         }
     case dataType_t::dataUint8Array:
         if(bInput)
         {
-            return dataTypeAndFTVL_t("asynOctetRead", "UCHAR");
+            return dataTypeAndFTVL_t("asynInt8ArrayIn", "UCHAR");
         }
         else
         {
-            return dataTypeAndFTVL_t("asynOctetWrite", "UCHAR");
+            return dataTypeAndFTVL_t("asynInt8ArrayOut", "UCHAR");
         }
     case dataType_t::dataInt32Array:
         if(bInput)
@@ -236,7 +231,7 @@ void EpicsInterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
         dbEntry << "    field(SCAN, \"" << scanType.str() << "\")" << std::endl;
 
         // Add INP/OUT fields
-        if(recordTypeAndInput.second)
+        if(recordTypeAndInput.second || type == recordType_t::waveformOut)
         {
             dbEntry << "    field(INP, \"@asyn(" << pv->getPort()->getFullName() << ", " << portAddress<< ")" << pv->getFullNameFromPort() << "\")" << std::endl;
         }
@@ -294,36 +289,6 @@ void EpicsInterfaceImpl::registrationTerminated()
 }
 
 
-void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::uint32_t& value)
-{
-
-}
-
-void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int8_t> & value)
-{
-
-}
-
-void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::uint8_t> & value)
-{
-
-}
-
-void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<double> & value)
-{
-
-}
-
-void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int8_t& value)
-{
-    //pushOneValue<epicsInt8, asynInt32Interrupt>(pv, timestamp, (epicsInt32)value, asynStdInterfaces.int32InterruptPvt);
-}
-
-void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::uint8_t& value)
-{
-    //pushOneValue<epicsUInt8, asynInt32Interrupt>(pv, timestamp, (epicsInt32)value, asynStdInterfaces.int32InterruptPvt);
-}
-
 void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int32_t& value)
 {
     pushOneValue<epicsInt32, asynInt32Interrupt>(pv, timestamp, (epicsInt32)value, asynStdInterfaces.int32InterruptPvt);
@@ -336,8 +301,22 @@ void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& ti
 
 void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int32_t> & value)
 {
-    pv->getLogger(logLevel_t::debug) << "Pushing data" << std::endl;
     pushArray<epicsInt32, asynInt32ArrayInterrupt>(pv, timestamp, (epicsInt32*)value.data(), value.size(), asynStdInterfaces.int32ArrayInterruptPvt);
+}
+
+void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<double> & value)
+{
+    pushArray<epicsFloat64, asynFloat64ArrayInterrupt>(pv, timestamp, (epicsFloat64*)value.data(), value.size(), asynStdInterfaces.float64ArrayInterruptPvt);
+}
+
+void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int8_t> & value)
+{
+    pushArray<epicsInt8, asynInt8ArrayInterrupt>(pv, timestamp, (epicsInt8*)value.data(), value.size(), asynStdInterfaces.int8ArrayInterruptPvt);
+}
+
+void EpicsInterfaceImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::uint8_t> & value)
+{
+    pushArray<epicsInt8, asynInt8ArrayInterrupt>(pv, timestamp, (epicsInt8*)value.data(), value.size(), asynStdInterfaces.int8ArrayInterruptPvt);
 }
 
 
