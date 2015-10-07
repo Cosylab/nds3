@@ -22,12 +22,12 @@ public:
     // All the base versions throw.
     // Only the overwritten ones in the derived classes will function correctly.
     ////////////////////////////////////////////////////////////////////////////
-    virtual void read(timespec* pTimestamp, std::int32_t* pValue);
-    virtual void read(timespec* pTimestamp, double* pValue);
-    virtual void read(timespec* pTimestamp, std::vector<std::int8_t>* pValue);
-    virtual void read(timespec* pTimestamp, std::vector<std::uint8_t>* pValue);
-    virtual void read(timespec* pTimestamp, std::vector<std::int32_t>* pValue);
-    virtual void read(timespec* pTimestamp, std::vector<double>* pValue);
+    virtual void read(timespec* pTimestamp, std::int32_t* pValue) const;
+    virtual void read(timespec* pTimestamp, double* pValue) const;
+    virtual void read(timespec* pTimestamp, std::vector<std::int8_t>* pValue) const;
+    virtual void read(timespec* pTimestamp, std::vector<std::uint8_t>* pValue) const;
+    virtual void read(timespec* pTimestamp, std::vector<std::int32_t>* pValue) const;
+    virtual void read(timespec* pTimestamp, std::vector<double>* pValue) const;
 
     virtual void write(const timespec& timestamp, const std::int32_t& value);
     virtual void write(const timespec& timestamp, const double& value);
@@ -35,6 +35,8 @@ public:
     virtual void write(const timespec& timestamp, const std::vector<std::uint8_t>& value);
     virtual void write(const timespec& timestamp, const std::vector<std::int32_t>& value);
     virtual void write(const timespec& timestamp, const std::vector<double>& value);
+
+    virtual dataDirection_t getDataDirection() const = 0;
 
     template<typename T>
     void push(const timespec& timestamp, const T& value);
@@ -50,22 +52,20 @@ public:
      *
      * @return the data type used by the PV
      */
-    virtual dataType_t getDataType() = 0;
+    virtual dataType_t getDataType() const = 0;
 
-    void setType(const recordType_t type);
     void setDescription(const std::string& description);
     void setInterfaceName(const std::string& interfaceName);
     void setScanType(const scanType_t scanType, const double periodSeconds);
     void setMaxElements(const size_t maxElements);
     void setEnumeration(const enumerationStrings_t& enumerations);
 
-    recordType_t getType() const;
     std::string getDescription() const;
     std::string getInterfaceName() const;
     scanType_t getScanType() const;
     double getScanPeriodSeconds() const;
     size_t getMaxElements() const;
-    const enumerationStrings_t& getEnumerations();
+    const enumerationStrings_t& getEnumerations() const;
 
 
 protected:
@@ -88,7 +88,6 @@ protected:
         return(dataType_t)type;
     }
 
-    recordType_t m_type;
     std::string m_description;
     std::string m_interfaceName;
     scanType_t m_scanType;

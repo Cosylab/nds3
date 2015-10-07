@@ -1,5 +1,6 @@
 #include "stateMachineImpl.h"
-#include "pvDelegateImpl.h"
+#include "pvDelegateOutImpl.h"
+#include "pvDelegateInImpl.h"
 #include "pvBaseImpl.h"
 #include "../include/nds3/exceptions.h"
 #include <cstdint>
@@ -37,30 +38,27 @@ StateMachineImpl::StateMachineImpl(bool bAsync,
 
     // Add PVs for the state machine
     ////////////////////////////////
-    std::shared_ptr<PVDelegateImpl<std::int32_t> > pSetStatePV(
-                new PVDelegateImpl<std::int32_t>("setState",
-                                                 std::bind(&StateMachineImpl::readLocalState, this, std::placeholders::_1, std::placeholders::_2),
-                                                 std::bind(&StateMachineImpl::writeLocalState, this, std::placeholders::_1, std::placeholders::_2)));
+    std::shared_ptr<PVDelegateOutImpl<std::int32_t> > pSetStatePV(
+                new PVDelegateOutImpl<std::int32_t>("setState",
+                                                    std::bind(&StateMachineImpl::writeLocalState, this, std::placeholders::_1, std::placeholders::_2),
+                                                    std::bind(&StateMachineImpl::readLocalState, this, std::placeholders::_1, std::placeholders::_2)));
     pSetStatePV->setDescription("Set local state");
     pSetStatePV->setScanType(scanType_t::passive, 0);
-    pSetStatePV->setType(recordType_t::mbbo);
     pSetStatePV->setEnumeration(enumerationStrings);
     addChild(pSetStatePV);
 
     m_pGetStatePV.reset(
-                new PVDelegateImpl<std::int32_t>("getState",
+                new PVDelegateInImpl<std::int32_t>("getState",
                                                  std::bind(&StateMachineImpl::readLocalState, this, std::placeholders::_1, std::placeholders::_2)));
     m_pGetStatePV->setDescription("Get local state");
     m_pGetStatePV->setScanType(scanType_t::interrupt, 0);
-    m_pGetStatePV->setType(recordType_t::mbbi);
     m_pGetStatePV->setEnumeration(enumerationStrings);
     addChild(m_pGetStatePV);
 
-    std::shared_ptr<PVDelegateImpl<std::int32_t> > pGetGlobalStatePV(
-                new PVDelegateImpl<std::int32_t>("getGlobalState",
+    std::shared_ptr<PVDelegateInImpl<std::int32_t> > pGetGlobalStatePV(
+                new PVDelegateInImpl<std::int32_t>("getGlobalState",
                                                  std::bind(&StateMachineImpl::readGlobalState, this, std::placeholders::_1, std::placeholders::_2)));
     pGetGlobalStatePV->setScanType(scanType_t::passive, 0);
-    pGetGlobalStatePV->setType(recordType_t::mbbi);
     pGetGlobalStatePV->setEnumeration(enumerationStrings);
     addChild(pGetGlobalStatePV);
 

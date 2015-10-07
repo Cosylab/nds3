@@ -16,18 +16,22 @@ class LogStreamGetterImpl;
 
 /**
  * @brief This is the base class for objects that interact with specific control systems
- *        and need to be allocated only once (singletons).
+ *        and has to be allocated only once (singletons).
  *
  * In order to create support for a control system you need to overwrite this class and
  *  InterfaceBaseImpl.
  *
- * The FactoryBaseImpl object will be created when NDS starts and will stay alive until NDS
+ * The FactoryBaseImpl derived object will be created when NDS starts and will stay alive until NDS
  *  is shutdown.
  *
- * The overwritten classes should implement at least the following methods:
+ * The overwritten classes must implement the following methods:
  * - getNewInterface()
  * - run()
  * - getLogStreamGetter()
+ * - registerCommand()
+ * - deregisterCommand()
+ *
+ * Optionally, the method createThread() can also be overwritten.
  */
 
 class FactoryBaseImpl
@@ -43,7 +47,7 @@ public:
      * @param allocateFunction   the allocation function.
      * @param deallocateFunction the deallocation function
      */
-    virtual void registerDriver(const std::string& driverName, allocateDriver_t allocateFunction, deallocateDriver_t deallocateFunction);
+    void registerDriver(const std::string& driverName, allocateDriver_t allocateFunction, deallocateDriver_t deallocateFunction);
 
     virtual std::thread createThread(const std::string& name, threadFunction_t function);
 

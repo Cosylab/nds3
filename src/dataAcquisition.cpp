@@ -18,7 +18,6 @@ DataAcquisition<T>::DataAcquisition(): Node()
  */
 template <typename T>
 DataAcquisition<T>::DataAcquisition(const std::string& name,
-                recordType_t recordType,
                 size_t maxElements,
                 stateChange_t switchOnFunction,
                 stateChange_t switchOffFunction,
@@ -27,7 +26,6 @@ DataAcquisition<T>::DataAcquisition(const std::string& name,
                 stateChange_t recoverFunction,
                 allowChange_t allowStateChangeFunction):
     Node(std::shared_ptr<DataAcquisitionImpl<T> >(new DataAcquisitionImpl<T>(name,
-                                                                             recordType,
                                                                              maxElements,
                                                                              switchOnFunction,
                                                                              switchOffFunction,

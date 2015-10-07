@@ -2,18 +2,20 @@
 #define NDSDATAACQUISITIONIMPL_H
 
 #include "nodeImpl.h"
-#include "pvVariableImpl.h"
 #include "../include/nds3/definitions.h"
 #include <memory>
 namespace nds
 {
+
+template <typename T> class PVVariableInImpl;
+template <typename T> class PVVariableOutImpl;
+
 
 template<typename T>
 class DataAcquisitionImpl: public NodeImpl
 {
 public:
     DataAcquisitionImpl(const std::string& name,
-                    recordType_t recordType,
                     size_t maxElements,
                     stateChange_t switchOnFunction,
                     stateChange_t switchOffFunction,
@@ -68,11 +70,11 @@ protected:
     timespec m_startTime;
 
     // PVs
-    std::shared_ptr<PVVariableImpl<T> > m_dataPV;
-    std::shared_ptr<PVVariableImpl<double> > m_frequencyPV;
-    std::shared_ptr<PVVariableImpl<double> > m_durationPV;
-    std::shared_ptr<PVVariableImpl<std::int32_t> > m_maxElementsPV;
-    std::shared_ptr<PVVariableImpl<std::int32_t> > m_decimationPV;
+    std::shared_ptr<PVVariableInImpl<T> > m_dataPV;
+    std::shared_ptr<PVVariableOutImpl<double> > m_frequencyPV;
+    std::shared_ptr<PVVariableOutImpl<double> > m_durationPV;
+    std::shared_ptr<PVVariableOutImpl<std::int32_t> > m_maxElementsPV;
+    std::shared_ptr<PVVariableOutImpl<std::int32_t> > m_decimationPV;
     std::shared_ptr<StateMachineImpl> m_stateMachine;
 
 

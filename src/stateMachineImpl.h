@@ -8,7 +8,7 @@
 namespace nds
 {
 
-template <typename T> class PVDelegateImpl;
+template <typename T> class PVDelegateInImpl;
 
 /**
  * @brief Implements the state machine.
@@ -62,9 +62,6 @@ public:
 protected:
     void executeTransition(const state_t initialState, const state_t finalState, stateChange_t transitionFunction);
 
-    std::shared_ptr<PVDelegateImpl<std::int32_t> > m_pStatePV; ///< The PV holding the current state
-    std::shared_ptr<PVDelegateImpl<std::int32_t> > m_pGlobalStatePV; ///< The PV holding the current state
-
     void readLocalState(timespec* pTimestamp, std::int32_t* pValue);
     void writeLocalState(const timespec& pTimestamp, const std::int32_t& value);
 
@@ -87,7 +84,7 @@ protected:
     stateChange_t m_recover;
     allowChange_t m_allowChange;
 
-    std::shared_ptr<PVDelegateImpl<std::int32_t> > m_pGetStatePV;
+    std::shared_ptr<PVDelegateInImpl<std::int32_t> > m_pGetStatePV;
 
 };
 

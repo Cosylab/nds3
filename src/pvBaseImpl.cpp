@@ -7,7 +7,6 @@ namespace nds
 {
 
 PVBaseImpl::PVBaseImpl(const std::string& name): BaseImpl(name),
-    m_type(recordType_t::notSpecified),
     m_scanType(scanType_t::passive),
     m_periodicScanSeconds(1),
     m_maxElements(1)
@@ -15,17 +14,17 @@ PVBaseImpl::PVBaseImpl(const std::string& name): BaseImpl(name),
 
 }
 
-void PVBaseImpl::read(timespec* /* pTimestamp */, std::int32_t* /* pValue */)
+void PVBaseImpl::read(timespec* /* pTimestamp */, std::int32_t* /* pValue */) const
 {
     throw;
 }
 
-void PVBaseImpl::read(timespec* /* pTimestamp */, double* /* pValue */)
+void PVBaseImpl::read(timespec* /* pTimestamp */, double* /* pValue */) const
 {
     throw;
 }
 
-void PVBaseImpl::read(timespec* pTimestamp, std::vector<std::int8_t>* pValue)
+void PVBaseImpl::read(timespec* pTimestamp, std::vector<std::int8_t>* pValue) const
 {
     // TODO
     // Epics calls this also for unsigned-int.
@@ -34,17 +33,17 @@ void PVBaseImpl::read(timespec* pTimestamp, std::vector<std::int8_t>* pValue)
     read(pTimestamp, (std::vector<std::uint8_t>*) pValue);
 }
 
-void PVBaseImpl::read(timespec* /* pTimestamp */, std::vector<std::uint8_t>* /* pValue */)
+void PVBaseImpl::read(timespec* /* pTimestamp */, std::vector<std::uint8_t>* /* pValue */) const
 {
     throw;
 }
 
-void PVBaseImpl::read(timespec* /* pTimestamp */, std::vector<std::int32_t>* /* pValue */)
+void PVBaseImpl::read(timespec* /* pTimestamp */, std::vector<std::int32_t>* /* pValue */) const
 {
     throw;
 }
 
-void PVBaseImpl::read(timespec* /* pTimestamp */, std::vector<double>* /* pValue */)
+void PVBaseImpl::read(timespec* /* pTimestamp */, std::vector<double>* /* pValue */) const
 {
     throw;
 }
@@ -100,11 +99,6 @@ template void PVBaseImpl::push<std::vector<std::uint8_t> >(const timespec&, cons
 template void PVBaseImpl::push<std::vector<std::int32_t> >(const timespec&, const std::vector<std::int32_t>&);
 template void PVBaseImpl::push<std::vector<double> >(const timespec&, const std::vector<double>&);
 
-void PVBaseImpl::setType(const recordType_t type)
-{
-    m_type = type;
-}
-
 void PVBaseImpl::setDescription(const std::string& description)
 {
     m_description = description;
@@ -129,11 +123,6 @@ void PVBaseImpl::setMaxElements(const size_t maxElements)
 void PVBaseImpl::setEnumeration(const enumerationStrings_t &enumerations)
 {
     m_enumeration = enumerations;
-}
-
-recordType_t PVBaseImpl::getType() const
-{
-    return m_type;
 }
 
 std::string PVBaseImpl::getDescription() const
@@ -161,7 +150,7 @@ size_t PVBaseImpl::getMaxElements() const
     return m_maxElements;
 }
 
-const enumerationStrings_t& PVBaseImpl::getEnumerations()
+const enumerationStrings_t& PVBaseImpl::getEnumerations() const
 {
     return m_enumeration;
 }

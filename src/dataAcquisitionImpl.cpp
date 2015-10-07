@@ -1,13 +1,15 @@
 #include "dataAcquisitionImpl.h"
 #include "stateMachineImpl.h"
+#include "pvVariableInImpl.h"
+#include "pvVariableOutImpl.h"
 #include "../include/nds3/definitions.h"
+
 namespace nds
 {
 
 template<typename T>
 DataAcquisitionImpl<T>::DataAcquisitionImpl(
         const std::string& name,
-        recordType_t recordType,
         size_t maxElements,
         stateChange_t switchOnFunction,
         stateChange_t switchOffFunction,
@@ -20,37 +22,32 @@ DataAcquisitionImpl<T>::DataAcquisitionImpl(
     m_startTimestampFunction(std::bind(&BaseImpl::getTimestamp, this))
 {
     // Add the children PVs
-    m_dataPV.reset(new PVVariableImpl<T>("Data"));
+    m_dataPV.reset(new PVVariableInImpl<T>("Data"));
     m_dataPV->setMaxElements(maxElements);
     m_dataPV->setDescription("Acquired data");
     m_dataPV->setScanType(scanType_t::interrupt, 0);
-    m_dataPV->setType(recordType);
     addChild(m_dataPV);
 
-    m_frequencyPV.reset(new PVVariableImpl<double>("Frequency"));
+    m_frequencyPV.reset(new PVVariableOutImpl<double>("Frequency"));
     m_frequencyPV->setDescription("Acquisition frequency");
     m_frequencyPV->setScanType(scanType_t::passive, 0);
-    m_frequencyPV->setType(recordType_t::ai);
     m_frequencyPV->write(getTimestamp(), (double)1);
     addChild(m_frequencyPV);
 
-    m_durationPV.reset(new PVVariableImpl<double>("Duration"));
+    m_durationPV.reset(new PVVariableOutImpl<double>("Duration"));
     m_durationPV->setDescription("Acquisition duration");
     m_durationPV->setScanType(scanType_t::passive, 0);
-    m_durationPV->setType(recordType_t::ai);
     addChild(m_durationPV);
 
-    m_maxElementsPV.reset(new PVVariableImpl<std::int32_t>("maxLength"));
+    m_maxElementsPV.reset(new PVVariableOutImpl<std::int32_t>("maxLength"));
     m_maxElementsPV->setDescription("Number of element in acquisition array");
     m_maxElementsPV->setScanType(scanType_t::passive, 0);
-    m_maxElementsPV->setType(recordType_t::longin);
     m_maxElementsPV->write(getTimestamp(), (std::int32_t)maxElements);
     addChild(m_maxElementsPV);
 
-    m_decimationPV.reset(new PVVariableImpl<std::int32_t>("decimation"));
+    m_decimationPV.reset(new PVVariableOutImpl<std::int32_t>("decimation"));
     m_decimationPV->setDescription("Decimation");
     m_decimationPV->setScanType(scanType_t::passive, 0);
-    m_decimationPV->setType(recordType_t::longin);
     m_decimationPV->write(getTimestamp(), (std::int32_t)1);
     addChild(m_decimationPV);
 

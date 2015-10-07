@@ -71,104 +71,76 @@ EpicsInterfaceImpl::EpicsInterfaceImpl(const std::string& portName): InterfaceBa
  *
  *************************************************************************/
 typedef std::pair<std::string, std::string> dataTypeAndFTVL_t;
-dataTypeAndFTVL_t dataTypeToEpicsString(dataType_t dataType, bool bInput)
+struct recordDataFTVL_t
 {
-    switch(dataType)
+    recordDataFTVL_t(const std::string& recordType, const std::string& dataType, const std::string ftvl):
+        m_recordType(recordType),
+        m_dataType(dataType),
+        m_ftvl(ftvl)
     {
-
-    case dataType_t::dataInt32:
-        return dataTypeAndFTVL_t("asynInt32", "");
-    case dataType_t::dataFloat64:
-        return dataTypeAndFTVL_t("asynFloat64", "");
-    case dataType_t::dataInt8Array:
-        if(bInput)
-        {
-            return dataTypeAndFTVL_t("asynInt8ArrayIn", "CHAR");
-        }
-        else
-        {
-            return dataTypeAndFTVL_t("asynInt8ArrayOut", "CHAR");
-        }
-    case dataType_t::dataUint8Array:
-        if(bInput)
-        {
-            return dataTypeAndFTVL_t("asynInt8ArrayIn", "UCHAR");
-        }
-        else
-        {
-            return dataTypeAndFTVL_t("asynInt8ArrayOut", "UCHAR");
-        }
-    case dataType_t::dataInt32Array:
-        if(bInput)
-        {
-            return dataTypeAndFTVL_t("asynInt32ArrayIn", "LONG");
-        }
-        else
-        {
-            return dataTypeAndFTVL_t("asynInt32ArrayOut", "LONG");
-        }
-    case dataType_t::dataFloat64Array:
-        if(bInput)
-        {
-            return dataTypeAndFTVL_t("asynFloat64ArrayIn", "DOUBLE");
-        }
-        else
-        {
-            return dataTypeAndFTVL_t("asynFloat64ArrayOut", "DOUBLE");
-        }
     }
-    throw std::logic_error("Unknown data type");
-}
 
+    std::string m_recordType;
+    std::string m_dataType;
+    std::string m_ftvl;
+};
 
-/*
- * Convert a PV type from enum to string.
- *
- * Here we use a switch statement instead of a table so we receive a
- * warning when we forget to check for a value.
- *
- *******************************************************************/
-typedef std::pair<std::string, bool> typeAndInput_t;
-typeAndInput_t recordTypeToEpicsString(recordType_t recordType)
+recordDataFTVL_t dataTypeToEpicsString(const PVBaseImpl& pv)
 {
-    switch(recordType)
+    if(pv.getDataDirection() == dataDirection_t::input)
     {
-    case recordType_t::notSpecified:
-        throw std::logic_error("The type notSpecified should not be auto-inserted in the generated db file");
-    case recordType_t::aai:
-        return typeAndInput_t("aai", true);
-    case recordType_t::aao:
-        return typeAndInput_t("aao", false);
-    case recordType_t::ai:
-        return typeAndInput_t("ai", true);
-    case recordType_t::ao:
-        return typeAndInput_t("ao", false);
-    case recordType_t::bi:
-        return typeAndInput_t("bi", true);
-    case recordType_t::bo:
-        return typeAndInput_t("bo", false);
-    case recordType_t::longin:
-        return typeAndInput_t("longin", true);
-    case recordType_t::longout:
-        return typeAndInput_t("longout", false);
-    case recordType_t::mbbi:
-        return typeAndInput_t("mbbi", true);
-    case recordType_t::mbbo:
-        return typeAndInput_t("mbbo", false);
-    case recordType_t::mbbiDirect:
-        return typeAndInput_t("mbbiDirect", true);
-    case recordType_t::mbboDirect:
-        return typeAndInput_t("mbboDirect", false);
-    case recordType_t::stringIn:
-        return typeAndInput_t("stringin", true);
-    case recordType_t::stringOut:
-        return typeAndInput_t("stringout", false);
-    case recordType_t::waveformIn:
-        return typeAndInput_t("waveform", true);
-    case recordType_t::waveformOut:
-        return typeAndInput_t("waveform", false);
+        switch(pv.getDataType())
+        {
+        case dataType_t::dataInt32:
+            if(pv.getEnumerations().empty())
+            {
+                return recordDataFTVL_t("longin", "asynInt32", "");
+            }
+            else
+            {
+                return recordDataFTVL_t("mbbi", "asynInt32", "");
+            }
+        case dataType_t::dataFloat64:
+            return recordDataFTVL_t("ai", "asynFloat64", "");
+        case dataType_t::dataInt8Array:
+            return recordDataFTVL_t("waveform", "asynInt8ArrayIn", "CHAR");
+        case dataType_t::dataUint8Array:
+            return recordDataFTVL_t("waveform", "asynInt8ArrayIn", "UCHAR");
+        case dataType_t::dataInt32Array:
+            return recordDataFTVL_t("waveform", "asynInt32ArrayIn", "LONG");
+        case dataType_t::dataFloat64Array:
+            return recordDataFTVL_t("waveform", "asynFloat64ArrayIn", "DOUBLE");
+        }
+        throw std::logic_error("Unknown data type");
+
     }
-    throw std::logic_error("Unknown record type");
+    else
+    {
+        switch(pv.getDataType())
+        {
+        case dataType_t::dataInt32:
+            if(pv.getEnumerations().empty())
+            {
+                return recordDataFTVL_t("longout", "asynInt32", "");
+            }
+            else
+            {
+                return recordDataFTVL_t("mbbo", "asynInt32", "");
+            }
+        case dataType_t::dataFloat64:
+            return recordDataFTVL_t("ao", "asynFloat64", "");
+        case dataType_t::dataInt8Array:
+            return recordDataFTVL_t("waveform", "asynInt8ArrayOut", "CHAR");
+        case dataType_t::dataUint8Array:
+            return recordDataFTVL_t("waveform", "asynInt8ArrayOut", "UCHAR");
+        case dataType_t::dataInt32Array:
+            return recordDataFTVL_t("waveform", "asynInt32ArrayOut", "LONG");
+        case dataType_t::dataFloat64Array:
+            return recordDataFTVL_t("waveform", "asynFloat64ArrayOut", "DOUBLE");
+        }
+        throw std::logic_error("Unknown data type");
+
+    }
 }
 
 
@@ -183,80 +155,75 @@ void EpicsInterfaceImpl::registerPV(std::shared_ptr<PVBaseImpl> pv)
     m_pvs.push_back(pv);
     m_pvNameToReason[pv->getFullNameFromPort()] = m_pvs.size() - 1;
 
-    // If the record type is specified then attempt to auto generate a db file
+    // Auto generate a db file
     //////////////////////////////////////////////////////////////////////////
-    recordType_t type = pv->getType();
-    if(type != recordType_t::notSpecified)
+    recordDataFTVL_t recordDataFTVL = dataTypeToEpicsString(*(pv.get()));
+
+    int portAddress(0);
+    std::ostringstream dbEntry;
+
+    std::string externalName(pv->getFullName());
+    if(!pv->getInterfaceName().empty())
     {
-        typeAndInput_t recordTypeAndInput = recordTypeToEpicsString(type);
-
-        int portAddress(0);
-        std::ostringstream dbEntry;
-
-        std::string externalName(pv->getFullName());
-        if(!pv->getInterfaceName().empty())
-        {
-            externalName = pv->getPort()->getFullName() + "-" + pv->getInterfaceName();
-        }
-
-        std::ostringstream scanType;
-
-        switch(pv->getScanType())
-        {
-        case scanType_t::passive:
-            scanType << "Passive";
-            break;
-        case scanType_t::periodic:
-            scanType << pv->getScanPeriodSeconds() << " second";
-            break;
-        case scanType_t::interrupt:
-            scanType << "I/O Intr";
-            break;
-        }
-
-        dataTypeAndFTVL_t dataTypeAndFTVL = dataTypeToEpicsString(pv->getDataType(), recordTypeAndInput.second);
-        size_t maxElements(pv->getMaxElements());
-        dbEntry << "record(" << recordTypeAndInput.first << ", \"" << externalName << "\") {" << std::endl;
-        dbEntry << "    field(DESC, \"" << pv->getDescription() << "\")" << std::endl;
-        dbEntry << "    field(DTYP, \"" << dataTypeAndFTVL.first << "\")" << std::endl;
-
-        if(!dataTypeAndFTVL.second.empty())
-        {
-            dbEntry << "    field(FTVL, \"" << dataTypeAndFTVL.second << "\")" << std::endl;
-        }
-        if(maxElements > 1)
-        {
-            dbEntry << "    field(NELM, " << maxElements << ")" << std::endl;
-        }
-        dbEntry << "    field(SCAN, \"" << scanType.str() << "\")" << std::endl;
-
-        // Add INP/OUT fields
-        if(recordTypeAndInput.second || type == recordType_t::waveformOut)
-        {
-            dbEntry << "    field(INP, \"@asyn(" << pv->getPort()->getFullName() << ", " << portAddress<< ")" << pv->getFullNameFromPort() << "\")" << std::endl;
-        }
-        else
-        {
-            dbEntry << "    field(OUT, \"@asyn(" << pv->getPort()->getFullName() << ", " << portAddress<< ")" << pv->getFullNameFromPort() << "\")" << std::endl;
-        }
-
-        // Add enumerations
-        static const char* epicsEnumNames[] = {"ZR", "ON", "TW", "TH", "FR", "FV", "SX", "SV", "EI", "NI", "TE", "EL", "TV", "TT", "FT", "FF"};
-        const enumerationStrings_t& enumerations = pv->getEnumerations();
-        size_t enumNumber(0);
-        for(enumerationStrings_t::const_iterator scanStrings(enumerations.begin()), endScan(enumerations.end()); scanStrings != endScan; ++scanStrings)
-        {
-            dbEntry << "    field(" << epicsEnumNames[enumNumber] << "VL, " << enumNumber << ")" << std::endl;
-            dbEntry << "    field(" << epicsEnumNames[enumNumber] << "ST, \"" << *scanStrings << "\")" << std::endl;
-            enumNumber++;
-        }
-
-
-        dbEntry << "}" << std::endl << std::endl;
-        dbEntry.flush();
-
-        m_autogeneratedDB += dbEntry.str();
+        externalName = pv->getPort()->getFullName() + "-" + pv->getInterfaceName();
     }
+
+    std::ostringstream scanType;
+
+    switch(pv->getScanType())
+    {
+    case scanType_t::passive:
+        scanType << "Passive";
+        break;
+    case scanType_t::periodic:
+        scanType << pv->getScanPeriodSeconds() << " second";
+        break;
+    case scanType_t::interrupt:
+        scanType << "I/O Intr";
+        break;
+    }
+
+    size_t maxElements(pv->getMaxElements());
+    dbEntry << "record(" << recordDataFTVL.m_recordType << ", \"" << externalName << "\") {" << std::endl;
+    dbEntry << "    field(DESC, \"" << pv->getDescription() << "\")" << std::endl;
+    dbEntry << "    field(DTYP, \"" << recordDataFTVL.m_dataType << "\")" << std::endl;
+
+    if(!recordDataFTVL.m_ftvl.empty())
+    {
+        dbEntry << "    field(FTVL, \"" << recordDataFTVL.m_ftvl << "\")" << std::endl;
+    }
+    if(maxElements > 1)
+    {
+        dbEntry << "    field(NELM, " << maxElements << ")" << std::endl;
+    }
+    dbEntry << "    field(SCAN, \"" << scanType.str() << "\")" << std::endl;
+
+    // Add INP/OUT fields
+    if(pv->getDataDirection() == dataDirection_t::input || recordDataFTVL.m_recordType == "waveform")
+    {
+        dbEntry << "    field(INP, \"@asyn(" << pv->getPort()->getFullName() << ", " << portAddress<< ")" << pv->getFullNameFromPort() << "\")" << std::endl;
+    }
+    else
+    {
+        dbEntry << "    field(OUT, \"@asyn(" << pv->getPort()->getFullName() << ", " << portAddress<< ")" << pv->getFullNameFromPort() << "\")" << std::endl;
+    }
+
+    // Add enumerations
+    static const char* epicsEnumNames[] = {"ZR", "ON", "TW", "TH", "FR", "FV", "SX", "SV", "EI", "NI", "TE", "EL", "TV", "TT", "FT", "FF"};
+    const enumerationStrings_t& enumerations = pv->getEnumerations();
+    size_t enumNumber(0);
+    for(enumerationStrings_t::const_iterator scanStrings(enumerations.begin()), endScan(enumerations.end()); scanStrings != endScan; ++scanStrings)
+    {
+        dbEntry << "    field(" << epicsEnumNames[enumNumber] << "VL, " << enumNumber << ")" << std::endl;
+        dbEntry << "    field(" << epicsEnumNames[enumNumber] << "ST, \"" << *scanStrings << "\")" << std::endl;
+        enumNumber++;
+    }
+
+
+    dbEntry << "}" << std::endl << std::endl;
+    dbEntry.flush();
+
+    m_autogeneratedDB += dbEntry.str();
 }
 
 void EpicsInterfaceImpl::deregisterPV(std::shared_ptr<PVBaseImpl> pv)
