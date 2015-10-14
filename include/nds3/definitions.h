@@ -16,21 +16,10 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <map>
 
 namespace nds
 {
-
-/**
- * The type of control system that NDS must interface with.
- */
-enum class controlSystem_t
-{
-    defaultSystem,  ///< The control system defined with setDefaultControlSystem()
-    test,           ///< A Mock control system used by the test units
-    epics,          ///< EPICS (http://www.aps.anl.gov/epics)
-    tango           ///< Tango (http://tango-controls.org)
-
-};
 
 /**
  * @brief Available states, ordered by priority (lowest to higher).
@@ -74,38 +63,6 @@ enum class scanType_t
     interrupt ///< The device server pushes the value to the control system when it changes
 };
 
-/**
- * @brief Possible record types.
- *
- * The record types are mostly used by EPICS to auto-generate the db file.
- *
- * PVs that have the record type set to notSpecified will not be included in the
- *  auto generated db file.
- *
- * Input records have the bit 7 set to 1, output records have the bit 6 set to
- *  1.
- */
-enum class recordType_t
-{
-    notSpecified = 0,  ///< The PV's type is not specified
-    aao         = 64,  ///< Array analog output
-    ao          = 65,  ///< Analog output
-    bo          = 66,  ///< Binary output
-    mbbo        = 68,  ///< Multi-bit binary output
-    longout     = 67,  ///< Long output
-    mbboDirect  = 69,  ///< Multi-bit binary output direct
-    stringOut   = 70,  ///< String output
-    waveformOut = 71,  ///< Waveform output. On EPICS db files "waveform" together with an output array type will be used
-    aai         = 128, ///< Array analog input
-    ai          = 129, ///< Analog input
-    bi          = 130, ///< Binary input
-    longin      = 131, ///< Long input
-    mbbi        = 132, ///< Multi-bit binary input
-    mbbiDirect  = 133, ///< Multi-bit binary input direct
-    stringIn    = 134, ///< String input
-    waveformIn  = 135  ///< Waveworm input. On EPICS db files "waveform" together with an input array type will be used
-};
-
 
 /**
  * @ingroup logging
@@ -118,6 +75,12 @@ enum class logLevel_t: std::uint8_t
     warning, ///< Warning
     error,   ///< Error
     none     ///< Nothing is logger
+};
+
+enum class dataDirection_t
+{
+    input, ///< The data is being written by the control system and read by the device support
+    output ///< The data is being written by the device support and read by the control system
 };
 
 /**
@@ -159,7 +122,26 @@ enum class logLevel_t: std::uint8_t
 #define ndsWarningStream(node) ndsLogStream(node, nds::logLevel_t::warning)
 #define ndsErrorStream(node) ndsLogStream(node, nds::logLevel_t::error)
 
+/**
+ * @brief List of strings passed as parameters to nodes' commands.
+ */
+typedef std::vector<std::string> parameters_t;
 
+/**
+ * @brief Definition of a function called to execute a node's command.
+ *
+ * It receives a vector of string parameters. It is the responsability of
+ *  the delegate function to convert the strings to the appropriate data
+ *  types.
+ *
+ * The number of parameters is verified by NDS before calling the delegate
+ *  function.
+ */
+typedef std::function<void (const parameters_t& parameters)> command_t;
+
+typedef std::map<std::string, std::string> namedParameters_t;
+
+class Factory;
 
 /**
  * @brief Definition for the function executed to allocate a driver.
@@ -171,8 +153,7 @@ enum class logLevel_t: std::uint8_t
  *  on its root nodes.
  *
  */
-typedef std::function<void*(const std::string& parameter)> allocateDriver_t;
-
+typedef std::function<void*(Factory& factory, const std::string& deviceName, const namedParameters_t& parameters)> allocateDriver_t;
 
 /**
  * @brief Definition for the function executed to deallocate a driver.
@@ -208,23 +189,6 @@ typedef std::function<void ()> stateChange_t;
  *  the requested transition is legal.
  */
 typedef std::function<bool (const state_t, const state_t, const state_t)> allowChange_t;
-
-/**
- * @brief List of strings passed as parameters to nodes' commands.
- */
-typedef std::vector<std::string> parameters_t;
-
-/**
- * @brief Definition of a function called to execute a node's command.
- *
- * It receives a vector of string parameters. It is the responsability of
- *  the delegate function to convert the strings to the appropriate data
- *  types.
- *
- * The number of parameters is verified by NDS before calling the delegate
- *  function.
- */
-typedef std::function<void (const parameters_t& parameters)> command_t;
 
 /**
  * @ingroup timing

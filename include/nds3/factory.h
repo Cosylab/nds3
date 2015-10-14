@@ -23,12 +23,16 @@ class NDS3_API Factory
 {
     friend class Base;
 public:
+#ifndef SWIG
+    Factory(std::shared_ptr<FactoryBaseImpl> impl);
+#endif
+
     /**
      * @brief Allocate a factory object that communicates with the control system
      *
-     * @param controlSystemType the type of control system to communicate with
+     * @param controlSystemName the type of control system to communicate with (empty = default)
      */
-    Factory(const controlSystem_t controlSystemType);
+    Factory(const std::string& controlSystemName);
 
     /**
      * @brief Register a device in the control system.
@@ -65,7 +69,7 @@ public:
 
 #ifndef SWIG
 private:
-    FactoryBaseImpl* m_pFactory;
+    std::shared_ptr<FactoryBaseImpl> m_pFactory;
 #endif
 };
 

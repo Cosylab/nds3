@@ -17,13 +17,13 @@ PVBaseOut::PVBaseOut(std::shared_ptr<PVBaseOutImpl> pvImpl): PVBase(std::static_
 template<typename T>
 void PVBaseOut::read(timespec* pTimestamp, T* pValue) const
 {
-    std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->read(pTimestamp, pValue);
+    std::static_pointer_cast<PVBaseOutImpl>(m_pImplementation)->read(pTimestamp, pValue);
 }
 
 template<typename T>
 void PVBaseOut::write(const timespec& timestamp, const T& value)
 {
-    std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->write(timestamp, value);
+    std::static_pointer_cast<PVBaseOutImpl>(m_pImplementation)->write(timestamp, value);
 }
 
 template void PVBaseOut::read<std::int32_t>(timespec*, std::int32_t*) const;

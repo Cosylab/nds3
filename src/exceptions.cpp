@@ -31,4 +31,16 @@ NoPortDefinedError::NoPortDefinedError(const std::string &what): std::logic_erro
 {
 }
 
+FactoryError::FactoryError(const std::string &what): std::runtime_error(what)
+{
+}
+
+DirectoryNotFoundError::DirectoryNotFoundError(const std::string &what): FactoryError(what)
+{
+}
+
+DriverNotFound::DriverNotFound(const std::string &what): FactoryError(what)
+{
+}
+
 }

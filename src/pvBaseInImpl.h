@@ -6,11 +6,14 @@
 #include "../include/nds3/definitions.h"
 
 #include <string>
+#include <set>
+#include <mutex>
 
 namespace nds
 {
 
 class PVBase;
+class PVBaseOutImpl;
 
 /**
  * @brief Base class for all the PVs.
@@ -33,7 +36,15 @@ public:
     template<typename T>
     void push(const timespec& timestamp, const T& value);
 
+    void subscribeReceiver(PVBaseOutImpl* pReceiver);
+    void unsubscribeReceiver(PVBaseOutImpl* pReceiver);
+
     virtual dataDirection_t getDataDirection() const;
+
+protected:
+    typedef std::set<PVBaseOutImpl*> subscribersList_t;
+    subscribersList_t m_subscriberOutputPVs;
+    std::mutex m_lockSubscribersList;
 
 };
 

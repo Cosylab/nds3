@@ -60,7 +60,7 @@ void PortImpl::deregisterPV(std::shared_ptr<PVBaseImpl> pv)
 template<typename T>
 void PortImpl::push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const T& value)
 {
-    m_pInterface->push(pv, timestamp, value);
+    m_pInterface->push(*(pv.get()), timestamp, value);
 }
 
 template void PortImpl::push<std::int32_t>(std::shared_ptr<PVBaseImpl>, const timespec&, const std::int32_t&);

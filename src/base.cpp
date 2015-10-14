@@ -56,15 +56,15 @@ std::string Base::getFullNameFromPort() const
     return m_pImplementation->getFullNameFromPort();
 }
 
-void Base::initialize(void* pDeviceObject, const controlSystem_t controlSystem /*  = controlSystem_t::default */)
+void Base::initialize(void* pDeviceObject, Factory& factory)
 {
     if(m_pImplementation->getParent().get() != 0)
     {
         throw std::logic_error("You can initialize only the root nodes");
     }
 
-    FactoryBaseImpl* pFactory = Factory(controlSystem).m_pFactory;
-    m_pImplementation->initialize(*pFactory);
+    std::shared_ptr<FactoryBaseImpl> pFactory = factory.m_pFactory;
+    m_pImplementation->initialize(*(pFactory.get()));
 
     pFactory->holdNode(pDeviceObject, m_pImplementation);
 }

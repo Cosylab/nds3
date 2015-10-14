@@ -111,7 +111,7 @@ void BaseImpl::initialize(FactoryBaseImpl &controlSystem)
     ////////////////////////////
     for(commands_t::const_iterator scanCommands(m_commands.begin()), endCommands(m_commands.end()); scanCommands != endCommands; ++scanCommands)
     {
-        controlSystem.registerCommand(*this, scanCommands->m_command, scanCommands->m_usage, scanCommands->m_numParameters, scanCommands->m_function);
+        controlSystem.registerCommand(getFullName(), scanCommands->m_command, scanCommands->m_usage, scanCommands->m_numParameters, scanCommands->m_function);
     }
 }
 
@@ -121,7 +121,7 @@ void BaseImpl::deinitialize()
     //////////////////////////////
     for(commands_t::const_iterator scanCommands(m_commands.begin()), endCommands(m_commands.end()); scanCommands != endCommands; ++scanCommands)
     {
-        m_pFactory->deregisterCommand(*this, scanCommands->m_command);
+        m_pFactory->deregisterCommand(getFullName());
     }
 
 }

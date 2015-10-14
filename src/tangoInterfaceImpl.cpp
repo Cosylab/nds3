@@ -181,7 +181,7 @@ void NdsDevice::init_device()
 
 void NdsDevice::delete_device()
 {
-    TangoFactoryImpl::getInstance().destroyDriver(m_pDevice);
+    TangoFactoryImpl::getInstance().destroyDevice(m_pDevice);
 }
 
 void NdsDevice::setRootNode(std::shared_ptr<NodeImpl> pRootNode)

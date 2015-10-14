@@ -14,7 +14,7 @@ class PVBase;
 /**
  * @brief Base class for all the PVs.
  */
-class PVBaseImpl: public BaseImpl
+class NDS3_API PVBaseImpl: public BaseImpl
 {
 public:
     PVBaseImpl(const std::string& name);
@@ -37,9 +37,6 @@ public:
     virtual void write(const timespec& timestamp, const std::vector<double>& value);
 
     virtual dataDirection_t getDataDirection() const = 0;
-
-    template<typename T>
-    void push(const timespec& timestamp, const T& value);
 
     virtual void initialize(FactoryBaseImpl& controlSystem);
 
@@ -67,13 +64,11 @@ public:
     size_t getMaxElements() const;
     const enumerationStrings_t& getEnumerations() const;
 
-
-protected:
     template<typename T>
 #if !defined(__GNUC__) || __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
     constexpr
 #endif
-    dataType_t getDataTypeForCPPType() const
+    static dataType_t getDataTypeForCPPType()
     {
         const int type =
                 int(std::is_same<T, std::int32_t>::value) * (int)dataType_t::dataInt32 +
@@ -88,6 +83,7 @@ protected:
         return(dataType_t)type;
     }
 
+protected:
     std::string m_description;
     std::string m_interfaceName;
     scanType_t m_scanType;

@@ -45,7 +45,6 @@ public:
      *
      */
     DataAcquisition(const std::string& name,               ///< The node's name
-                    recordType_t recordType,               ///< The acquisition PV type
                     size_t maxElements,                    ///< Maximum size of the acquired array. Set to 1 for scalar values
                     stateChange_t switchOnFunction,        ///< Delegate function that performs the actions to switch the node on
                     stateChange_t switchOffFunction,       ///< Delegate function that performs the actions to switch the node off

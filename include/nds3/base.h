@@ -111,9 +111,9 @@ public:
      *        which will take care of traversing its children and initialize them.
      *
      * @param pDeviceObject   pointer to the device object
-     * @param controlSystem_t control system with which the node must be registered
+     * @param factory         control system with which the node must be registered
      */
-    void initialize(void* pDeviceObject, const controlSystem_t controlSystemType = controlSystem_t::defaultSystem);
+    void initialize(void* pDeviceObject, Factory& factory);
 
     /**
      * @ingroup timestamp

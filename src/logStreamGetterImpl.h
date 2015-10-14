@@ -9,7 +9,7 @@ namespace nds
 
 class BaseImpl;
 
-class LogStreamGetterImpl
+class NDS3_API LogStreamGetterImpl
 {
 public:
     virtual ~LogStreamGetterImpl();

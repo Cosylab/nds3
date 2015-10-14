@@ -25,12 +25,14 @@ typedef enum {
 
 struct symbolProperties
 {
+    std::string m_libraryPath;
+    std::string m_libraryName;
     symbol_bind m_bind;
     symbol_type m_type;
     const void* m_pAddress;
 };
 
-typedef std::map<std::string, symbolProperties> symbolsList_t;
+typedef std::multimap<std::string, symbolProperties> symbolsList_t;
 
 symbolsList_t getSymbols();
 

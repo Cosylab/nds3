@@ -12,7 +12,7 @@ class Delegate;
 class NDS3_API PVHoldDelegate: public PVBase
 {
 public:
-    PVHoldDelegate(const std::string& name, dataType_t dataType, std::shared_ptr<Delegate> pDelegate);
+    PVHoldDelegate(const std::string& name, dataType_t dataType, std::shared_ptr<Delegate> pDelegate, dataDirection_t dataDirection);
 
 };
 

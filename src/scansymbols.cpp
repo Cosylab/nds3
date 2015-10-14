@@ -164,12 +164,12 @@ int iterate_phdr(struct dl_phdr_info *info, size_t /* size */, void *dataref)
                     else
                         name = "";
 
-
-                    std::string symbolName(name);
-                    (*pList)[symbolName].m_bind = bind;
-                    (*pList)[symbolName].m_type = type;
-                    (*pList)[symbolName].m_pAddress = ptr;
-
+                    symbolsList_t::iterator position = pList->insert(std::pair<std::string, symbolProperties>(name, symbolProperties()));
+                    position->second.m_libraryPath = libpath;
+                    position->second.m_libraryName = libname;
+                    position->second.m_bind = bind;
+                    position->second.m_type = type;
+                    position->second.m_pAddress = ptr;
                 }
             }
         }

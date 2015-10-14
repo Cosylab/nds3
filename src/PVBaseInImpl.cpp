@@ -1,4 +1,5 @@
 #include "pvBaseInImpl.h"
+#include "pvBaseOutImpl.h"
 #include "portImpl.h"
 
 namespace nds
@@ -51,7 +52,31 @@ void PVBaseInImpl::push(const timespec& timestamp, const T& value)
     ////////////////////////////////////
     std::shared_ptr<PortImpl> pPort(getPort());
     pPort->push(std::static_pointer_cast<PVBaseImpl>(shared_from_this()), timestamp, value);
+
+    // Push the value to the outputs
+    ////////////////////////////////
+    std::lock_guard<std::mutex> lock(m_lockSubscribersList);
+    for(subscribersList_t::iterator scanOutputs(m_subscriberOutputPVs.begin()), endOutputs(m_subscriberOutputPVs.end());
+        scanOutputs != endOutputs;
+        ++scanOutputs)
+    {
+        (*scanOutputs)->write(timestamp, value);
+    }
 }
+
+void PVBaseInImpl::subscribeReceiver(PVBaseOutImpl* pReceiver)
+{
+    std::lock_guard<std::mutex> lock(m_lockSubscribersList);
+    m_subscriberOutputPVs.insert(pReceiver);
+}
+
+void PVBaseInImpl::unsubscribeReceiver(PVBaseOutImpl* pReceiver)
+{
+    std::lock_guard<std::mutex> lock(m_lockSubscribersList);
+    m_subscriberOutputPVs.erase(pReceiver);
+}
+
+
 
 dataDirection_t PVBaseInImpl::getDataDirection() const
 {

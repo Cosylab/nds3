@@ -82,23 +82,6 @@ void PVBaseImpl::write(const timespec& /* pTimestamp */, const std::vector<doubl
     throw;
 }
 
-
-template<typename T>
-void PVBaseImpl::push(const timespec& timestamp, const T& value)
-{
-    // Find the port then push the value
-    ////////////////////////////////////
-    std::shared_ptr<PortImpl> pPort(getPort());
-    pPort->push(std::static_pointer_cast<PVBaseImpl>(shared_from_this()), timestamp, value);
-}
-
-template void PVBaseImpl::push<std::int32_t>(const timespec&, const std::int32_t&);
-template void PVBaseImpl::push<double>(const timespec&, const double&);
-template void PVBaseImpl::push<std::vector<std::int8_t> >(const timespec&, const std::vector<std::int8_t>&);
-template void PVBaseImpl::push<std::vector<std::uint8_t> >(const timespec&, const std::vector<std::uint8_t>&);
-template void PVBaseImpl::push<std::vector<std::int32_t> >(const timespec&, const std::vector<std::int32_t>&);
-template void PVBaseImpl::push<std::vector<double> >(const timespec&, const std::vector<double>&);
-
 void PVBaseImpl::setDescription(const std::string& description)
 {
     m_description = description;

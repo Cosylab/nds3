@@ -16,13 +16,13 @@ PVBaseIn::PVBaseIn(std::shared_ptr<PVBaseInImpl> pvImpl): PVBase(std::static_poi
 template<typename T>
 void PVBaseIn::read(timespec* pTimestamp, T* pValue) const
 {
-    std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->read(pTimestamp, pValue);
+    std::static_pointer_cast<PVBaseInImpl>(m_pImplementation)->read(pTimestamp, pValue);
 }
 
 template<typename T>
 void PVBaseIn::push(const timespec& timestamp, const T& value)
 {
-    std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->push(timestamp, value);
+    std::static_pointer_cast<PVBaseInImpl>(m_pImplementation)->push(timestamp, value);
 }
 
 template void PVBaseIn::read<std::int32_t>(timespec*, std::int32_t*) const;

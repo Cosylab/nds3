@@ -112,6 +112,34 @@ public:
     NoPortDefinedError(const std::string& what);
 };
 
+
+/**
+ * @brief This is the base class for exceptions thrown by the NDS Factory.
+ *        Usually it is thrown while allocating new control system structures.
+ */
+class NDS3_API FactoryError: public std::runtime_error
+{
+public:
+    FactoryError(const std::string& what);
+};
+
+
+/**
+ * @brief This exception is thrown when the folder being scanned for control
+ *        system modules does not exist.
+ */
+class NDS3_API DirectoryNotFoundError: public FactoryError
+{
+public:
+    DirectoryNotFoundError(const std::string& what);
+};
+
+class NDS3_API DriverNotFound: public FactoryError
+{
+public:
+    DriverNotFound(const std::string& what);
+};
+
 }
 
 #endif // NDSEXCEPTIONS_H

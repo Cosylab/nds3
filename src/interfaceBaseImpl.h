@@ -14,15 +14,9 @@ namespace nds
  * Classes derived from this one implement specific code for the control system they
  * interact with.
  */
-class InterfaceBaseImpl
+class NDS3_API InterfaceBaseImpl
 {
 public:
-    /**
-     * @brief Creates a device with the specific name.
-     *
-     * @param portName the device's name
-     */
-    InterfaceBaseImpl(const std::string& portName);
     virtual ~InterfaceBaseImpl();
 
     /**
@@ -51,16 +45,12 @@ public:
      */
     virtual void registrationTerminated() = 0;
 
-    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::int32_t& value) = 0;
-    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const double& value) = 0;
-    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int8_t> & value) = 0;
-    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::uint8_t> & value) = 0;
-    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<std::int32_t> & value) = 0;
-    virtual void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const std::vector<double> & value) = 0;
-
-protected:
-    std::string m_portName;
-
+    virtual void push(const PVBaseImpl& pv, const timespec& timestamp, const std::int32_t& value) = 0;
+    virtual void push(const PVBaseImpl& pv, const timespec& timestamp, const double& value) = 0;
+    virtual void push(const PVBaseImpl& pv, const timespec& timestamp, const std::vector<std::int8_t> & value) = 0;
+    virtual void push(const PVBaseImpl& pv, const timespec& timestamp, const std::vector<std::uint8_t> & value) = 0;
+    virtual void push(const PVBaseImpl& pv, const timespec& timestamp, const std::vector<std::int32_t> & value) = 0;
+    virtual void push(const PVBaseImpl& pv, const timespec& timestamp, const std::vector<double> & value) = 0;
 };
 
 }

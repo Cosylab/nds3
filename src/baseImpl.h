@@ -26,7 +26,7 @@ class LogStreamGetterImpl;
  * @brief This is the base class for the implementation of nodes, devices, PVs.
  *
  */
-class BaseImpl: public std::enable_shared_from_this<BaseImpl>
+class NDS3_API BaseImpl: public std::enable_shared_from_this<BaseImpl>
 {
 protected:
     BaseImpl(const std::string& name);

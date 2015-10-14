@@ -12,6 +12,7 @@ namespace nds
 
 class InterfaceBaseImpl;
 class BaseImpl;
+class PVBaseImpl;
 class LogStreamGetterImpl;
 
 /**
@@ -25,6 +26,7 @@ class LogStreamGetterImpl;
  *  is shutdown.
  *
  * The overwritten classes must implement the following methods:
+ * - getName()
  * - getNewInterface()
  * - run()
  * - getLogStreamGetter()
@@ -34,11 +36,19 @@ class LogStreamGetterImpl;
  * Optionally, the method createThread() can also be overwritten.
  */
 
-class FactoryBaseImpl
+class NDS3_API FactoryBaseImpl: public std::enable_shared_from_this<FactoryBaseImpl>
 {
     friend class InterfaceBaseImpl;
 public:
     virtual ~FactoryBaseImpl();
+
+    /**
+     * @brief This function is called before the destructor is invoked.
+     *
+     * It takes care of de-initializing all the PVs while the control system is
+     *  still up and running.
+     */
+    virtual void preDelete();
 
     /**
      * @brief Called to register the functions that allocate and deallocate a device.
@@ -51,11 +61,28 @@ public:
 
     virtual std::thread createThread(const std::string& name, threadFunction_t function);
 
-    void* createDevice(const std::string& name, const std::string& parameter);
+    /**
+     * @brief Allocate a device. The device driver must have been registered via
+     *        registerDriver() or must have been loaded from the folder defined
+     *        in the enviroment variables LD_LIBRARY_PATH or NDS_DEVICES
+     *
+     * @param driverName
+     * @param deviceName
+     * @param parameters
+     * @return an opaque pointer that represents the allocated device. Pass it to
+     *         destroyDevice() to remove the device
+     */
+    void* createDevice(const std::string& driverName, const std::string& deviceName, const namedParameters_t& parameters);
 
-    void destroyDriver(void* pDevice);
+    /**
+     * @brief Deallocate an allocated device
+     * @param pDevice
+     */
+    void destroyDevice(void* pDevice);
 
     void holdNode(void* pDeviceObject, std::shared_ptr<BaseImpl> pHoldNode);
+
+    virtual const std::string getName() const = 0;
 
     /**
      * @brief This method is called by a PortNodeImpl object in order to create a
@@ -89,19 +116,20 @@ public:
                                  const size_t numParameters, command_t commandFunction) = 0;
 
     /**
-     * @brief Called to deregister a command tied to a node.
+     * @brief Called to deregister a node from all the NDS commands
      *
      * The NDS framework guarantees that there are no multi-threading concurrency
      *  issues when calling this function.
      *
      * @param node          to node from which the command has to be removed
-     * @param command       the command to remove
      */
-    virtual void deregisterCommand(const BaseImpl& node,
-                                   const std::string& command) = 0;
+    virtual void deregisterCommand(const BaseImpl& node) = 0;
 
 protected:
+    typedef std::list<std::string> driversList_t;
+    driversList_t getDriversList();
 
+private:
     typedef std::map<std::string, std::pair<allocateDriver_t, deallocateDriver_t> > driverAllocDeallocMap_t;
     driverAllocDeallocMap_t m_driversAllocDealloc;
 

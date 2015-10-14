@@ -1,4 +1,5 @@
 #include "pvVariableInImpl.h"
+#include "pvBaseOutImpl.h"
 
 namespace nds
 {
@@ -22,17 +23,27 @@ void PVVariableInImpl<T>::read(timespec* pTimestamp, T* pValue) const
 template <typename T>
 void PVVariableInImpl<T>::setValue(const timespec& timestamp, const T& value)
 {
-    std::unique_lock<std::mutex> lock(m_pvMutex);
-    m_value =value;
-    m_timestamp = timestamp;
+    {
+        std::unique_lock<std::mutex> lock(m_pvMutex);
+        m_value =value;
+        m_timestamp = timestamp;
+    }
+
+    // Push the value to the outputs
+    ////////////////////////////////
+    std::lock_guard<std::mutex> lock(m_lockSubscribersList);
+    for(subscribersList_t::iterator scanOutputs(m_subscriberOutputPVs.begin()), endOutputs(m_subscriberOutputPVs.end());
+        scanOutputs != endOutputs;
+        ++scanOutputs)
+    {
+        (*scanOutputs)->write(timestamp, value);
+    }
 }
 
 template <typename T>
 void PVVariableInImpl<T>::setValue(const T& value)
 {
-    std::unique_lock<std::mutex> lock(m_pvMutex);
-    m_value =value;
-    m_timestamp = getTimestamp();
+    setValue(getTimestamp(), value);
 }
 
 template <typename T>
