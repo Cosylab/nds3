@@ -80,6 +80,8 @@ public:
      */
     void destroyDevice(void* pDevice);
 
+    void destroyDevice(const std::string& deviceName);
+
     void holdNode(void* pDeviceObject, std::shared_ptr<BaseImpl> pHoldNode);
 
     virtual const std::string getName() const = 0;
@@ -133,7 +135,13 @@ private:
     typedef std::map<std::string, std::pair<allocateDriver_t, deallocateDriver_t> > driverAllocDeallocMap_t;
     driverAllocDeallocMap_t m_driversAllocDealloc;
 
-    typedef std::multimap<std::string, void*> allocatedDevices_t;
+    struct allocatedDevice_t
+    {
+        void* m_pDevice;
+        std::string m_driverName;
+    };
+
+    typedef std::map<std::string, allocatedDevice_t> allocatedDevices_t;
     allocatedDevices_t m_allocatedDevices;
 
     typedef std::list<std::shared_ptr<BaseImpl> > nodesList_t;

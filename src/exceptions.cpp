@@ -43,4 +43,28 @@ DriverNotFound::DriverNotFound(const std::string &what): FactoryError(what)
 {
 }
 
+ControlSystemNotFound::ControlSystemNotFound(const std::string &what): FactoryError(what)
+{
+}
+
+DeviceNotAllocated::DeviceNotAllocated(const std::string &what): FactoryError(what)
+{
+}
+
+DeviceAlreadyCreated::DeviceAlreadyCreated(const std::string &what): FactoryError(what)
+{
+}
+
+PVAlreadyDeclared::PVAlreadyDeclared(const std::string& what): FactoryError(what)
+{
+}
+
+MissingInputPV::MissingInputPV(const std::string& what): FactoryError(what)
+{
+}
+
+MissingOutputPV::MissingOutputPV(const std::string& what): FactoryError(what)
+{
+}
+
 }

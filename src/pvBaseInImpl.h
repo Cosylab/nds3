@@ -23,6 +23,10 @@ class PVBaseInImpl: public PVBaseImpl
 public:
     PVBaseInImpl(const std::string& name);
 
+    virtual void initialize(FactoryBaseImpl& controlSystem);
+
+    virtual void deinitialize();
+
     // All the base versions throw.
     // Only the overwritten ones in the derived classes will function correctly.
     ////////////////////////////////////////////////////////////////////////////

@@ -20,6 +20,12 @@ class PVBaseOutImpl: public PVBaseImpl
 public:
     PVBaseOutImpl(const std::string& name);
 
+    virtual void initialize(FactoryBaseImpl& controlSystem);
+
+    virtual void deinitialize();
+
+    void subscribeTo(const std::string& inputPVName);
+
     // All the base versions throw.
     // Only the overwritten ones in the derived classes will function correctly.
     ////////////////////////////////////////////////////////////////////////////

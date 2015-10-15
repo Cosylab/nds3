@@ -10,6 +10,7 @@
  */
 
 #include "definitions.h"
+#include "exceptions.h"
 #include "base.h"
 #include "node.h"
 #include "port.h"

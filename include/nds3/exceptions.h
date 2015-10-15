@@ -134,10 +134,50 @@ public:
     DirectoryNotFoundError(const std::string& what);
 };
 
+/**
+ * @brief This exception is thrown while creating a device when the requested
+ *        device driver cannot be located.
+ */
 class NDS3_API DriverNotFound: public FactoryError
 {
 public:
     DriverNotFound(const std::string& what);
+};
+
+class NDS3_API ControlSystemNotFound: public FactoryError
+{
+public:
+    ControlSystemNotFound(const std::string& what);
+};
+
+class NDS3_API DeviceNotAllocated: public FactoryError
+{
+public:
+    DeviceNotAllocated(const std::string& what);
+};
+
+class NDS3_API DeviceAlreadyCreated: public FactoryError
+{
+public:
+    DeviceAlreadyCreated(const std::string& what);
+};
+
+class PVAlreadyDeclared: public FactoryError
+{
+public:
+    PVAlreadyDeclared(const std::string& what);
+};
+
+class MissingInputPV: public FactoryError
+{
+public:
+    MissingInputPV(const std::string& what);
+};
+
+class MissingOutputPV: public FactoryError
+{
+public:
+    MissingOutputPV(const std::string& what);
 };
 
 }

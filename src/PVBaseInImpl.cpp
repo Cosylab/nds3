@@ -1,13 +1,25 @@
 #include "pvBaseInImpl.h"
 #include "pvBaseOutImpl.h"
 #include "portImpl.h"
+#include "ndsFactoryImpl.h"
 
 namespace nds
 {
 
 PVBaseInImpl::PVBaseInImpl(const std::string& name): PVBaseImpl(name)
 {
+}
 
+void PVBaseInImpl::initialize(FactoryBaseImpl &controlSystem)
+{
+    PVBaseImpl::initialize(controlSystem);
+    NdsFactoryImpl::getInstance().registerInputPV(this);
+}
+
+void PVBaseInImpl::deinitialize()
+{
+    NdsFactoryImpl::getInstance().deregisterInputPV(this);
+    PVBaseImpl::deinitialize();
 }
 
 void PVBaseInImpl::read(timespec* /* pTimestamp */, std::int32_t* /* pValue */) const
@@ -73,7 +85,12 @@ void PVBaseInImpl::subscribeReceiver(PVBaseOutImpl* pReceiver)
 void PVBaseInImpl::unsubscribeReceiver(PVBaseOutImpl* pReceiver)
 {
     std::lock_guard<std::mutex> lock(m_lockSubscribersList);
-    m_subscriberOutputPVs.erase(pReceiver);
+
+    subscribersList_t::const_iterator findReceiver = m_subscriberOutputPVs.find(pReceiver);
+    if(findReceiver != m_subscriberOutputPVs.end())
+    {
+        m_subscriberOutputPVs.erase(findReceiver);
+    }
 }
 
 

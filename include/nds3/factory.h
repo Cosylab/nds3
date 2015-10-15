@@ -65,6 +65,28 @@ public:
      */
     void run(int argc,char *argv[]);
 
+    /**
+     * @brief Create a device registered with registerDriver or loaded
+     *        during the startup sequence.
+     *
+     * @param driverName the name of the driver that implements the device
+     * @param deviceName a parameter passed to the device usually used to
+     *                    set the name of the root node
+     * @param parameters map of named parameters passed to the device
+     */
+    void createDevice(const std::string& driverName, const std::string& deviceName, const namedParameters_t& parameters);
+
+    /**
+     * @brief Destroy a device created with createDevice().
+     *
+     * @param deviceName the name given to the device in createDevice()
+     */
+    void destroyDevice(const std::string& deviceName);
+
+    void subscribe(const std::string& pushFrom, const std::string& pushTo);
+
+    void unsubscribe(const std::string& pushTo);
+
     std::thread createThread(const std::string& name, threadFunction_t function);
 
 #ifndef SWIG

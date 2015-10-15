@@ -1,5 +1,7 @@
 #include "ndsFactoryImpl.h"
 #include "factoryBaseImpl.h"
+#include "pvBaseInImpl.h"
+#include "pvBaseOutImpl.h"
 #include "scansymbols.h"
 #include "/usr/include/link.h"
 #include "../include/nds3/exceptions.h"
@@ -107,6 +109,138 @@ void NdsFactoryImpl::registerDriver(const std::string &driverName, allocateDrive
     }
 }
 
+void NdsFactoryImpl::registerInputPV(PVBaseInImpl *pSender)
+{
+    std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
+
+    std::string fullName(pSender->getFullName());
+    if(m_registeredInputPVs.find(fullName) != m_registeredInputPVs.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "The input PV with name " << fullName << " has already been registered";
+        throw PVAlreadyDeclared(errorMessage.str());
+    }
+    if(m_registeredOutputPVs.find(fullName) != m_registeredOutputPVs.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "The input PV with name " << fullName << " has already been registered as an output PV";
+        throw PVAlreadyDeclared(errorMessage.str());
+    }
+    m_registeredInputPVs[fullName] = pSender;
+}
+
+void NdsFactoryImpl::registerOutputPV(PVBaseOutImpl *pReceiver)
+{
+    std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
+
+    std::string fullName(pReceiver->getFullName());
+    if(m_registeredOutputPVs.find(fullName) != m_registeredOutputPVs.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "The output PV with name " << fullName << " has already been registered";
+        throw PVAlreadyDeclared(errorMessage.str());
+    }
+    if(m_registeredInputPVs.find(fullName) != m_registeredInputPVs.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "The output PV with name " << fullName << " has already been registered as an input PV";
+        throw PVAlreadyDeclared(errorMessage.str());
+    }
+    m_registeredOutputPVs[fullName] = pReceiver;
+}
+
+void NdsFactoryImpl::deregisterInputPV(PVBaseInImpl *pSender)
+{
+    std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
+
+    m_registeredInputPVs.erase(pSender->getFullName());
+}
+
+void NdsFactoryImpl::deregisterOutputPV(PVBaseOutImpl *pReceiver)
+{
+    std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
+
+    m_registeredOutputPVs.erase(pReceiver->getFullName());
+
+    for(registeredInputPVs_t::iterator scanInputs(m_registeredInputPVs.begin()), endInputs(m_registeredInputPVs.end());
+        scanInputs != endInputs;
+        ++scanInputs)
+    {
+        scanInputs->second->unsubscribeReceiver(pReceiver);
+    }
+}
+
+void NdsFactoryImpl::subscribe(const std::string &pushFrom, PVBaseOutImpl *pReceiver)
+{
+    std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
+
+    // Sanity check
+    registeredOutputPVs_t::const_iterator findOutput = m_registeredOutputPVs.find(pReceiver->getFullName());
+    if(findOutput == m_registeredOutputPVs.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "The output PV " << pReceiver->getFullName() << " was never registered";
+        throw std::logic_error(errorMessage.str());
+    }
+    if(findOutput->second != pReceiver)
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "A different output PV " << pReceiver->getFullName() << " was registered";
+        throw std::logic_error(errorMessage.str());
+    }
+
+    registeredInputPVs_t::iterator findInput = m_registeredInputPVs.find(pushFrom);
+    if(findInput == m_registeredInputPVs.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "Cannot subscribe " << pReceiver->getFullName() << " to " << pushFrom << " because the input PV cannot be located";
+        throw MissingInputPV(errorMessage.str());
+    }
+
+    findInput->second->subscribeReceiver(pReceiver);
+}
+
+void NdsFactoryImpl::subscribe(const std::string& pushFrom, const std::string& pushTo)
+{
+    std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
+
+    registeredOutputPVs_t::const_iterator findOutput = m_registeredOutputPVs.find(pushTo);
+    if(findOutput == m_registeredOutputPVs.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "Cannot subscribe " << pushTo << " to " << pushFrom << " because the output PV cannot be located";
+        throw MissingOutputPV(errorMessage.str());
+    }
+    subscribe(pushFrom, findOutput->second);
+
+}
+
+void NdsFactoryImpl::unsubscribe(PVBaseOutImpl *pReceiver)
+{
+    std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
+
+    for(registeredInputPVs_t::iterator scanInputs(m_registeredInputPVs.begin()), endInputs(m_registeredInputPVs.end());
+        scanInputs != endInputs;
+        ++scanInputs)
+    {
+        scanInputs->second->unsubscribeReceiver(pReceiver);
+    }
+}
+
+void NdsFactoryImpl::unsubscribe(const std::string &pushTo)
+{
+    std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
+
+    registeredOutputPVs_t::const_iterator findOutput = m_registeredOutputPVs.find(pushTo);
+    if(findOutput == m_registeredOutputPVs.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "Cannot unsubscribe " << pushTo << " because the output PV cannot be located";
+        throw MissingOutputPV(errorMessage.str());
+    }
+    unsubscribe(findOutput->second);
+}
+
 std::shared_ptr<FactoryBaseImpl> NdsFactoryImpl::getControlSystem(const std::string& controlSystem)
 {
     if(controlSystem.empty())
@@ -120,7 +254,9 @@ std::shared_ptr<FactoryBaseImpl> NdsFactoryImpl::getControlSystem(const std::str
     controlSystems_t::iterator findControlSystem = m_controlSystems.find(controlSystem);
     if(findControlSystem == m_controlSystems.end())
     {
-        throw;
+        std::ostringstream errorMessage;
+        errorMessage << "The control system " << controlSystem << " cannot be located.";
+        throw ControlSystemNotFound(errorMessage.str());
     }
     return findControlSystem->second;
 }

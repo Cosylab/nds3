@@ -42,7 +42,7 @@ void FactoryBaseImpl::preDelete()
     /////////////////////
     for(allocatedDevices_t::iterator scanAllocated(m_allocatedDevices.begin()), endAllocated(m_allocatedDevices.end()); scanAllocated != endAllocated; ++scanAllocated)
     {
-        m_driversAllocDealloc[(*scanAllocated).first].second((*scanAllocated).second);
+        m_driversAllocDealloc[scanAllocated->second.m_driverName].second(scanAllocated->second.m_pDevice);
     }
 
 }
@@ -66,8 +66,15 @@ void* FactoryBaseImpl::createDevice(const std::string& driverName, const std::st
 {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
 
-    driverAllocDeallocMap_t::const_iterator findDevice = m_driversAllocDealloc.find(driverName);
-    if(findDevice == m_driversAllocDealloc.end())
+    if(m_allocatedDevices.find(deviceName) != m_allocatedDevices.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "A device with named " << deviceName << " for the control system " << getName() << " has already been created";
+        throw DeviceAlreadyCreated(errorMessage.str());
+    }
+
+    driverAllocDeallocMap_t::const_iterator findDriver = m_driversAllocDealloc.find(driverName);
+    if(findDriver == m_driversAllocDealloc.end())
     {
         std::ostringstream error;
         error << "The driver " << driverName << " has not been registered";
@@ -75,21 +82,15 @@ void* FactoryBaseImpl::createDevice(const std::string& driverName, const std::st
     }
 
     Factory factory(shared_from_this());
-    void* driver = findDevice->second.first(factory, deviceName, parameters);
+    void* device = findDriver->second.first(factory, deviceName, parameters);
 
-    m_allocatedDevices.insert(std::pair<std::string, void*> (driverName, driver));
+    m_allocatedDevices[deviceName].m_pDevice = device;
+    m_allocatedDevices[deviceName].m_driverName = driverName;
 
-    return driver;
+    return device;
 }
 
 
-
-std::thread FactoryBaseImpl::createThread(const std::string &name, threadFunction_t function)
-{
-    std::thread newThread(function);
-    pthread_setname_np(newThread.native_handle(), name.c_str());
-    return newThread;
-}
 
 void FactoryBaseImpl::destroyDevice(void* pDevice)
 {
@@ -112,9 +113,9 @@ void FactoryBaseImpl::destroyDevice(void* pDevice)
     /////////////////////
     for(allocatedDevices_t::iterator scanAllocated(m_allocatedDevices.begin()), endAllocated(m_allocatedDevices.end()); scanAllocated != endAllocated; ++scanAllocated)
     {
-        if((*scanAllocated).second == pDevice)
+        if(scanAllocated->second.m_pDevice == pDevice)
         {
-            m_driversAllocDealloc[(*scanAllocated).first].second((*scanAllocated).second);
+            m_driversAllocDealloc[scanAllocated->second.m_driverName].second(scanAllocated->second.m_pDevice);
             m_allocatedDevices.erase(scanAllocated);
             break;
         }
@@ -130,8 +131,31 @@ void FactoryBaseImpl::destroyDevice(void* pDevice)
             break;
         }
     }
-
 }
+
+void FactoryBaseImpl::destroyDevice(const std::string& deviceName)
+{
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+
+    allocatedDevices_t::const_iterator findDevice = m_allocatedDevices.find(deviceName);
+    if(findDevice == m_allocatedDevices.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "The device " << deviceName << " was never allocated or has already been destroyed";
+        throw DeviceNotAllocated(errorMessage.str());
+    }
+
+    destroyDevice(findDevice->second.m_pDevice);
+}
+
+
+std::thread FactoryBaseImpl::createThread(const std::string &name, threadFunction_t function)
+{
+    std::thread newThread(function);
+    pthread_setname_np(newThread.native_handle(), name.c_str());
+    return newThread;
+}
+
 
 void FactoryBaseImpl::holdNode(void* pDeviceObject, std::shared_ptr<BaseImpl> pHoldNode)
 {

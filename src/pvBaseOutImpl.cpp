@@ -1,4 +1,5 @@
 #include "pvBaseOutImpl.h"
+#include "ndsFactoryImpl.h"
 
 namespace nds
 {
@@ -7,6 +8,24 @@ PVBaseOutImpl::PVBaseOutImpl(const std::string& name): PVBaseImpl(name)
 {
 
 }
+
+void PVBaseOutImpl::initialize(FactoryBaseImpl &controlSystem)
+{
+    PVBaseImpl::initialize(controlSystem);
+    NdsFactoryImpl::getInstance().registerOutputPV(this);
+}
+
+void PVBaseOutImpl::deinitialize()
+{
+    NdsFactoryImpl::getInstance().deregisterOutputPV(this);
+    PVBaseImpl::deinitialize();
+}
+
+void PVBaseOutImpl::subscribeTo(const std::string &inputPVName)
+{
+    NdsFactoryImpl::getInstance().subscribe(inputPVName, this);
+}
+
 
 void PVBaseOutImpl::read(timespec* /* pTimestamp */, std::int32_t* /* pValue */) const
 {

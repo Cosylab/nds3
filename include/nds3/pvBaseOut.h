@@ -53,6 +53,19 @@ public:
     template<typename T>
     void write(const timespec& timestamp, const T& value);
 
+    /**
+     * @brief Subscribe the PV to an input PV which may be located on any other
+     *         device running in the NDS process.
+     *
+     * When the input PV will be written by the device via a PVBaseIn::push() operation
+     *  or via a PVVariableIn::setValue() then the input PV will forward the value
+     *  to this PV by calling PVBaseOut::write().
+     *
+     * @param inputPVName the name of the input PV from which we want to
+     *                     receive the values
+     */
+    void subscribeTo(const std::string& inputPVName);
+
 };
 
 }

@@ -6,12 +6,15 @@ namespace nds
 
 PVBaseOut::PVBaseOut()
 {
-
 }
 
 PVBaseOut::PVBaseOut(std::shared_ptr<PVBaseOutImpl> pvImpl): PVBase(std::static_pointer_cast<PVBaseImpl>(pvImpl))
 {
+}
 
+void PVBaseOut::subscribeTo(const std::string &inputPVName)
+{
+    std::static_pointer_cast<PVBaseOutImpl>(m_pImplementation)->subscribeTo(inputPVName);
 }
 
 template<typename T>
