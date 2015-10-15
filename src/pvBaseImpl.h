@@ -65,9 +65,6 @@ public:
     const enumerationStrings_t& getEnumerations() const;
 
     template<typename T>
-#if !defined(__GNUC__) || __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
-    constexpr
-#endif
     static dataType_t getDataTypeForCPPType()
     {
         const int type =
