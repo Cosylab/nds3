@@ -54,7 +54,6 @@ SOURCES +=\
     src/pvDelegateOutImpl.cpp \
     src/pvDelegateInImpl.cpp \
     src/pvVariableOut.cpp \
-    src/pvVariableOut.cpp \
     src/pvVariableIn.cpp \
     src/pvVariableInImpl.cpp \
     src/pvVariableOutImpl.cpp \
