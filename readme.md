@@ -1,4 +1,6 @@
-= NDS v.3
+# NDS v.3 
+
+## Introduction
 
 NDS (Nominal Device Support) is a library that allows to write device supports for a variety of 
  control systems (CS) by hiding the details of the chosen CS and focusing on device functionalities.
@@ -16,5 +18,31 @@ NDS provides the following features:
 - guaranteed binary compatibility between minor versions allow to easily upgrade existing installations
   without recompiling the device support
 
+## Compilation
 
+### Using qmake:
+
+mkdir build_folder
+cd build_folder
+qmake-qt4 ../nds3_library.pro
+make
+
+or
+
+mkdir build_folder
+cd build_folder
+qmake ../nds3_library.pro
+make
+
+### Using cmake
+
+mkdir build_folder
+cd build_folder
+cmake ..
+make
+
+### Using make
+
+make
+sudo make install
 
