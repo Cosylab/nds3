@@ -1,10 +1,10 @@
-#include "ndsFactoryImpl.h"
-#include "factoryBaseImpl.h"
-#include "pvBaseInImpl.h"
-#include "pvBaseOutImpl.h"
-#include "scansymbols.h"
+#include "../include/nds3impl/ndsFactoryImpl.h"
+#include "../include/nds3impl/factoryBaseImpl.h"
+#include "../include/nds3impl/pvBaseInImpl.h"
+#include "../include/nds3impl/pvBaseOutImpl.h"
 #include "/usr/include/link.h"
 #include "../include/nds3/exceptions.h"
+#include "../include/nds3/factory.h"
 #include <cstdlib>
 #include <elf.h>
 #include <dlfcn.h>
@@ -91,7 +91,12 @@ NdsFactoryImpl::~NdsFactoryImpl()
 {
     // Deregister all the nodes before deleting the control systems
     ///////////////////////////////////////////////////////////////
-    for(controlSystems_t::iterator scanControlSystems(m_controlSystems.begin()), endControlSystems(m_controlSystems.end());
+    controlSystems_t controlSystems;
+    {
+        std::lock_guard<std::mutex> lock(m_lockControlSystems);
+         controlSystems = m_controlSystems;
+    }
+    for(controlSystems_t::iterator scanControlSystems(controlSystems.begin()), endControlSystems(controlSystems.end());
         scanControlSystems != endControlSystems;
         ++scanControlSystems)
     {
@@ -101,13 +106,43 @@ NdsFactoryImpl::~NdsFactoryImpl()
 
 void NdsFactoryImpl::registerDriver(const std::string &driverName, allocateDriver_t allocateFunction, deallocateDriver_t deallocateFunction)
 {
-    for(controlSystems_t::iterator scanControlSystems(m_controlSystems.begin()), endControlSystems(m_controlSystems.end());
-        scanControlSystems != endControlSystems;
-        ++scanControlSystems)
-    {
-        scanControlSystems->second->registerDriver(driverName, allocateFunction, deallocateFunction);
-    }
+    std::lock_guard<std::mutex> lock(m_lockDrivers);
+
+    m_driversAllocDealloc[driverName] = std::pair<allocateDriver_t, deallocateDriver_t>(allocateFunction, deallocateFunction);
 }
+
+void NdsFactoryImpl::registerControlSystem(std::shared_ptr<FactoryBaseImpl> pControlSystem)
+{
+    std::lock_guard<std::mutex> lock(m_lockControlSystems);
+    m_controlSystems[pControlSystem->getName()] = pControlSystem;
+}
+
+std::pair<void*, deallocateDriver_t> NdsFactoryImpl::createDevice(FactoryBaseImpl& factory, const std::string& driverName, const std::string& deviceName, const namedParameters_t& parameters)
+{
+    allocateDriver_t allocationFunction;
+    deallocateDriver_t deallocationFunction;
+
+    {
+        std::lock_guard<std::mutex> lock(m_lockDrivers);
+
+        driverAllocDeallocMap_t::const_iterator findDriver = m_driversAllocDealloc.find(driverName);
+        if(findDriver == m_driversAllocDealloc.end())
+        {
+            std::ostringstream error;
+            error << "The driver " << driverName << " has not been registered";
+            throw DriverNotFound(error.str());
+        }
+        allocationFunction = findDriver->second.first;
+        deallocationFunction = findDriver->second.second;
+    }
+
+    Factory userFactory(factory.shared_from_this());
+    void* device = allocationFunction(userFactory, deviceName, parameters);
+
+    return std::pair<void*, deallocateDriver_t>(device, deallocationFunction);
+
+}
+
 
 void NdsFactoryImpl::registerInputPV(PVBaseInImpl *pSender)
 {

@@ -1,5 +1,5 @@
 #include "../include/nds3/pvBase.h"
-#include "pvBaseImpl.h"
+#include "../include/nds3impl/pvBaseImpl.h"
 
 namespace nds
 {

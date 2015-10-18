@@ -1,7 +1,7 @@
 #include "../include/nds3/pvHoldDelegate.h"
 #include "../include/nds3/delegate.h"
 
-#include "pvHoldDelegateImpl.h"
+#include "../include/nds3impl/pvHoldDelegateImpl.h"
 
 namespace nds
 {

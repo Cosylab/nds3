@@ -53,7 +53,20 @@ public:
      * @param allocateFunction   the allocation function
      * @param deallocateFunction the deallocation function
      */
-    void registerDriver(const std::string& driverName, allocateDriver_t allocateFunction, deallocateDriver_t deallocateFunction);
+    static void registerDriver(const std::string& driverName, allocateDriver_t allocateFunction, deallocateDriver_t deallocateFunction);
+
+    /**
+     * @brief Register a new control system.
+     *
+     * Control system interfaces are loaded from dynamic modules during startup, but
+     *  in some cases they may also be registered separately via this method.
+     *
+     * The test units use this method to register test control systems that have access
+     *  to the NDS internals.
+     *
+     * @param factory the control system to be registered
+     */
+    static void registerControlSystem(Factory& factory);
 
     /**
      * @brief Launches a loop that communicate with the control system.

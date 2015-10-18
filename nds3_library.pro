@@ -20,14 +20,11 @@ tango:LIBS += -L/usr/local/lib -ltango -llog4tango -lomniORB4 -lomnithread -lomn
 tango:INCLUDEPATH += /usr/local/include/tango /usr/include/omniORB4
 
 SOURCES +=\
-    src/scansymbols.cpp \
     src/base.cpp \
     src/baseImpl.cpp \
     src/dataAcquisition.cpp \
     src/dataAcquisitionImpl.cpp \
     src/delegate.cpp \
-    #src/epicsFactoryImpl.cpp \
-    #src/epicsInterfaceImpl.cpp \
     src/exceptions.cpp \
     src/factory.cpp \
     src/factoryBaseImpl.cpp \
@@ -73,32 +70,32 @@ HEADERS += \
     include/nds3/pvBase.h \
     include/nds3/pvHoldDelegate.h \
     include/nds3/stateMachine.h \
-    src/epicsFactoryImpl.h \
-    src/dataAcquisitionImpl.h \
-    src/epicsInterfaceImpl.h \
-    src/factoryBaseImpl.h \
-    src/interfaceBaseImpl.h \
-    src/nodeImpl.h \
-    src/portImpl.h \
-    src/pvBaseImpl.h \
-    src/pvHoldDelegateImpl.h \
-    src/stateMachineImpl.h \
-    src/tangoFactoryImpl.h \
-    src/tangoInterfaceImpl.h \
-    src/baseImpl.h \
-    src/logStreamGetterImpl.h \
+    include/nds3impl/epicsFactoryImpl.h \
+    include/nds3impl/dataAcquisitionImpl.h \
+    include/nds3impl/epicsInterfaceImpl.h \
+    include/nds3impl/factoryBaseImpl.h \
+    include/nds3impl/interfaceBaseImpl.h \
+    include/nds3impl/nodeImpl.h \
+    include/nds3impl/portImpl.h \
+    include/nds3impl/pvBaseImpl.h \
+    include/nds3impl/pvHoldDelegateImpl.h \
+    include/nds3impl/stateMachineImpl.h \
+    include/nds3impl/tangoFactoryImpl.h \
+    include/nds3impl/tangoInterfaceImpl.h \
+    include/nds3impl/baseImpl.h \
+    include/nds3impl/logStreamGetterImpl.h \
     doc/groups.h \
     include/nds3/pvBaseIn.h \
     include/nds3/pvBaseOut.h \
-    src/pvBaseInImpl.h \
-    src/pvBaseOutImpl.h \
+    include/nds3impl/pvBaseInImpl.h \
+    include/nds3impl/pvBaseOutImpl.h \
     include/nds3/pvDelegateIn.h \
     include/nds3/pvDelegateOut.h \
-    src/pvDelegateInImpl.h \
-    src/pvDelegateOutImpl.h \
+    include/nds3impl/pvDelegateInImpl.h \
+    include/nds3impl/pvDelegateOutImpl.h \
     include/nds3/pvVariableIn.h \
     include/nds3/pvVariableOut.h \
-    src/pvVariableInImpl.h \
-    src/pvVariableOutImpl.h \
-    src/ndsFactoryImpl.h
+    include/nds3impl/pvVariableInImpl.h \
+    include/nds3impl/pvVariableOutImpl.h \
+    include/nds3impl/ndsFactoryImpl.h
 

@@ -1,7 +1,7 @@
-#include "baseImpl.h"
-#include "nodeImpl.h"
-#include "factoryBaseImpl.h"
-#include "logStreamGetterImpl.h"
+#include "../include/nds3impl/baseImpl.h"
+#include "../include/nds3impl/nodeImpl.h"
+#include "../include/nds3impl/factoryBaseImpl.h"
+#include "../include/nds3impl/logStreamGetterImpl.h"
 
 #include <stdexcept>
 

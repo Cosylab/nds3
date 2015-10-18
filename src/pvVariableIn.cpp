@@ -1,5 +1,5 @@
 #include "../include/nds3/pvVariableIn.h"
-#include "pvVariableInImpl.h"
+#include "../include/nds3impl/pvVariableInImpl.h"
 
 #include <cstdint>
 #include <vector>

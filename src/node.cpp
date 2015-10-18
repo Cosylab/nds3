@@ -2,7 +2,7 @@
 #include "../include/nds3/pvBase.h"
 #include "../include/nds3/stateMachine.h"
 
-#include "nodeImpl.h"
+#include "../include/nds3impl/nodeImpl.h"
 
 namespace nds
 {

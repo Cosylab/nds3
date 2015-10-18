@@ -1,7 +1,7 @@
 #include "../include/nds3/port.h"
 #include "../include/nds3/pvBase.h"
 #include "../include/nds3/factory.h"
-#include "portImpl.h"
+#include "../include/nds3impl/portImpl.h"
 
 namespace nds
 {

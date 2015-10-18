@@ -1,7 +1,7 @@
-#include "dataAcquisitionImpl.h"
-#include "stateMachineImpl.h"
-#include "pvVariableInImpl.h"
-#include "pvVariableOutImpl.h"
+#include "../include/nds3impl/dataAcquisitionImpl.h"
+#include "../include/nds3impl/stateMachineImpl.h"
+#include "../include/nds3impl/pvVariableInImpl.h"
+#include "../include/nds3impl/pvVariableOutImpl.h"
 #include "../include/nds3/definitions.h"
 
 namespace nds

@@ -1,5 +1,6 @@
-#include "factoryBaseImpl.h"
-#include "baseImpl.h"
+#include "../include/nds3impl/factoryBaseImpl.h"
+#include "../include/nds3impl/ndsFactoryImpl.h"
+#include "../include/nds3impl/baseImpl.h"
 #include <thread>
 #include <sstream>
 #include "../include/nds3/exceptions.h"
@@ -42,21 +43,12 @@ void FactoryBaseImpl::preDelete()
     /////////////////////
     for(allocatedDevices_t::iterator scanAllocated(m_allocatedDevices.begin()), endAllocated(m_allocatedDevices.end()); scanAllocated != endAllocated; ++scanAllocated)
     {
-        m_driversAllocDealloc[scanAllocated->second.m_driverName].second(scanAllocated->second.m_pDevice);
+        scanAllocated->second.m_deallocationFunction(scanAllocated->second.m_pDevice);
     }
 
 }
 
 
-/*
- * Register a device driver with the control system
- */
-void FactoryBaseImpl::registerDriver(const std::string& driverName, allocateDriver_t allocateFunction, deallocateDriver_t deallocateFunction)
-{
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
-
-    m_driversAllocDealloc[driverName] = std::pair<allocateDriver_t, deallocateDriver_t>(allocateFunction, deallocateFunction);
-}
 
 
 /*
@@ -73,21 +65,12 @@ void* FactoryBaseImpl::createDevice(const std::string& driverName, const std::st
         throw DeviceAlreadyCreated(errorMessage.str());
     }
 
-    driverAllocDeallocMap_t::const_iterator findDriver = m_driversAllocDealloc.find(driverName);
-    if(findDriver == m_driversAllocDealloc.end())
-    {
-        std::ostringstream error;
-        error << "The driver " << driverName << " has not been registered";
-        throw DriverNotFound(error.str());
-    }
+    std::pair<void*, deallocateDriver_t> newDevice = NdsFactoryImpl::getInstance().createDevice(*this, driverName, deviceName, parameters);
 
-    Factory factory(shared_from_this());
-    void* device = findDriver->second.first(factory, deviceName, parameters);
+    m_allocatedDevices[deviceName].m_pDevice = newDevice.first;
+    m_allocatedDevices[deviceName].m_deallocationFunction = newDevice.second;
 
-    m_allocatedDevices[deviceName].m_pDevice = device;
-    m_allocatedDevices[deviceName].m_driverName = driverName;
-
-    return device;
+    return newDevice.first;
 }
 
 
@@ -115,7 +98,7 @@ void FactoryBaseImpl::destroyDevice(void* pDevice)
     {
         if(scanAllocated->second.m_pDevice == pDevice)
         {
-            m_driversAllocDealloc[scanAllocated->second.m_driverName].second(scanAllocated->second.m_pDevice);
+            scanAllocated->second.m_deallocationFunction(scanAllocated->second.m_pDevice);
             m_allocatedDevices.erase(scanAllocated);
             break;
         }
@@ -163,18 +146,6 @@ void FactoryBaseImpl::holdNode(void* pDeviceObject, std::shared_ptr<BaseImpl> pH
 
     m_heldNodes[pDeviceObject].push_back(pHoldNode);
 
-}
-
-FactoryBaseImpl::driversList_t FactoryBaseImpl::getDriversList()
-{
-    driversList_t drivers;
-    for(driverAllocDeallocMap_t::const_iterator scanDrivers(m_driversAllocDealloc.begin()), endDrivers(m_driversAllocDealloc.end());
-        scanDrivers != endDrivers;
-        ++scanDrivers)
-    {
-        drivers.push_back(scanDrivers->first);
-    }
-    return drivers;
 }
 
 }

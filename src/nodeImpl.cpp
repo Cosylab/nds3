@@ -1,5 +1,5 @@
-#include "nodeImpl.h"
-#include "stateMachineImpl.h"
+#include "../include/nds3impl/nodeImpl.h"
+#include "../include/nds3impl/stateMachineImpl.h"
 #include "../include/nds3/definitions.h"
 #include <memory>
 #include <mutex>

@@ -1,7 +1,7 @@
-#include "portImpl.h"
-#include "pvBaseImpl.h"
-#include "factoryBaseImpl.h"
-#include "interfaceBaseImpl.h"
+#include "../include/nds3impl/portImpl.h"
+#include "../include/nds3impl/pvBaseImpl.h"
+#include "../include/nds3impl/factoryBaseImpl.h"
+#include "../include/nds3impl/interfaceBaseImpl.h"
 
 namespace nds
 {

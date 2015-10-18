@@ -1,6 +1,6 @@
 #include "../include/nds3/factory.h"
-#include "factoryBaseImpl.h"
-#include "ndsFactoryImpl.h"
+#include "../include/nds3impl/factoryBaseImpl.h"
+#include "../include/nds3impl/ndsFactoryImpl.h"
 
 namespace nds
 {
@@ -17,7 +17,12 @@ Factory::Factory(const std::string& controlSystemName)
 
 void Factory::registerDriver(const std::string &driverName, allocateDriver_t allocateFunction, deallocateDriver_t deallocateFunction)
 {
-    m_pFactory->registerDriver(driverName, allocateFunction, deallocateFunction);
+    NdsFactoryImpl::getInstance().registerDriver(driverName, allocateFunction, deallocateFunction);
+}
+
+void Factory::registerControlSystem(Factory &factory)
+{
+    NdsFactoryImpl::getInstance().registerControlSystem(factory.m_pFactory);
 }
 
 void Factory::run(int argc,char *argv[])

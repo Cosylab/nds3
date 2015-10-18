@@ -1,5 +1,5 @@
-#include "pvBaseImpl.h"
-#include "portImpl.h"
+#include "../include/nds3impl/pvBaseImpl.h"
+#include "../include/nds3impl/portImpl.h"
 #include "../include/nds3/port.h"
 #include "../include/nds3/pvBase.h"
 

@@ -1,4 +1,4 @@
-#include "logStreamGetterImpl.h"
+#include "../include/nds3impl/logStreamGetterImpl.h"
 
 namespace nds
 {
