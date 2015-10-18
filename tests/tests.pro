@@ -3,24 +3,16 @@ CONFIG += console
 CONFIG -= qt
 
 QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic -pthread
+debug:QMAKE_CXXFLAGS += --coverage
 
 DEFINES += NDS3_DLL
 DEFINES += NDS3_DLL_IMPORT
 
 
-INCLUDEPATH += \
-    /opt/codac-5.0/common/gtest/include \
-    /opt/codac-5.0/common/gtest/
-
-LIBS +=  -L/opt/codac-5.0/lib -lnds3
+LIBS +=  -lgtest -lnds3 -lpthread
+debug:LIBS += -lgcov
 
 SOURCES += \
-    /opt/codac-5.0/common/gtest/src/gtest-typed-test.cc \
-    /opt/codac-5.0/common/gtest/src/gtest-test-part.cc \
-    /opt/codac-5.0/common/gtest/src/gtest-port.cc \
-    /opt/codac-5.0/common/gtest/src/gtest-filepath.cc \
-    /opt/codac-5.0/common/gtest/src/gtest-death-test.cc \
-    /opt/codac-5.0/common/gtest/src/gtest.cc \
     src/testDevice.cpp \
     src/testDeviceAllocation.cpp \
     src/testDataAcquisition.cpp \

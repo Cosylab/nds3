@@ -2,7 +2,6 @@
 #include "../include/nds3/port.h"
 #include "../include/nds3/factory.h"
 #include "../include/nds3impl/baseImpl.h"
-#include "../include/nds3impl/factoryBaseImpl.h"
 
 namespace nds
 {
@@ -39,34 +38,21 @@ Port Base::getPort()
 }
 
 
-std::string Base::getComponentName() const
+const std::string& Base::getComponentName() const
 {
     return m_pImplementation->getComponentName();
 }
 
 
-std::string Base::getFullName() const
+const std::string& Base::getFullName() const
 {
     return m_pImplementation->getFullName();
 }
 
 
-std::string Base::getFullNameFromPort() const
+const std::string& Base::getFullNameFromPort() const
 {
     return m_pImplementation->getFullNameFromPort();
-}
-
-void Base::initialize(void* pDeviceObject, Factory& factory)
-{
-    if(m_pImplementation->getParent().get() != 0)
-    {
-        throw std::logic_error("You can initialize only the root nodes");
-    }
-
-    std::shared_ptr<FactoryBaseImpl> pFactory = factory.m_pFactory;
-    m_pImplementation->initialize(*(pFactory.get()));
-
-    pFactory->holdNode(pDeviceObject, m_pImplementation);
 }
 
 timespec Base::getTimestamp() const

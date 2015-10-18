@@ -1,6 +1,17 @@
 #ifndef NDSFACTORY_H
 #define NDSFACTORY_H
 
+/**
+ * @file factory.h
+ *
+ * @brief Define the class that interfaces with the NDS factory and
+ *        the chosen control system.
+ *
+ * Include nds3.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
+
 #include <string>
 #include <memory>
 #include <thread>
@@ -21,7 +32,7 @@ class FactoryBaseImpl;
  */
 class NDS3_API Factory
 {
-    friend class Base;
+    friend class Node;
 public:
 #ifndef SWIG
     Factory(std::shared_ptr<FactoryBaseImpl> impl);
@@ -36,6 +47,11 @@ public:
 
     /**
      * @brief Register a device in the control system.
+     *
+     * The devices are loaded automatically from the folders declared in the
+     *  enviroment variables NDS_DEVICES and LD_LIBRARY_PATH. However you can use
+     *  this method to declare additional devices that have been statically linked
+     *  to your application (e.g.: the NDS test units do this).
      *
      * Your device lifecycle will be managed by NDS: an allocation function will be
      *  called when the device is needed and a deallocation function will be called
@@ -96,8 +112,26 @@ public:
      */
     void destroyDevice(const std::string& deviceName);
 
+    /**
+     * @brief Subscribe an output PV (derived from PVBaseOut) to an input PV
+     *        (derived from PVBaseIn).
+     *
+     * Each time the specified input PV pushes new values or is written by the
+     *  device support that owns it then the output PV receives the pushed or
+     * written value immediately and in the same thread used to push/write the
+     *  input PV.
+     *
+     * This method works also across control systems running in the same NDS process.
+     *
+     * @param pushFrom the full name of the input PV from which the data must be pushed
+     * @param pushTo   the full name of the output PV to which the data must be pushed
+     */
     void subscribe(const std::string& pushFrom, const std::string& pushTo);
 
+    /**
+     * @brief Unsubscribe an output PV from the input PV.
+     * @param pushTo the name of the receiving PV that must be unsubscribed
+     */
     void unsubscribe(const std::string& pushTo);
 
     std::thread createThread(const std::string& name, threadFunction_t function);

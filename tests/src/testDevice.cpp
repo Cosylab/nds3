@@ -2,6 +2,7 @@
 #include "include/testDevice.h"
 #include <nds3/nds.h>
 #include <mutex>
+#include <unistd.h>
 
 static std::map<std::string, TestDevice*> m_devicesMap;
 static std::mutex m_lockDevicesMap;
@@ -23,7 +24,7 @@ TestDevice::TestDevice(nds::Factory &factory, const std::string &parameter): m_n
     m_variableIn0 = channel1.addChild(nds::PVVariableIn<std::int32_t>("variableIn0"));
     m_variableIn1 = channel1.addChild(nds::PVVariableIn<std::vector<std::int32_t> >("variableIn1"));
     m_dataAcquisition = channel1.addChild(nds::DataAcquisition<std::vector<std::int32_t> >("data",
-                                                                                           100,
+                                                                                           10000,
                                                                                            std::bind(&TestDevice::switchOn, this),
                                                                                            std::bind(&TestDevice::switchOff, this),
                                                                                            std::bind(&TestDevice::start, this),
@@ -76,12 +77,12 @@ void TestDevice::deallocateDevice(void* device)
 
 void TestDevice::switchOn()
 {
-
+    ::sleep(1);
 }
 
 void TestDevice::switchOff()
 {
-
+    ::sleep(1);
 }
 
 void TestDevice::start()
@@ -119,11 +120,11 @@ void TestDevice::acquire(size_t numAcquisition, size_t numSamples)
     {
         if((acquisitionNumber & 0x1) == 0)
         {
-            m_dataAcquisition.pushData(m_dataAcquisition.getTimestamp(), pushData0);
+            m_dataAcquisition.push(m_dataAcquisition.getTimestamp(), pushData0);
         }
         else
         {
-            m_dataAcquisition.pushData(m_dataAcquisition.getTimestamp(), pushData1);
+            m_dataAcquisition.push(m_dataAcquisition.getTimestamp(), pushData1);
         }
     }
 }

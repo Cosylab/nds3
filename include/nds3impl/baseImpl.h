@@ -49,7 +49,7 @@ public:
      *
      * @return the node's name.
      */
-    std::string getComponentName() const;
+    const std::string& getComponentName() const;
 
     /**
      * @brief Return the full node's name, prepending the parents' names if necessary
@@ -57,7 +57,7 @@ public:
      *
      * @return the fully qualified node's name
      */
-    std::string getFullName() const;
+    const std::string& getFullName() const;
 
     void setParent(std::shared_ptr<NodeImpl> pParent);
 
@@ -73,7 +73,7 @@ public:
      *
      * @return the node's name relative to the AsynPort that contains it.
      */
-    virtual std::string getFullNameFromPort() const;
+    const std::string& getFullNameFromPort() const;
 
     /**
      * @brief Registers all the records with the control system. Call this from the root node
@@ -144,6 +144,9 @@ public:
 
 
 protected:
+    virtual std::string buildFullName(const FactoryBaseImpl& controlSystem) const ;
+    virtual std::string buildFullNameFromPort(const FactoryBaseImpl& controlSystem) const ;
+
     timespec getLocalTimestamp() const;
 
     /**
@@ -194,6 +197,10 @@ protected:
 
     typedef std::list<commandDefinition_t> commands_t;
     commands_t m_commands;
+
+protected:
+    std::string m_cachedFullName;
+    std::string m_cachedFullNameFromPort;
 };
 
 

@@ -22,7 +22,7 @@ std::shared_ptr<PortImpl> PortImpl::getPort()
     return std::static_pointer_cast<PortImpl>(shared_from_this());
 }
 
-std::string PortImpl::getFullNameFromPort() const
+std::string PortImpl::buildFullNameFromPort(const FactoryBaseImpl& controlSystem) const
 {
     return "";
 }
@@ -31,7 +31,7 @@ void PortImpl::initialize(FactoryBaseImpl& controlSystem)
 {
     if(m_pInterface.get() == 0)
     {
-        m_pInterface.reset(controlSystem.getNewInterface(getFullName()));
+        m_pInterface.reset(controlSystem.getNewInterface(buildFullName(controlSystem)));
     }
     NodeImpl::initialize(controlSystem);
 

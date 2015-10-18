@@ -139,6 +139,10 @@ typedef std::vector<std::string> parameters_t;
  */
 typedef std::function<void (const parameters_t& parameters)> command_t;
 
+/**
+ * @brief Map containing named parameters passed to the device during the
+ *        initialization.
+ */
 typedef std::map<std::string, std::string> namedParameters_t;
 
 class Factory;

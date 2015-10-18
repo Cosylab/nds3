@@ -29,7 +29,7 @@ class Node;
 
 /**
  * @brief This is the base class for all the NDS3 public classes that
- *        declare a device structure.
+ *        declare a device part (node, port, PV, etc).
  *
  */
 class NDS3_API Base
@@ -82,7 +82,7 @@ public:
      *
      * @return the node's name.
      */
-    std::string getComponentName() const;
+    const std::string& getComponentName() const;
 
     /**
      * @ingroup naming
@@ -91,7 +91,7 @@ public:
      *
      * @return the fully qualified node's name
      */
-    std::string getFullName() const;
+    const std::string& getFullName() const;
 
     /**
      * @ingroup naming
@@ -104,16 +104,7 @@ public:
      *
      * @return the node's name relative to the Port that contains it.
      */
-    std::string getFullNameFromPort() const;
-
-    /**
-     * @brief Registers all the records with the control system. Call this from the root node
-     *        which will take care of traversing its children and initialize them.
-     *
-     * @param pDeviceObject   pointer to the device object
-     * @param factory         control system with which the node must be registered
-     */
-    void initialize(void* pDeviceObject, Factory& factory);
+    const std::string& getFullNameFromPort() const;
 
     /**
      * @ingroup timestamp

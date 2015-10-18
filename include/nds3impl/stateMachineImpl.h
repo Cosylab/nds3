@@ -31,6 +31,8 @@ public:
 
     virtual void initialize(FactoryBaseImpl& controlSystem);
 
+    virtual void deinitialize();
+
     /**
      * @brief Instructs the state machine to start the transition to another state.
      *
@@ -73,6 +75,7 @@ protected:
     bool m_bAsync;
 
     std::thread m_transitionThread;
+    std::mutex m_lockTransitionThread;
 
     state_t m_localState;
     timespec m_stateTimestamp;

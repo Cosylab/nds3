@@ -46,6 +46,11 @@ public:
      * The control system will receive the value immediately, regardless of
      * when it calls the read() function.
      *
+     * If one or more output PVs have been suscribed to this PV via Factory::subscribe()
+     * then the value will be pushed immediately to all the subscribed PVs via PVBaseOut::write().
+     *
+     * See also Factory::subscribe() and PVBaseOut::subscribeTo().
+     *
      * @param timestamp    the new value's timestamp
      * @param value        the value to push to the control system
      */

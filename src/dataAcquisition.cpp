@@ -48,11 +48,16 @@ DataAcquisition<T>& DataAcquisition<T>::operator=(const DataAcquisition<T>& righ
     return *this;
 }
 
+template <typename T>
+void DataAcquisition<T>::setStartTimestampDelegate(getTimestampPlugin_t timestampDelegate)
+{
+    std::static_pointer_cast<DataAcquisitionImpl<T> >(m_pImplementation)->setStartTimestampDelegate(timestampDelegate);
+}
 
 template <typename T>
-void DataAcquisition<T>::pushData(const timespec& timestamp, const T& data)
+void DataAcquisition<T>::push(const timespec& timestamp, const T& data)
 {
-    std::static_pointer_cast<DataAcquisitionImpl<T> >(m_pImplementation)->pushData(timestamp, data);
+    std::static_pointer_cast<DataAcquisitionImpl<T> >(m_pImplementation)->push(timestamp, data);
 }
 
 template <typename T>
@@ -80,7 +85,7 @@ size_t DataAcquisition<T>::getDecimation()
 }
 
 template <typename T>
-timespec DataAcquisition<T>::getStartTimestamp()
+timespec DataAcquisition<T>::getStartTimestamp() const
 {
     return std::static_pointer_cast<DataAcquisitionImpl<T> >(m_pImplementation)->getStartTimestamp();
 }

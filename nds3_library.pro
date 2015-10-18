@@ -6,6 +6,8 @@ TARGET = nds3
 # Library flags
 #--------------
 QMAKE_CXXFLAGS += -std=c++0x -Wall -Wextra -pedantic -fPIC -pthread -fvisibility=hidden -fvisibility-inlines-hidden
+debug:QMAKE_CXXFLAGS += --coverage
+
 QMAKE_LFLAGS += -fPIC -Wl,-as-needed
 
 # We are building the library, export symbols
@@ -14,10 +16,7 @@ DEFINES += NDS3_DLL
 DEFINES += NDS3_DLL_EXPORTS
 
 LIBS += -lrt -ldl
-
-tango:LIBS += -L/usr/local/lib -ltango -llog4tango -lomniORB4 -lomnithread -lomniDynamic4
-
-tango:INCLUDEPATH += /usr/local/include/tango /usr/include/omniORB4
+debug:LIBS += -lgcov
 
 SOURCES +=\
     src/base.cpp \
@@ -39,8 +38,6 @@ SOURCES +=\
     src/pvHoldDelegateImpl.cpp \
     src/stateMachine.cpp \
     src/stateMachineImpl.cpp \
-    src/tangoFactoryImpl.cpp \
-    src/tangoInterfaceImpl.cpp \
     src/logStreamGetterImpl.cpp \
     src/pvBaseIn.cpp \
     src/pvBaseOut.cpp \
@@ -80,8 +77,6 @@ HEADERS += \
     include/nds3impl/pvBaseImpl.h \
     include/nds3impl/pvHoldDelegateImpl.h \
     include/nds3impl/stateMachineImpl.h \
-    include/nds3impl/tangoFactoryImpl.h \
-    include/nds3impl/tangoInterfaceImpl.h \
     include/nds3impl/baseImpl.h \
     include/nds3impl/logStreamGetterImpl.h \
     doc/groups.h \

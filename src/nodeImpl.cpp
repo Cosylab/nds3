@@ -13,7 +13,6 @@ static std::recursive_mutex m_initializationMutex;
 NodeImpl::NodeImpl(const std::string &name): BaseImpl(name)
 {}
 
-
 void NodeImpl::addChild(std::shared_ptr<BaseImpl> pChild)
 {
     std::string name(pChild->getComponentName());
@@ -24,6 +23,7 @@ void NodeImpl::addChild(std::shared_ptr<BaseImpl> pChild)
         errorString << "A node with the name " << name << " has already been registered into " << getFullName() << std::endl;
         throw std::logic_error(errorString.str());
     }
+
     m_children[name] = pChild;
 
     std::shared_ptr<StateMachineImpl> stateMachine = std::dynamic_pointer_cast<StateMachineImpl>(pChild);

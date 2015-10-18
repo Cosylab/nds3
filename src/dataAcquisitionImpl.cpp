@@ -99,13 +99,19 @@ size_t DataAcquisitionImpl<T>::getDecimation()
 }
 
 template<typename T>
-timespec DataAcquisitionImpl<T>::getStartTimestamp()
+timespec DataAcquisitionImpl<T>::getStartTimestamp() const
 {
     return m_startTime;
 }
 
 template<typename T>
-void DataAcquisitionImpl<T>::pushData(const timespec& timestamp, const T& data)
+void DataAcquisitionImpl<T>::setStartTimestampDelegate(getTimestampPlugin_t timestampDelegate)
+{
+    m_startTimestampFunction = timestampDelegate;
+}
+
+template<typename T>
+void DataAcquisitionImpl<T>::push(const timespec& timestamp, const T& data)
 {
     m_dataPV->push(timestamp, data);
 }

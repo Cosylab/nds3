@@ -35,6 +35,11 @@ public:
      *
      * The control system will retrieve the value when it choses to do so.
      *
+     * If one or more output PVs have been suscribed to this PV via Factory::subscribe()
+     * then the value will be pushed immediately to all the subscribed PVs via PVBaseOut::write().
+     *
+     * See also Factory::subscribe() and PVBaseOut::subscribeTo().
+     *
      * @param value the value to write into the variable. The timestamp will
      *              be taken via the getTimestamp() method.
      */
@@ -45,6 +50,11 @@ public:
      * @brief Set the variable's value.
      *
      * The control system will retrieve the value when it choses to do so.
+     *
+     * If one or more output PVs have been suscribed to this PV via Factory::subscribe()
+     * then the value will be pushed immediately to all the subscribed PVs via PVBaseOut::write().
+     *
+     * See also Factory::subscribe() and PVBaseOut::subscribeTo().
      *
      * @param timestamp the timestamp to assign to the variable
      * @param value     the value to write into the variable

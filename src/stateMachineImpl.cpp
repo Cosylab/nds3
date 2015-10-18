@@ -72,6 +72,7 @@ StateMachineImpl::StateMachineImpl(bool bAsync,
 
 StateMachineImpl::~StateMachineImpl()
 {
+    std::lock_guard<std::mutex> lockThread(m_lockTransitionThread);
     if(m_transitionThread.joinable())
     {
         m_transitionThread.join();
@@ -86,6 +87,17 @@ void StateMachineImpl::initialize(FactoryBaseImpl& controlSystem)
     m_localState = state_t::off;
     m_stateTimestamp = getTimestamp();
     m_pGetStatePV->push(m_stateTimestamp, (std::int32_t)m_localState);
+}
+
+void StateMachineImpl::deinitialize()
+{
+    std::lock_guard<std::mutex> lockThread(m_lockTransitionThread);
+    if(m_transitionThread.joinable())
+    {
+        m_transitionThread.join();
+    }
+    NodeImpl::deinitialize();
+
 }
 
 
@@ -170,6 +182,7 @@ void StateMachineImpl::setState(const state_t newState)
     ///////////////////////////////////////////////////////////////////////
     if(m_bAsync)
     {
+        std::lock_guard<std::mutex> lockThread(m_lockTransitionThread);
         if(m_transitionThread.joinable())
         {
             m_transitionThread.join();

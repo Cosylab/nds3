@@ -34,6 +34,11 @@ template <typename T>
 class NDS3_API DataAcquisition: public Node
 {
 public:
+    /**
+     * @brief Initializes an empty data acquisition node.
+     *
+     * You must assign a valid DataAcquisition node before calling initialize().
+     */
     DataAcquisition();
 
     DataAcquisition(const DataAcquisition<T>& right);
@@ -55,6 +60,15 @@ public:
                     );
 
     /**
+     * @ingroup timing
+     * @brief Set the function that retrieves the exaxt start time when the data acquisition starts.
+     *
+     * @param timestampDelegate the function that returns the exact starting time of the
+     *                           data acquisition
+     */
+    void setStartTimestampDelegate(getTimestampPlugin_t timestampDelegate);
+
+    /**
      * @ingroup datareadwrite
      * @brief Push acquired data to the control system.
      *
@@ -64,7 +78,7 @@ public:
      * @param timestamp the timestamp for the data
      * @param data      the data to push to the control system
      */
-    void pushData(const timespec& timestamp, const T& data);
+    void push(const timespec& timestamp, const T& data);
 
     /**
      * @brief Retrieve the desidered acquisition frequency, in Hertz.
@@ -104,7 +118,7 @@ public:
      *
      * @return the time when the acquisition started.
      */
-    timespec getStartTimestamp();
+    timespec getStartTimestamp() const;
 };
 
 }

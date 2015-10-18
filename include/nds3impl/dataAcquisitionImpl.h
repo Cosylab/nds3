@@ -36,7 +36,7 @@ public:
      */
     void setStartTimestampDelegate(getTimestampPlugin_t timestampDelegate);
 
-    void pushData(const timespec& timestamp, const T& data);
+    void push(const timespec& timestamp, const T& data);
 
     double getFrequencyHz();
     double getDurationSeconds();
@@ -51,7 +51,7 @@ public:
      *
      * @return the time when the acquisition started.
      */
-    timespec getStartTimestamp();
+    timespec getStartTimestamp() const;
 
     /**
      * @brief Called by the state machine. Store the current timestamp and then calls the
@@ -61,12 +61,26 @@ public:
 
 
 protected:
-    // Delegate functions
-    /////////////////////
+    /**
+     * @brief In the state machine we set the start function to onStart(), so we
+     *        remember here what to call from onStart().
+     */
     stateChange_t m_onStartDelegate;
 
+    /**
+     * @brief Delegate function that retrieves the start time. Executed
+     *        by onStart().
+     *
+     * By default points to BaseImpl::getTimestamp().
+     *
+     * Use setStartTimestampDelegate() to change the delegate function.
+     */
     getTimestampPlugin_t m_startTimestampFunction;
 
+    /**
+     * @brief Acquisition start time. Retrieved during onStart() via the delegate
+     *        function declared in  m_startTimestampFunction.
+     */
     timespec m_startTime;
 
     // PVs

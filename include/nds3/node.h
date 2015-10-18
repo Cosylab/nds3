@@ -1,6 +1,17 @@
 #ifndef NDSNODE_H
 #define NDSNODE_H
 
+/**
+ * @file node.h
+ *
+ * @brief Defines the Node class, a class that can contain other device's nodes, ports
+ *         or PVs.
+ *
+ * Include nds3.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
+
 #include "definitions.h"
 #include "base.h"
 
@@ -12,7 +23,7 @@ class PVBase;
 class StateMachine;
 
 /**
- * @brief A node object that can contain other nodes as children.
+ * @brief A node object that can contain other nodes or PVs as children.
  *
  */
 class NDS3_API Node: public Base
@@ -45,6 +56,15 @@ public:
         addChildInternal(child);
         return child;
     }
+
+    /**
+     * @brief Registers all the records with the control system. Call this from the root node
+     *        which will take care of traversing its children and initialize them.
+     *
+     * @param pDeviceObject   pointer to the device object
+     * @param factory         control system with which the node must be registered
+     */
+    void initialize(void* pDeviceObject, Factory& factory);
 
     Node addNode(Node& node);     // Specialized for SWIG
 

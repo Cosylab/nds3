@@ -10,7 +10,7 @@ namespace nds
 
 BaseImpl::BaseImpl(const std::string& name): m_name(name), m_pFactory(0),
     m_timestampFunction(std::bind(&BaseImpl::getLocalTimestamp, this)),
-    m_logLevel(logLevel_t::warning)
+    m_logLevel(logLevel_t::warning), m_cachedFullName(name), m_cachedFullNameFromPort(name)
 {
     for(size_t scanLevels(0); scanLevels != m_loggersKeys.size(); ++scanLevels)
     {
@@ -50,7 +50,7 @@ std::shared_ptr<PortImpl> BaseImpl::getPort()
     return temporaryPointer->getPort();
 }
 
-std::string BaseImpl::getComponentName() const
+const std::string& BaseImpl::getComponentName() const
 {
     return m_name;
 }
@@ -60,7 +60,7 @@ std::shared_ptr<NodeImpl> BaseImpl::getParent() const
     return m_pParent.lock();
 }
 
-std::string BaseImpl::getFullName() const
+std::string BaseImpl::buildFullName(const FactoryBaseImpl& controlSystem) const
 {
     std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();
     if(temporaryPointer == 0)
@@ -68,7 +68,7 @@ std::string BaseImpl::getFullName() const
         return getComponentName();
     }
 
-    return temporaryPointer->getFullName() + "-" + getComponentName();
+    return temporaryPointer->buildFullName(controlSystem) + "-" + getComponentName();
 }
 
 void BaseImpl::setParent(std::shared_ptr<NodeImpl> pParent)
@@ -83,14 +83,24 @@ void BaseImpl::setParent(std::shared_ptr<NodeImpl> pParent)
     m_pParent = pParent;
 }
 
-std::string BaseImpl::getFullNameFromPort() const
+const std::string& BaseImpl::getFullName() const
+{
+    return m_cachedFullName;
+}
+
+const std::string& BaseImpl::getFullNameFromPort() const
+{
+    return m_cachedFullNameFromPort;
+}
+
+std::string BaseImpl::buildFullNameFromPort(const FactoryBaseImpl& controlSystem) const
 {
     std::string parentName;
 
     std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();
     if(temporaryPointer != 0)
     {
-        parentName = temporaryPointer->getFullNameFromPort();
+        parentName = temporaryPointer->buildFullNameFromPort(controlSystem);
     }
     if(parentName.empty())
     {
@@ -102,6 +112,9 @@ std::string BaseImpl::getFullNameFromPort() const
 void BaseImpl::initialize(FactoryBaseImpl &controlSystem)
 {
     m_pFactory = &controlSystem;
+
+    m_cachedFullName = buildFullName(controlSystem);
+    m_cachedFullNameFromPort = buildFullNameFromPort(controlSystem);
 
     // Remember where we can go get our logging streams
     ///////////////////////////////////////////////////

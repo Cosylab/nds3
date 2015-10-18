@@ -35,7 +35,7 @@ public:
      */
     virtual std::shared_ptr<PortImpl> getPort();
 
-    virtual std::string getFullNameFromPort() const;
+    virtual std::string buildFullNameFromPort(const FactoryBaseImpl& controlSystem) const;
 
     virtual void initialize(FactoryBaseImpl& controlSystem);
 
