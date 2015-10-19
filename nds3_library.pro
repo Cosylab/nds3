@@ -1,7 +1,9 @@
 TEMPLATE = lib
-QT -= qt
+QT = ""
 CONFIG += dll
 TARGET = nds3
+
+VERSION = 3.0.0
 
 # Library flags
 #--------------
@@ -54,7 +56,6 @@ SOURCES +=\
     src/ndsFactoryImpl.cpp
 
 HEADERS += \
-    src/scansymbols.h \
     include/nds3/definitions.h \
     include/nds3/nds.h \
     include/nds3/base.h \
@@ -79,7 +80,6 @@ HEADERS += \
     include/nds3impl/stateMachineImpl.h \
     include/nds3impl/baseImpl.h \
     include/nds3impl/logStreamGetterImpl.h \
-    doc/groups.h \
     include/nds3/pvBaseIn.h \
     include/nds3/pvBaseOut.h \
     include/nds3impl/pvBaseInImpl.h \

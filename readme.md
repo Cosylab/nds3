@@ -20,7 +20,12 @@ NDS provides the following features:
 
 ## Compilation
 
-### Using qmake:
+### Using make
+
+make
+sudo make install
+
+### Using qmake
 
 mkdir build_folder
 cd build_folder
