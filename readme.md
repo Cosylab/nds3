@@ -22,32 +22,28 @@ NDS provides the following features:
 
 ### Using make
 
-make
-sudo make install
+    make
+    sudo make install
 
 ### Using qmake
 
-mkdir build_folder
-cd build_folder
-qmake-qt4 ../nds3_library.pro
-make
+    mkdir build_folder
+    cd build_folder
+    qmake-qt4 ../nds3_library.pro
+    make
 
 or
 
-mkdir build_folder
-cd build_folder
-qmake ../nds3_library.pro
-make
+    mkdir build_folder
+    cd build_folder
+    qmake ../nds3_library.pro
+    make
 
 ### Using cmake
 
-mkdir build_folder
-cd build_folder
-cmake ..
-make
+    mkdir build_folder
+    cd build_folder
+    cmake ..
+    make
 
-### Using make
-
-make
-sudo make install
 
