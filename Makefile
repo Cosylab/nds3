@@ -32,8 +32,8 @@ clean:
  
 .PHONY: install
 install: $(TARGET)
-	$(CP) $(TARGET) /usr/lib
-	chmod -R 0755 /usr/lib/libnds3.so
+	$(CP) $(TARGET) /usr/lib64
+	chmod -R 0755 /usr/lib64/libnds3.so
 	$(CP) -r include/nds3 /usr/include
 	chmod -R 0755 /usr/include/nds3
 	$(CP) -r include/nds3impl /usr/include
