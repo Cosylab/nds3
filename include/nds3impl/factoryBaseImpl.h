@@ -118,10 +118,6 @@ public:
      */
     virtual void deregisterCommand(const BaseImpl& node) = 0;
 
-protected:
-    typedef std::list<std::string> driversList_t;
-    driversList_t getDriversList();
-
 private:
     struct allocatedDevice_t
     {
