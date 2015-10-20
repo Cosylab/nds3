@@ -8,7 +8,7 @@ CXXFLAGS = -std=c++0x -Wall -Wextra -pedantic -fPIC -pthread -fvisibility=hidden
 LINK = -shared -fPIC -Wl,-as-needed
  
 # Name of the nds library
-TARGET = nds3.so
+TARGET = libnds3.so
  
 # Additional linker libraries
 LIBS = -lrt -ldl -lpthread
@@ -33,8 +33,12 @@ clean:
 .PHONY: install
 install: $(TARGET)
 	$(CP) $(TARGET) /usr/lib
+	chmod -R 0755 /usr/lib/libnds3.so
 	$(CP) -r include/nds3 /usr/include
+	chmod -R 0755 /usr/include/nds3
 	$(CP) -r include/nds3impl /usr/include
+	chmod -R 0755 /usr/include/nds3impl
+	ldconfig -n /usr/lib
 
 .PHONY: revision
 revision:
