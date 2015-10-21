@@ -9,7 +9,7 @@
 
 #include <unistd.h>
 
-#include "library/include/nds3/nds3.h"
+#include "../nds3/include/nds3/nds.h"
 //#include "iocsh.h"
 
 

@@ -144,6 +144,22 @@ public:
     DriverNotFound(const std::string& what);
 };
 
+/**
+ * @brief This exception is thrown when a driver with the same name has already
+ *        been registered.
+ */
+class NDS3_API DriverAlreadyRegistered: public FactoryError
+{
+public:
+    DriverAlreadyRegistered(const std::string& what);
+};
+
+class NDS3_API DriverDoesNotExportRegistrationFunctions: public FactoryError
+{
+public:
+    DriverDoesNotExportRegistrationFunctions(const std::string& what);
+};
+
 class NDS3_API ControlSystemNotFound: public FactoryError
 {
 public:

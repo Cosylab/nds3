@@ -43,6 +43,14 @@ DriverNotFound::DriverNotFound(const std::string &what): FactoryError(what)
 {
 }
 
+DriverAlreadyRegistered::DriverAlreadyRegistered(const std::string &what): FactoryError(what)
+{
+}
+
+DriverDoesNotExportRegistrationFunctions::DriverDoesNotExportRegistrationFunctions(const std::string &what): FactoryError(what)
+{
+}
+
 ControlSystemNotFound::ControlSystemNotFound(const std::string &what): FactoryError(what)
 {
 }

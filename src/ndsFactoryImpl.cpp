@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <sstream>
 #include <string.h>
+#include <iostream>
 
 namespace nds
 {
@@ -34,6 +35,7 @@ NdsFactoryImpl::NdsFactoryImpl()
     typedef FactoryBaseImpl* (*controSystemAllocateFunction_t)() ;
 
     fileNames_t controlSystemModules = listFiles(controlSystemsFolders, "lib", "NdsControlSystem.so");
+    controlSystemModules.splice(controlSystemModules.end(), listFiles(controlSystemsFolders, "lib", "NdsControlSystem"));
     for(fileNames_t::const_iterator scanFiles(controlSystemModules.begin()), endFiles(controlSystemModules.end());
         scanFiles != endFiles;
         ++scanFiles)
@@ -58,32 +60,19 @@ NdsFactoryImpl::NdsFactoryImpl()
     devicesFolders.splice(devicesFolders.end(), separateFoldersList(std::getenv("LD_LIBRARY_PATH")));
     devicesFolders.splice(devicesFolders.end(), separateFoldersList(std::getenv("NDS_DEVICES")));
 
-    typedef void* (*deviceAllocateFunction_t)(Factory& factory, const std::string& deviceName, const namedParameters_t& parameters) ;
-    typedef void (*deviceDeallocateFunction_t)(void*) ;
-    typedef const char* (*getDeviceNameFunction_t)() ;
-
     fileNames_t deviceModules = listFiles(devicesFolders, "lib", "NdsDevice.so");
     for(fileNames_t::const_iterator scanFiles(deviceModules.begin()), endFiles(deviceModules.end());
         scanFiles != endFiles;
         ++scanFiles)
     {
-        std::shared_ptr<DynamicModule> module(std::make_shared<DynamicModule>(*scanFiles));
-
-        getDeviceNameFunction_t nameFunction = (getDeviceNameFunction_t)(module->getAddress("getDeviceName"));
-        deviceAllocateFunction_t allocateFunction = (deviceAllocateFunction_t)(module->getAddress("allocateDevice"));
-        deviceDeallocateFunction_t deallocateFunction = (deviceDeallocateFunction_t)(module->getAddress("deallocateDevice"));
-
-        if(allocateFunction == 0 || deallocateFunction == 0 || nameFunction == 0)
+        try
         {
-            continue;
+            loadDriver(*scanFiles);
         }
-
-        m_modules.push_back(module);
-        registerDriver(nameFunction(),
-                       std::bind(allocateFunction, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
-                       std::bind(deallocateFunction, std::placeholders::_1)
-                       );
-
+        catch(const DriverDoesNotExportRegistrationFunctions& e)
+        {
+            std::cout << "Skipper library " << *scanFiles << " because it does not export the registration functions" << std::endl;
+        }
     }
 }
 
@@ -104,10 +93,43 @@ NdsFactoryImpl::~NdsFactoryImpl()
     }
 }
 
+
+void NdsFactoryImpl::loadDriver(const std::string& driverModuleName)
+{
+    std::shared_ptr<DynamicModule> module(std::make_shared<DynamicModule>(driverModuleName));
+
+    typedef void* (*deviceAllocateFunction_t)(Factory& factory, const std::string& deviceName, const namedParameters_t& parameters) ;
+    typedef void (*deviceDeallocateFunction_t)(void*) ;
+    typedef const char* (*getDeviceNameFunction_t)() ;
+
+    getDeviceNameFunction_t nameFunction = (getDeviceNameFunction_t)(module->getAddress("getDeviceName"));
+    deviceAllocateFunction_t allocateFunction = (deviceAllocateFunction_t)(module->getAddress("allocateDevice"));
+    deviceDeallocateFunction_t deallocateFunction = (deviceDeallocateFunction_t)(module->getAddress("deallocateDevice"));
+
+    if(allocateFunction == 0 || deallocateFunction == 0 || nameFunction == 0)
+    {
+        std::ostringstream error;
+        error << "The driver " << driverModuleName << " does not export the registration functions";
+        throw DriverDoesNotExportRegistrationFunctions(error.str());
+    }
+
+    registerDriver(nameFunction(),
+                   std::bind(allocateFunction, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
+                   std::bind(deallocateFunction, std::placeholders::_1)
+                   );
+    m_modules.push_back(module);
+}
+
 void NdsFactoryImpl::registerDriver(const std::string &driverName, allocateDriver_t allocateFunction, deallocateDriver_t deallocateFunction)
 {
-    std::lock_guard<std::mutex> lock(m_lockDrivers);
+    std::lock_guard<std::recursive_mutex> lock(m_lockDrivers);
 
+    if(m_driversAllocDealloc.find(driverName) != m_driversAllocDealloc.end())
+    {
+        std::ostringstream error;
+        error << "The driver " << driverName << " has already been registered";
+        throw DriverAlreadyRegistered(error.str());
+    }
     m_driversAllocDealloc[driverName] = std::pair<allocateDriver_t, deallocateDriver_t>(allocateFunction, deallocateFunction);
 }
 
@@ -123,7 +145,7 @@ std::pair<void*, deallocateDriver_t> NdsFactoryImpl::createDevice(FactoryBaseImp
     deallocateDriver_t deallocationFunction;
 
     {
-        std::lock_guard<std::mutex> lock(m_lockDrivers);
+        std::lock_guard<std::recursive_mutex> lock(m_lockDrivers);
 
         driverAllocDeallocMap_t::const_iterator findDriver = m_driversAllocDealloc.find(driverName);
         if(findDriver == m_driversAllocDealloc.end())

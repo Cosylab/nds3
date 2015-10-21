@@ -49,6 +49,13 @@ void FactoryBaseImpl::preDelete()
 }
 
 
+/*
+ * @brief Load a dynamic library containing a device driver
+ */
+void FactoryBaseImpl::loadDriver(const std::string &libraryName)
+{
+    NdsFactoryImpl::getInstance().loadDriver(libraryName);
+}
 
 
 /*

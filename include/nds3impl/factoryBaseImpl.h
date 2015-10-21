@@ -52,6 +52,8 @@ public:
 
     virtual std::thread createThread(const std::string& name, threadFunction_t function);
 
+    void loadDriver(const std::string& libraryName);
+
     /**
      * @brief Allocate a device. The device driver must have been registered via
      *        registerDriver() or must have been loaded from the folder defined
