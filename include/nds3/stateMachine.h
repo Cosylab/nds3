@@ -85,6 +85,10 @@ public:
      *   (the state active before the transition was requested)
      * - any exception: the state switches to Fault.
      *
+     * @warning If the state machine is asynchronous (parameter bAsync set to true in the constructor)
+     *           then exceptions thrown in state change functions are silenced and only the log messages
+     *           are sent to the control system.
+     *
      * @param newState
      */
     void setState(const state_t newState);
