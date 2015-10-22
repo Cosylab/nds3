@@ -38,21 +38,21 @@ TEST(testStateMachine, testAllowedTransitions)
     nds::Node ch1 = rootNode.addChild(nds::Node("ch1"));
 
     nds::StateMachine stateMachine1 = ch0.addChild(nds::StateMachine(true,
-                                                                              std::bind(&wait1sec),
-                                                                              std::bind(&wait1sec),
-                                                                              std::bind(&wait1sec),
-                                                                              std::bind(&wait1sec),
-                                                                              std::bind(&wait1sec),
-                                                                              std::bind(&returnTrue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)));
+                                                                     std::bind(&wait1sec),
+                                                                     std::bind(&wait1sec),
+                                                                     std::bind(&wait1sec),
+                                                                     std::bind(&wait1sec),
+                                                                     std::bind(&wait1sec),
+                                                                     std::bind(&returnTrue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)));
 
 
     nds::StateMachine stateMachine2 = ch1.addChild(nds::StateMachine(true,
-                                                                              std::bind(&wait1sec),
-                                                                              std::bind(&wait1sec),
-                                                                              std::bind(&rollback),
-                                                                              std::bind(&wait1sec),
-                                                                              std::bind(&wait1sec),
-                                                                              std::bind(&returnTrue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)));
+                                                                     std::bind(&wait1sec),
+                                                                     std::bind(&wait1sec),
+                                                                     std::bind(&rollback),
+                                                                     std::bind(&wait1sec),
+                                                                     std::bind(&wait1sec),
+                                                                     std::bind(&returnTrue, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)));
 
     nds::Factory factory("test");
 
