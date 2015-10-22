@@ -36,6 +36,7 @@ public:
     virtual void read(timespec* pTimestamp, std::vector<std::uint8_t>* pValue) const;
     virtual void read(timespec* pTimestamp, std::vector<std::int32_t>* pValue) const;
     virtual void read(timespec* pTimestamp, std::vector<double>* pValue) const;
+    virtual void read(timespec* pTimestamp, std::string* pValue) const;
 
     template<typename T>
     void push(const timespec& timestamp, const T& value);

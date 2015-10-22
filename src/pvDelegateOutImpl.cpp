@@ -47,6 +47,7 @@ template class PVDelegateOutImpl<std::vector<std::int8_t> >;
 template class PVDelegateOutImpl<std::vector<std::uint8_t> >;
 template class PVDelegateOutImpl<std::vector<std::int32_t> >;
 template class PVDelegateOutImpl<std::vector<double> >;
+template class PVDelegateOutImpl<std::string>;
 
 }
 

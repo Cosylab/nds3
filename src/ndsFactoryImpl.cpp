@@ -71,7 +71,7 @@ NdsFactoryImpl::NdsFactoryImpl()
         }
         catch(const DriverDoesNotExportRegistrationFunctions& e)
         {
-            std::cout << "Skipper library " << *scanFiles << " because it does not export the registration functions" << std::endl;
+            std::cout << "Skipped library " << *scanFiles << " because it does not export the registration functions" << std::endl;
         }
     }
 }

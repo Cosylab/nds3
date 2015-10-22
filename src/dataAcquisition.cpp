@@ -96,6 +96,7 @@ template class DataAcquisition<std::vector<std::int8_t> >;
 template class DataAcquisition<std::vector<std::uint8_t> >;
 template class DataAcquisition<std::vector<std::int32_t> >;
 template class DataAcquisition<std::vector<double> >;
+template class DataAcquisition<std::string >;
 
 
 }

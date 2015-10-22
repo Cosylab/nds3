@@ -36,6 +36,7 @@ template class PVVariableIn<std::vector<std::int8_t> >;
 template class PVVariableIn<std::vector<std::uint8_t> >;
 template class PVVariableIn<std::vector<std::int32_t> >;
 template class PVVariableIn<std::vector<double> >;
+template class PVVariableIn<std::string>;
 
 
 }
