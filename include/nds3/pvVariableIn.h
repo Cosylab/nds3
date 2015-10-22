@@ -14,6 +14,18 @@ namespace nds
  * The device support can use PVVariableIn::setValue() to modify the PV's value;
  * the read() method will be used to read the value on the control system side.
  *
+ * @warning for all the vector data types and for std::string remember to call
+ *          setMaxElements() to specify the maximum size of the vector or string.
+ *
+ * @tparam T  the PV data type.
+ *            The following data types are supported:
+ *            - std::int32_t
+ *            - std::double
+ *            - std::vector<std::int8_t>
+ *            - std::vector<std::uint8_t>
+ *            - std::vector<std::int32_t>
+ *            - std::vector<double>
+ *            - std::string
  */
 template <typename T>
 class NDS3_API PVVariableIn: public PVBaseIn

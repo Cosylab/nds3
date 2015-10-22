@@ -29,6 +29,16 @@ namespace nds
  *  the data acquisition thread which pushes the acquired data via pushData(),
  *  while the transition from running to on should stop the data acquisition thread.
  *
+ * @tparam T  the PV data type.
+ *            The following data types are supported:
+ *            - std::int32_t
+ *            - std::double
+ *            - std::vector<std::int8_t>
+ *            - std::vector<std::uint8_t>
+ *            - std::vector<std::int32_t>
+ *            - std::vector<double>
+ *            - std::string
+ *
  */
 template <typename T>
 class NDS3_API DataAcquisition: public Node
