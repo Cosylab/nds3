@@ -33,11 +33,10 @@ void NodeImpl::addChild(std::shared_ptr<BaseImpl> pChild)
 
         // Add the state machine commands also to this node
         ///////////////////////////////////////////////////
-        defineCommand("switchOn", "", 0, std::bind(&StateMachineImpl::setState, m_pStateMachine, state_t::on));
-        defineCommand("switchOff", "", 0, std::bind(&StateMachineImpl::setState, m_pStateMachine, state_t::off));
-        defineCommand("start", "", 0, std::bind(&StateMachineImpl::setState, m_pStateMachine, state_t::running));
-        defineCommand("stop", "", 0, std::bind(&StateMachineImpl::setState, m_pStateMachine, state_t::on));
-
+        defineCommand("switchOn", "", 0, std::bind(&StateMachineImpl::commandSetState, m_pStateMachine, state_t::on, std::placeholders::_1));
+        defineCommand("switchOff", "", 0, std::bind(&StateMachineImpl::commandSetState, m_pStateMachine, state_t::off, std::placeholders::_1));
+        defineCommand("start", "", 0, std::bind(&StateMachineImpl::commandSetState, m_pStateMachine, state_t::running, std::placeholders::_1));
+        defineCommand("stop", "", 0, std::bind(&StateMachineImpl::commandSetState, m_pStateMachine, state_t::on, std::placeholders::_1));
     }
 }
 

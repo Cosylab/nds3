@@ -150,6 +150,14 @@ protected:
     timespec getLocalTimestamp() const;
 
     /**
+     * @brief User command that set the log level
+     * @param logLevel   the log level to set
+     * @param parameters ignored
+     * @return           empty list of parameters
+     */
+    virtual parameters_t commandSetLogLevel(const logLevel_t logLevel, const parameters_t& parameters);
+
+    /**
      * @brief This method is registered with pthread_create_key(&m_removeLoggersKey, this)
      *        to remove the loggers that are specific to the running thread
      */

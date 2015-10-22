@@ -31,7 +31,7 @@ NoPortDefinedError::NoPortDefinedError(const std::string &what): std::logic_erro
 {
 }
 
-FactoryError::FactoryError(const std::string &what): std::runtime_error(what)
+FactoryError::FactoryError(const std::string &what): NdsError(what)
 {
 }
 

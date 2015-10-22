@@ -61,6 +61,8 @@ public:
 
     bool isIntermediateState(const state_t newState) const;
 
+    parameters_t commandSetState(const state_t state, const parameters_t& parameters);
+
 protected:
     void executeTransition(const state_t initialState, const state_t finalState, stateChange_t transitionFunction);
 

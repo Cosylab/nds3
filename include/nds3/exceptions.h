@@ -117,7 +117,7 @@ public:
  * @brief This is the base class for exceptions thrown by the NDS Factory.
  *        Usually it is thrown while allocating new control system structures.
  */
-class NDS3_API FactoryError: public std::runtime_error
+class NDS3_API FactoryError: public NdsError
 {
 public:
     FactoryError(const std::string& what);

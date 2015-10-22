@@ -64,10 +64,10 @@ StateMachineImpl::StateMachineImpl(bool bAsync,
 
     // Register state transition commands
     /////////////////////////////////////
-    defineCommand("switchOn", "", 0, std::bind(&StateMachineImpl::setState, this, state_t::on));
-    defineCommand("switchOff", "", 0, std::bind(&StateMachineImpl::setState, this, state_t::off));
-    defineCommand("start", "", 0, std::bind(&StateMachineImpl::setState, this, state_t::running));
-    defineCommand("stop", "", 0, std::bind(&StateMachineImpl::setState, this, state_t::on));
+    defineCommand("switchOn", "", 0, std::bind(&StateMachineImpl::commandSetState, this, state_t::on, std::placeholders::_1));
+    defineCommand("switchOff", "", 0, std::bind(&StateMachineImpl::commandSetState, this, state_t::off, std::placeholders::_1));
+    defineCommand("start", "", 0, std::bind(&StateMachineImpl::commandSetState, this, state_t::running, std::placeholders::_1));
+    defineCommand("stop", "", 0, std::bind(&StateMachineImpl::commandSetState, this, state_t::on, std::placeholders::_1));
 }
 
 StateMachineImpl::~StateMachineImpl()
@@ -304,6 +304,12 @@ void StateMachineImpl::readGlobalState(timespec* pTimestamp, std::int32_t* pValu
 void StateMachineImpl::writeGlobalState(const timespec& /* pTimestamp */, const std::int32_t& /* value */)
 {
 
+}
+
+parameters_t StateMachineImpl::commandSetState(const state_t state, const parameters_t& /* parameters */)
+{
+    setState(state);
+    return parameters_t();
 }
 
 std::string StateMachineImpl::getStateName(const state_t state)

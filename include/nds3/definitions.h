@@ -137,7 +137,7 @@ typedef std::vector<std::string> parameters_t;
  * The number of parameters is verified by NDS before calling the delegate
  *  function.
  */
-typedef std::function<void (const parameters_t& parameters)> command_t;
+typedef std::function<parameters_t (const parameters_t& parameters)> command_t;
 
 /**
  * @brief Map containing named parameters passed to the device during the

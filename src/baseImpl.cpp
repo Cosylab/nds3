@@ -19,10 +19,10 @@ BaseImpl::BaseImpl(const std::string& name): m_name(name), m_pFactory(0),
 
     // Register the commands for the log level
     //////////////////////////////////////////
-    defineCommand("setLogLevelDebug", "", 0, std::bind(&BaseImpl::setLogLevel, this, logLevel_t::debug));
-    defineCommand("setLogLevelInfo", "", 0, std::bind(&BaseImpl::setLogLevel, this, logLevel_t::info));
-    defineCommand("setLogLevelWarning", "", 0, std::bind(&BaseImpl::setLogLevel, this, logLevel_t::warning));
-    defineCommand("setLogLevelError", "", 0, std::bind(&BaseImpl::setLogLevel, this, logLevel_t::error));
+    defineCommand("setLogLevelDebug", "", 0, std::bind(&BaseImpl::commandSetLogLevel, this, logLevel_t::debug, std::placeholders::_1));
+    defineCommand("setLogLevelInfo", "", 0, std::bind(&BaseImpl::commandSetLogLevel, this, logLevel_t::info, std::placeholders::_1));
+    defineCommand("setLogLevelWarning", "", 0, std::bind(&BaseImpl::commandSetLogLevel, this, logLevel_t::warning, std::placeholders::_1));
+    defineCommand("setLogLevelError", "", 0, std::bind(&BaseImpl::commandSetLogLevel, this, logLevel_t::error, std::placeholders::_1));
 }
 
 BaseImpl::~BaseImpl()
@@ -195,6 +195,12 @@ void BaseImpl::setLogLevel(const logLevel_t logLevel)
 void BaseImpl::defineCommand(const std::string& command, const std::string& usage, const size_t numParameters, const command_t function)
 {
     m_commands.emplace_back(command, usage, numParameters, function);
+}
+
+parameters_t BaseImpl::commandSetLogLevel(const logLevel_t logLevel, const parameters_t &)
+{
+    setLogLevel(logLevel);
+    return parameters_t();
 }
 
 }
