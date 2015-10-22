@@ -6,7 +6,8 @@
 namespace nds
 {
 
-PVBaseInImpl::PVBaseInImpl(const std::string& name): PVBaseImpl(name)
+PVBaseInImpl::PVBaseInImpl(const std::string& name): PVBaseImpl(name),
+    m_decimationFactor(1), m_decimationCount(1)
 {
 }
 
@@ -63,7 +64,11 @@ void PVBaseInImpl::push(const timespec& timestamp, const T& value)
     // Find the port then push the value
     ////////////////////////////////////
     std::shared_ptr<PortImpl> pPort(getPort());
-    pPort->push(std::static_pointer_cast<PVBaseImpl>(shared_from_this()), timestamp, value);
+    if(--m_decimationCount == 0) // push can only happen from one thread. No sync needed
+    {
+        m_decimationCount = m_decimationFactor;
+        pPort->push(std::static_pointer_cast<PVBaseImpl>(shared_from_this()), timestamp, value);
+    }
 
     // Push the value to the outputs
     ////////////////////////////////
@@ -91,6 +96,12 @@ void PVBaseInImpl::unsubscribeReceiver(PVBaseOutImpl* pReceiver)
     {
         m_subscriberOutputPVs.erase(findReceiver);
     }
+}
+
+void PVBaseInImpl::setDecimation(const std::int32_t decimation)
+{
+    m_decimationFactor = decimation;
+    m_decimationCount = decimation;
 }
 
 

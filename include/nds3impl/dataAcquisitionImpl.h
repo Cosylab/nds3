@@ -87,7 +87,6 @@ protected:
     std::shared_ptr<PVVariableInImpl<T> > m_dataPV;
     std::shared_ptr<PVVariableOutImpl<double> > m_frequencyPV;
     std::shared_ptr<PVVariableOutImpl<double> > m_durationPV;
-    std::shared_ptr<PVVariableOutImpl<std::int32_t> > m_maxElementsPV;
     std::shared_ptr<PVVariableOutImpl<std::int32_t> > m_decimationPV;
     std::shared_ptr<StateMachineImpl> m_stateMachine;
 

@@ -35,8 +35,8 @@ void FactoryBaseImpl::preDelete()
         }
     }
 
-    // Release counter on the held nodes
-    ////////////////////////////////////
+    // Release counter on the held root nodes
+    /////////////////////////////////////////
     m_heldNodes.clear();
 
     // Deallocate devices

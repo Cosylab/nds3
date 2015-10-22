@@ -39,12 +39,6 @@ DataAcquisitionImpl<T>::DataAcquisitionImpl(
     m_durationPV->setScanType(scanType_t::passive, 0);
     addChild(m_durationPV);
 
-    m_maxElementsPV.reset(new PVVariableOutImpl<std::int32_t>("maxLength"));
-    m_maxElementsPV->setDescription("Number of element in acquisition array");
-    m_maxElementsPV->setScanType(scanType_t::passive, 0);
-    m_maxElementsPV->write(getTimestamp(), (std::int32_t)maxElements);
-    addChild(m_maxElementsPV);
-
     m_decimationPV.reset(new PVVariableOutImpl<std::int32_t>("decimation"));
     m_decimationPV->setDescription("Decimation");
     m_decimationPV->setScanType(scanType_t::passive, 0);
@@ -83,10 +77,7 @@ double DataAcquisitionImpl<T>::getDurationSeconds()
 template<typename T>
 size_t DataAcquisitionImpl<T>::getMaxElements()
 {
-    std::int32_t maxElements;
-    timespec timestamp;
-    m_maxElementsPV->read(&timestamp, &maxElements);
-    return (size_t)maxElements;
+    return m_dataPV->getMaxElements();
 }
 
 template<typename T>
@@ -120,6 +111,7 @@ template<typename T>
 void DataAcquisitionImpl<T>::onStart()
 {
     m_startTime = m_startTimestampFunction();
+    m_dataPV->setDecimation(m_decimationPV->getValue());
     m_onStartDelegate();
 }
 

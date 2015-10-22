@@ -43,12 +43,17 @@ public:
     void subscribeReceiver(PVBaseOutImpl* pReceiver);
     void unsubscribeReceiver(PVBaseOutImpl* pReceiver);
 
+    void setDecimation(const std::int32_t decimation);
+
     virtual dataDirection_t getDataDirection() const;
 
 protected:
     typedef std::set<PVBaseOutImpl*> subscribersList_t;
     subscribersList_t m_subscriberOutputPVs;
     std::mutex m_lockSubscribersList;
+
+    std::int32_t m_decimationFactor;
+    std::int32_t m_decimationCount;
 
 };
 

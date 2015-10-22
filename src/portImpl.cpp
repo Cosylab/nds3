@@ -22,7 +22,7 @@ std::shared_ptr<PortImpl> PortImpl::getPort()
     return std::static_pointer_cast<PortImpl>(shared_from_this());
 }
 
-std::string PortImpl::buildFullNameFromPort(const FactoryBaseImpl& controlSystem) const
+std::string PortImpl::buildFullNameFromPort(const FactoryBaseImpl& /* controlSystem */) const
 {
     return "";
 }
