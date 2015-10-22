@@ -68,9 +68,7 @@ HEADERS += \
     include/nds3/pvBase.h \
     include/nds3/pvHoldDelegate.h \
     include/nds3/stateMachine.h \
-    include/nds3impl/epicsFactoryImpl.h \
     include/nds3impl/dataAcquisitionImpl.h \
-    include/nds3impl/epicsInterfaceImpl.h \
     include/nds3impl/factoryBaseImpl.h \
     include/nds3impl/interfaceBaseImpl.h \
     include/nds3impl/nodeImpl.h \

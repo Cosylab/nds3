@@ -49,7 +49,7 @@ public:
     void getPushedVectorUint8(const std::string& pvName, const timespec*& pTime, const std::vector<std::uint8_t>*& pValue);
     void getPushedVectorInt32(const std::string& pvName, const timespec*& pTime, const std::vector<std::int32_t>*& pValue);
     void getPushedVectorDouble(const std::string& pvName, const timespec*& pTime, const std::vector<double>*& pValue);
-    void getPushedVectorDouble(const std::string& pvName, const timespec*& pTime, const std::string*& pValue);
+    void getPushedString(const std::string& pvName, const timespec*& pTime, const std::string*& pValue);
 
 private:
     const std::string m_name;

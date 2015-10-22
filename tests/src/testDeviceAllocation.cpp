@@ -10,23 +10,36 @@ TEST(testDeviceAllocation, testAllocationMissingDevice)
     EXPECT_EQ((void*)0, TestDevice::getInstance("rootNode"));
 }
 
+/*
+ * Try to allocate the same device twice with the same name.
+ */
 TEST(testDeviceAllocation, testDoubleAllocation)
 {
     nds::Factory factory("test");
 
+    // First allocation
     factory.createDevice("testDevice", "rootNode", nds::namedParameters_t());
 
+    // The port should have been allocated
     EXPECT_NE((void*)0, TestDevice::getInstance("rootNode"));
 
+    // 2nd allocation: should throw
     EXPECT_THROW(factory.createDevice("testDevice", "rootNode", nds::namedParameters_t()), nds::DeviceAlreadyCreated);
 
+    // Destroy the first allocated device
     factory.destroyDevice("rootNode");
 
+    // The port should have been deallocated
     EXPECT_EQ((void*)0, TestDevice::getInstance("rootNode"));
 
+    // Try to destroy again the same device: should throw
     EXPECT_THROW(factory.destroyDevice("rootNode"), nds::DeviceNotAllocated);
 }
 
+/*
+ * Initialize and de-initialize the device.
+ * Check that the port is actually allocated and then removed
+ */
 TEST(testDeviceAllocation, testInitDeinit)
 {
     nds::Factory factory("test");
@@ -41,6 +54,10 @@ TEST(testDeviceAllocation, testInitDeinit)
     EXPECT_THROW(factory.subscribe("rootNode-Channel1-variableIn0", "rootNode-Channel1-numAcquisitions"), nds::MissingOutputPV);
 }
 
+/*
+ * Allocate the same device type with two different names.
+ * Both should succeed
+ */
 TEST(testDeviceAllocation, testTwoAllocations)
 {
     nds::Factory factory("test");

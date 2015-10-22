@@ -18,7 +18,8 @@ SOURCES += \
     src/testDataAcquisition.cpp \
     src/ndsTestInterface.cpp \
     src/ndsTestFactory.cpp \
-    src/main.cpp
+    src/main.cpp \
+    src/testStateMachine.cpp
 
 
 HEADERS += \

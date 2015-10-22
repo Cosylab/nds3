@@ -187,11 +187,23 @@ void StateMachineImpl::setState(const state_t newState)
         {
             m_transitionThread.join();
         }
-        m_transitionThread = std::thread(std::bind(&StateMachineImpl::executeTransition, this, localState, newState, transitionFunction));
+        m_transitionThread = std::thread(std::bind(&StateMachineImpl::executeTransitionThread, this, localState, newState, transitionFunction));
     }
     else
     {
         executeTransition(localState, newState, transitionFunction);
+    }
+}
+
+void StateMachineImpl::executeTransitionThread(const state_t initialState, const state_t finalState, stateChange_t transitionFunction)
+{
+    try
+    {
+        executeTransition(initialState, finalState, transitionFunction);
+    }
+    catch(const std::runtime_error& e)
+    {
+        ndsErrorStream(*this) << "Error while asyncronously changing the state: " << e.what() << std::endl;
     }
 }
 

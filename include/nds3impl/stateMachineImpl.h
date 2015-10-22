@@ -66,6 +66,8 @@ public:
 protected:
     void executeTransition(const state_t initialState, const state_t finalState, stateChange_t transitionFunction);
 
+    void executeTransitionThread(const state_t initialState, const state_t finalState, stateChange_t transitionFunction);
+
     void readLocalState(timespec* pTimestamp, std::int32_t* pValue);
     void writeLocalState(const timespec& pTimestamp, const std::int32_t& value);
 

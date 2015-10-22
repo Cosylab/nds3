@@ -1,5 +1,6 @@
 #include "../include/ndsTestFactory.h"
 #include "../include/ndsTestInterface.h"
+#include <sstream>
 
 namespace nds
 {
@@ -43,6 +44,7 @@ void TestControlSystemFactoryImpl::deregisterCommand(const BaseImpl& node)
 
 std::ostream* TestControlSystemFactoryImpl::getLogStream(const BaseImpl& node, const logLevel_t logLevel)
 {
+    return new std::ostringstream();
 
 }
 
