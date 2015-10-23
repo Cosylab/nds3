@@ -10,7 +10,7 @@ namespace nds
 
 BaseImpl::BaseImpl(const std::string& name): m_name(name), m_pFactory(0),
     m_timestampFunction(std::bind(&BaseImpl::getLocalTimestamp, this)),
-    m_logLevel(logLevel_t::warning), m_cachedFullName(name), m_cachedFullNameFromPort(name)
+    m_logLevel(logLevel_t::warning), m_cachedFullName(name), m_cachedFullNameFromPort()
 {
     for(size_t scanLevels(0); scanLevels != m_loggersKeys.size(); ++scanLevels)
     {
@@ -124,7 +124,7 @@ void BaseImpl::initialize(FactoryBaseImpl &controlSystem)
     ////////////////////////////
     for(commands_t::const_iterator scanCommands(m_commands.begin()), endCommands(m_commands.end()); scanCommands != endCommands; ++scanCommands)
     {
-        controlSystem.registerCommand(getFullName(), scanCommands->m_command, scanCommands->m_usage, scanCommands->m_numParameters, scanCommands->m_function);
+        controlSystem.registerCommand(*this, scanCommands->m_command, scanCommands->m_usage, scanCommands->m_numParameters, scanCommands->m_function);
     }
 }
 
@@ -134,7 +134,7 @@ void BaseImpl::deinitialize()
     //////////////////////////////
     for(commands_t::const_iterator scanCommands(m_commands.begin()), endCommands(m_commands.end()); scanCommands != endCommands; ++scanCommands)
     {
-        m_pFactory->deregisterCommand(getFullName());
+        m_pFactory->deregisterCommand(*this);
     }
 
 }
