@@ -58,7 +58,7 @@ NDS3 provides 2 kinds of input and output PVs:
 
 - PVVariableIn and PVVariableOut: the Variable PVs are responsible for storing the value written by the Device Support or
   by the Control System and are able to supply the internal value on demand to both the Device Support and the Control System.
-  This means that the Device Support can just read or write a value into them when it is convenient, withput worrying about
+  This means that the Device Support can just read or write a value into them when it is convenient, without worrying about
   the mechanism and the timing that the Control System will use to read/write the PV
 - PVDelegateIn and PVDelegateOut: the Delegate PVs will call a predefined Device Support's function when the Control System
   wants to read or write some data from/to the PV
@@ -79,9 +79,14 @@ Let's put this in C++ form:
 
     #include <nds3/nds.h>
 
+    // This class declares our device in the contructor and supplies the functionalities to support it
+    //////////////////////////////////////////////////////////////////////////////////////////////////
     class Thermometer
     {
         public:
+
+        // Constructor. Here we setup the device structure
+        //////////////////////////////////////////////////
         Thermometer(nds::Factory &factory,
                     const std::string &deviceName,
                     const nds::namedParameters_t &parameters)
@@ -100,6 +105,29 @@ Let's put this in C++ form:
             *pValue = 10; // It is always cold in here
         }
     };
+
+    // If we want to load our device support dynamically then we have to compile it
+    //  as a dynamic module and we have to provide the functions to allocate it,
+    //  deallocate it and retrieve its name
+    ////////////////////////////////////////////////////////////////////////////////
+    extern "C"
+    {
+    void* allocateDevice(nds::Factory& factory, const std::string& device, const nds::namedParameters_t& parameters)
+    {
+        return new Thermometer(factory, device, parameters);
+    }
+
+    void deallocateDevice(void* device)
+    {
+        delete (Thermometer*)device;
+    }
+
+    const char* getDeviceName()
+    {
+        return "Thermometer";
+    }
+
+    } // extern "C"    
 
 What did we do with this code?
 
