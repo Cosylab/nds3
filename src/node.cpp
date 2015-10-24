@@ -31,7 +31,14 @@ void Node::initialize(void* pDeviceObject, Factory& factory)
     std::shared_ptr<FactoryBaseImpl> pFactory = factory.m_pFactory;
     m_pImplementation->initialize(*(pFactory.get()));
 
-    pFactory->holdNode(pDeviceObject, m_pImplementation);
+    if(pDeviceObject != 0)
+    {
+        // If we are associated with a device class that has been
+        //  created via createDevice() then hold a reference to the
+        //  root node so we don't need to remember it in the device
+        //  class.
+        pFactory->holdNode(pDeviceObject, m_pImplementation);
+    }
 }
 
 

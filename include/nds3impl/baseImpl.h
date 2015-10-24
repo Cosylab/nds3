@@ -158,12 +158,6 @@ protected:
     virtual parameters_t commandSetLogLevel(const logLevel_t logLevel, const parameters_t& parameters);
 
     /**
-     * @brief This method is registered with pthread_create_key(&m_removeLoggersKey, this)
-     *        to remove the loggers that are specific to the running thread
-     */
-    static void deleteLogger(void* logger);
-
-    /**
      * @brief The node name
      */
     std::string m_name;
@@ -184,11 +178,6 @@ protected:
      *        is needed.
      */
     LogStreamGetterImpl* m_logStreamGetter;
-
-    /**
-     * @brief Used to gain access to the node's loggers (they are different for each thread)
-     */
-    std::array<pthread_key_t, (size_t)logLevel_t::none> m_loggersKeys;
 
     struct commandDefinition_t
     {

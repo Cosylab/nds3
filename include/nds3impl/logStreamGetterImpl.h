@@ -13,6 +13,8 @@ class BaseImpl;
 class NDS3_API LogStreamGetterImpl
 {
 public:
+    LogStreamGetterImpl();
+
     virtual ~LogStreamGetterImpl();
 
     /**
@@ -25,7 +27,26 @@ public:
      * @param logLevel the log level
      * @return         the newly allocate log stream
      */
-    virtual std::ostream* getLogStream(const BaseImpl& node, const logLevel_t logLevel) = 0;
+
+    std::ostream* getLogStream(const logLevel_t logLevel);
+
+protected:
+    virtual std::ostream* createLogStream(const logLevel_t logLevel) = 0;
+
+    /**
+     * @brief This method is registered with pthread_create_key(&m_removeLoggersKey, this)
+     *        to remove the loggers that are specific to the running thread
+     */
+
+private:
+    static void deleteLogger(void* logger);
+
+    /**
+     * @brief Used to gain access to the node's loggers (they are different for each thread)
+     */
+    std::array<pthread_key_t, (size_t)logLevel_t::none> m_loggersKeys;
+
+
 };
 }
 #endif // NDSLOGSTREAMGETTERIMPL_H

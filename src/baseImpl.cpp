@@ -12,11 +12,6 @@ BaseImpl::BaseImpl(const std::string& name): m_name(name), m_pFactory(0),
     m_timestampFunction(std::bind(&BaseImpl::getLocalTimestamp, this)),
     m_logLevel(logLevel_t::warning), m_cachedFullName(name), m_cachedFullNameFromPort()
 {
-    for(size_t scanLevels(0); scanLevels != m_loggersKeys.size(); ++scanLevels)
-    {
-        pthread_key_create(&(m_loggersKeys[scanLevels]), &BaseImpl::deleteLogger);
-    }
-
     // Register the commands for the log level
     //////////////////////////////////////////
     defineCommand("setLogLevelDebug", "", 0, std::bind(&BaseImpl::commandSetLogLevel, this, logLevel_t::debug, std::placeholders::_1));
@@ -27,16 +22,6 @@ BaseImpl::BaseImpl(const std::string& name): m_name(name), m_pFactory(0),
 
 BaseImpl::~BaseImpl()
 {
-    for(size_t scanLevels(0); scanLevels != m_loggersKeys.size(); ++scanLevels)
-    {
-        std::ostream* pStream = (std::ostream*)pthread_getspecific(m_loggersKeys[scanLevels]);
-        if(pStream != 0)
-        {
-            pthread_setspecific(m_loggersKeys[scanLevels], 0);
-            delete pStream;
-        }
-        pthread_key_delete(m_loggersKeys[scanLevels]);
-    }
 
 }
 
@@ -167,19 +152,7 @@ std::ostream& BaseImpl::getLogger(const logLevel_t logLevel)
     {
         throw std::logic_error("Should not ask for a log stream for severity \"none\"");
     }
-    std::ostream* pStream = (std::ostream*)pthread_getspecific(m_loggersKeys[(size_t)logLevel]);
-    if(pStream == 0)
-    {
-        pStream = m_logStreamGetter->getLogStream(*this, logLevel);
-        pthread_setspecific(m_loggersKeys[(size_t)logLevel], pStream);
-    }
-
-    return *pStream;
-}
-
-void BaseImpl::deleteLogger(void* pLogger)
-{
-    delete (std::ostream*)pLogger;
+    return *(m_logStreamGetter->getLogStream(logLevel));
 }
 
 bool BaseImpl::isLogLevelEnabled(const logLevel_t logLevel) const

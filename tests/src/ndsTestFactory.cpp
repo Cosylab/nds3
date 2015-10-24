@@ -8,6 +8,18 @@ namespace nds
 namespace tests
 {
 
+static TestControlSystemFactoryImpl* m_factoryInstance(0);
+TestControlSystemFactoryImpl::TestControlSystemFactoryImpl()
+{
+    m_factoryInstance = this;
+
+}
+
+TestControlSystemFactoryImpl* TestControlSystemFactoryImpl::getInstance()
+{
+    return m_factoryInstance;
+}
+
 const std::string TestControlSystemFactoryImpl::getName() const
 {
     return "test";
@@ -41,12 +53,43 @@ void TestControlSystemFactoryImpl::deregisterCommand(const BaseImpl& node)
 {
 }
 
-
-std::ostream* TestControlSystemFactoryImpl::getLogStream(const BaseImpl& node, const logLevel_t logLevel)
+void TestControlSystemFactoryImpl::log(const std::string& logString, const logLevel_t logLevel)
 {
-    return new std::ostringstream();
+    std::lock_guard<std::mutex> lock(m_logMutex);
+    m_logs.insert(logString);
+}
+
+size_t TestControlSystemFactoryImpl::countStringInLog(const std::string &string)
+{
+    return m_logs.count(string);
+}
+
+std::ostream* TestControlSystemFactoryImpl::createLogStream(const logLevel_t logLevel)
+{
+    return new TestLogStream(logLevel, this);
+}
+
+
+TestLogStreamBufferImpl::TestLogStreamBufferImpl(const logLevel_t logLevel, TestControlSystemFactoryImpl* pFactory):
+    m_logLevel(logLevel), m_pFactory(pFactory)
+{
+}
+
+int TestLogStreamBufferImpl::sync()
+{
+    std::string string(std::string(pbase(), pptr() - pbase()));
+    m_pFactory->log(string, m_logLevel);
+    seekpos(0);
+    return 0;
+}
+
+TestLogStream::TestLogStream(const logLevel_t logLevel, TestControlSystemFactoryImpl* pFactory):
+    std::ostream(&m_buffer), m_buffer(logLevel, pFactory)
+{
 
 }
+
+
 
 extern "C"
 {
