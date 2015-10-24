@@ -2,6 +2,7 @@
 #define NDSLOGSTREAMGETTERIMPL_H
 
 #include <ostream>
+#include <array>
 #include "../nds3/definitions.h"
 
 namespace nds
