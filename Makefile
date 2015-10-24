@@ -3,7 +3,10 @@ RM = rm
 CP = cp
  
 CXXFLAGS = -std=c++0x -Wall -Wextra -pedantic -fPIC -pthread -fvisibility=hidden -fvisibility-inlines-hidden -DNDS3_DLL -DNDS3_DLL_EXPORTS
- 
+
+debug: CXXFLAGS += -DDEBUG -g
+debug: libnds3.so
+
 # Flags passed to gcc during linking
 LINK = -shared -fPIC -Wl,-as-needed
  
