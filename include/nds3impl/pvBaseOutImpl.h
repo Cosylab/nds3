@@ -20,11 +20,11 @@ class PVBaseOutImpl: public PVBaseImpl
 public:
     PVBaseOutImpl(const std::string& name);
 
+    void subscribeTo(const std::string& inputPVName);
+
     virtual void initialize(FactoryBaseImpl& controlSystem);
 
     virtual void deinitialize();
-
-    void subscribeTo(const std::string& inputPVName);
 
     // All the base versions throw.
     // Only the overwritten ones in the derived classes will function correctly.
@@ -46,6 +46,9 @@ public:
     virtual void write(const timespec& timestamp, const std::string& value);
 
     virtual dataDirection_t getDataDirection() const;
+
+
+
 };
 
 }

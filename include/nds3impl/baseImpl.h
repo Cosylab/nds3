@@ -76,21 +76,6 @@ public:
     const std::string& getFullNameFromPort() const;
 
     /**
-     * @brief Registers all the records with the control system. Call this from the root node
-     *        which will take care of traversing its children and initialize them.
-     *
-     * On EPICS it will create all the PVs and register them with the AsynDriver,
-     * on Tango will create the dynamic attributes.
-     */
-    virtual void initialize(FactoryBaseImpl& controlSystem);
-
-    /**
-     * @brief Deregister all the records from the control system. Call this from the root node
-     *        which will take care of traversing its children and deinitialize them.
-     */
-    virtual void deinitialize();
-
-    /**
      * @brief Return the current time.
      *
      * If a delegate function has been defined with setTimestampDelegate() then call
@@ -141,6 +126,21 @@ public:
      * @param numParameters
      */
     void defineCommand(const std::string& command, const std::string& usage, const size_t numParameters, const command_t function);
+
+    /**
+     * @brief Registers all the records with the control system. Do not call this
+     *        function directly: call NodeImpl::initializeRootNode() instead.
+     *
+     * On EPICS it will create all the PVs and register them with the AsynDriver,
+     * on Tango will create the dynamic attributes.
+     */
+    virtual void initialize(FactoryBaseImpl& controlSystem);
+
+    /**
+     * @brief Deregister all the records from the control system. Do not call this
+     *        function directly: call NodeImpl::deinitializeRootNode() instead.
+     */
+    virtual void deinitialize();
 
 
 protected:

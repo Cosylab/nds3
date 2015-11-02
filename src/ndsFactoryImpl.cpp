@@ -122,7 +122,7 @@ void NdsFactoryImpl::loadDriver(const std::string& driverModuleName)
 
 void NdsFactoryImpl::registerDriver(const std::string &driverName, allocateDriver_t allocateFunction, deallocateDriver_t deallocateFunction)
 {
-    std::lock_guard<std::recursive_mutex> lock(m_lockDrivers);
+    std::lock_guard<std::mutex> lock(m_lockDrivers);
 
     if(m_driversAllocDealloc.find(driverName) != m_driversAllocDealloc.end())
     {
@@ -145,7 +145,7 @@ std::pair<void*, deallocateDriver_t> NdsFactoryImpl::createDevice(FactoryBaseImp
     deallocateDriver_t deallocationFunction;
 
     {
-        std::lock_guard<std::recursive_mutex> lock(m_lockDrivers);
+        std::lock_guard<std::mutex> lock(m_lockDrivers);
 
         driverAllocDeallocMap_t::const_iterator findDriver = m_driversAllocDealloc.find(driverName);
         if(findDriver == m_driversAllocDealloc.end())

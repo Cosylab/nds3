@@ -89,7 +89,7 @@ private:
 
     typedef std::map<std::string, std::pair<allocateDriver_t, deallocateDriver_t> > driverAllocDeallocMap_t;
     driverAllocDeallocMap_t m_driversAllocDealloc;
-    std::recursive_mutex m_lockDrivers;
+    std::mutex m_lockDrivers;
 
     typedef std::list<std::shared_ptr<DynamicModule> > modules_t;
     modules_t m_modules;

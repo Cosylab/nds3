@@ -1,6 +1,7 @@
 #include "../include/nds3impl/factoryBaseImpl.h"
 #include "../include/nds3impl/ndsFactoryImpl.h"
 #include "../include/nds3impl/baseImpl.h"
+#include "../include/nds3impl/nodeImpl.h"
 #include <thread>
 #include <sstream>
 #include "../include/nds3/exceptions.h"
@@ -23,7 +24,7 @@ FactoryBaseImpl::~FactoryBaseImpl()
  */
 void FactoryBaseImpl::preDelete()
 {
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(m_mutex);
 
     // Deregister all the PVs
     /////////////////////////
@@ -31,7 +32,7 @@ void FactoryBaseImpl::preDelete()
     {
         for(nodesList_t::iterator scanNodes(scanDevices->second.begin()), endNodes(scanDevices->second.end()); scanNodes != endNodes; ++scanNodes)
         {
-            (*scanNodes)->deinitialize();
+            (*scanNodes)->deinitializeRootNode();
         }
     }
 
@@ -63,19 +64,25 @@ void FactoryBaseImpl::loadDriver(const std::string &libraryName)
  */
 void* FactoryBaseImpl::createDevice(const std::string& driverName, const std::string& deviceName, const namedParameters_t& parameters)
 {
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
-
-    if(m_allocatedDevices.find(deviceName) != m_allocatedDevices.end())
     {
-        std::ostringstream errorMessage;
-        errorMessage << "A device with named " << deviceName << " for the control system " << getName() << " has already been created";
-        throw DeviceAlreadyCreated(errorMessage.str());
+        std::lock_guard<std::mutex> lock(m_mutex);
+
+        if(m_allocatedDevices.find(deviceName) != m_allocatedDevices.end())
+        {
+            std::ostringstream errorMessage;
+            errorMessage << "A device with named " << deviceName << " for the control system " << getName() << " has already been created";
+            throw DeviceAlreadyCreated(errorMessage.str());
+        }
+        m_allocatedDevices[deviceName].m_pDevice = 0;
     }
 
     std::pair<void*, deallocateDriver_t> newDevice = NdsFactoryImpl::getInstance().createDevice(*this, driverName, deviceName, parameters);
 
-    m_allocatedDevices[deviceName].m_pDevice = newDevice.first;
-    m_allocatedDevices[deviceName].m_deallocationFunction = newDevice.second;
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_allocatedDevices[deviceName].m_pDevice = newDevice.first;
+        m_allocatedDevices[deviceName].m_deallocationFunction = newDevice.second;
+    }
 
     return newDevice.first;
 }
@@ -84,7 +91,7 @@ void* FactoryBaseImpl::createDevice(const std::string& driverName, const std::st
 
 void FactoryBaseImpl::destroyDevice(void* pDevice)
 {
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(m_mutex);
 
     // Deregister all the PVs
     /////////////////////////
@@ -94,7 +101,7 @@ void FactoryBaseImpl::destroyDevice(void* pDevice)
         {
             for(nodesList_t::iterator scanNodes(scanDevices->second.begin()), endNodes(scanDevices->second.end()); scanNodes != endNodes; ++scanNodes)
             {
-                (*scanNodes)->deinitialize();
+                (*scanNodes)->deinitializeRootNode();
             }
         }
     }
@@ -125,17 +132,22 @@ void FactoryBaseImpl::destroyDevice(void* pDevice)
 
 void FactoryBaseImpl::destroyDevice(const std::string& deviceName)
 {
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+    void* pDevice(0);
 
-    allocatedDevices_t::const_iterator findDevice = m_allocatedDevices.find(deviceName);
-    if(findDevice == m_allocatedDevices.end())
     {
-        std::ostringstream errorMessage;
-        errorMessage << "The device " << deviceName << " was never allocated or has already been destroyed";
-        throw DeviceNotAllocated(errorMessage.str());
+        std::lock_guard<std::mutex> lock(m_mutex);
+
+        allocatedDevices_t::const_iterator findDevice = m_allocatedDevices.find(deviceName);
+        if(findDevice == m_allocatedDevices.end())
+        {
+            std::ostringstream errorMessage;
+            errorMessage << "The device " << deviceName << " was never allocated or has already been destroyed";
+            throw DeviceNotAllocated(errorMessage.str());
+        }
+        pDevice = findDevice->second.m_pDevice;
     }
 
-    destroyDevice(findDevice->second.m_pDevice);
+    destroyDevice(pDevice);
 }
 
 
@@ -147,9 +159,9 @@ std::thread FactoryBaseImpl::createThread(const std::string &name, threadFunctio
 }
 
 
-void FactoryBaseImpl::holdNode(void* pDeviceObject, std::shared_ptr<BaseImpl> pHoldNode)
+void FactoryBaseImpl::holdNode(void* pDeviceObject, std::shared_ptr<NodeImpl> pHoldNode)
 {
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+    std::lock_guard<std::mutex> lock(m_mutex);
 
     m_heldNodes[pDeviceObject].push_back(pHoldNode);
 

@@ -28,6 +28,9 @@ public:
 
     virtual ~PortImpl();
 
+    virtual void initialize(FactoryBaseImpl& controlSystem);
+
+    virtual void deinitialize();
 
     /**
      * @brief Return a pointer to this object.
@@ -36,10 +39,6 @@ public:
     virtual std::shared_ptr<PortImpl> getPort();
 
     virtual std::string buildFullNameFromPort(const FactoryBaseImpl& controlSystem) const;
-
-    virtual void initialize(FactoryBaseImpl& controlSystem);
-
-    virtual void deinitialize();
 
     void registerPV(std::shared_ptr<PVBaseImpl> pv);
 

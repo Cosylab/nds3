@@ -19,6 +19,10 @@ class NDS3_API PVBaseImpl: public BaseImpl
 public:
     PVBaseImpl(const std::string& name);
 
+    virtual void initialize(FactoryBaseImpl& controlSystem);
+
+    virtual void deinitialize();
+
     // All the base versions throw.
     // Only the overwritten ones in the derived classes will function correctly.
     ////////////////////////////////////////////////////////////////////////////
@@ -40,9 +44,6 @@ public:
 
     virtual dataDirection_t getDataDirection() const = 0;
 
-    virtual void initialize(FactoryBaseImpl& controlSystem);
-
-    virtual void deinitialize();
 
     /**
      * @brief Return the PV's data type.

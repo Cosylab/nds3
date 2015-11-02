@@ -23,22 +23,8 @@ Node::Node(const std::string &name): Base(std::shared_ptr<BaseImpl>(new NodeImpl
 
 void Node::initialize(void* pDeviceObject, Factory& factory)
 {
-    if(m_pImplementation->getParent().get() != 0)
-    {
-        throw std::logic_error("You can initialize only the root nodes");
-    }
-
     std::shared_ptr<FactoryBaseImpl> pFactory = factory.m_pFactory;
-    m_pImplementation->initialize(*(pFactory.get()));
-
-    if(pDeviceObject != 0)
-    {
-        // If we are associated with a device class that has been
-        //  created via createDevice() then hold a reference to the
-        //  root node so we don't need to remember it in the device
-        //  class.
-        pFactory->holdNode(pDeviceObject, m_pImplementation);
-    }
+    std::static_pointer_cast<NodeImpl>(m_pImplementation)->initializeRootNode(pDeviceObject, *(pFactory.get()));
 }
 
 

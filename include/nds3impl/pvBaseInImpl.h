@@ -49,6 +49,7 @@ public:
     virtual dataDirection_t getDataDirection() const;
 
 protected:
+
     typedef std::set<PVBaseOutImpl*> subscribersList_t;
     subscribersList_t m_subscriberOutputPVs;
     std::mutex m_lockSubscribersList;

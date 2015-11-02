@@ -12,6 +12,7 @@ namespace nds
 
 class InterfaceBaseImpl;
 class BaseImpl;
+class NodeImpl;
 class PVBaseImpl;
 class LogStreamGetterImpl;
 
@@ -75,7 +76,7 @@ public:
 
     void destroyDevice(const std::string& deviceName);
 
-    void holdNode(void* pDeviceObject, std::shared_ptr<BaseImpl> pHoldNode);
+    void holdNode(void* pDeviceObject, std::shared_ptr<NodeImpl> pHoldNode);
 
     virtual const std::string getName() const = 0;
 
@@ -130,11 +131,11 @@ private:
     typedef std::map<std::string, allocatedDevice_t> allocatedDevices_t;
     allocatedDevices_t m_allocatedDevices;
 
-    typedef std::list<std::shared_ptr<BaseImpl> > nodesList_t;
+    typedef std::list<std::shared_ptr<NodeImpl> > nodesList_t;
     typedef std::map<void*, nodesList_t> heldNodes_t;
     heldNodes_t m_heldNodes;
 
-    std::recursive_mutex m_mutex;
+    std::mutex m_mutex;
 
 };
 

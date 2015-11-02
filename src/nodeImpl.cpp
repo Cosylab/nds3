@@ -1,5 +1,6 @@
 #include "../include/nds3impl/nodeImpl.h"
 #include "../include/nds3impl/stateMachineImpl.h"
+#include "../include/nds3impl/factoryBaseImpl.h"
 #include "../include/nds3/definitions.h"
 #include <memory>
 #include <mutex>
@@ -8,7 +9,7 @@
 namespace nds
 {
 
-static std::recursive_mutex m_initializationMutex;
+static std::mutex m_initializationMutex;
 
 NodeImpl::NodeImpl(const std::string &name): BaseImpl(name)
 {}
@@ -40,10 +41,30 @@ void NodeImpl::addChild(std::shared_ptr<BaseImpl> pChild)
     }
 }
 
+
+void NodeImpl::initializeRootNode(void *pDeviceObject, FactoryBaseImpl &controlSystem)
+{
+    if(getParent().get() != 0)
+    {
+        throw std::logic_error("You can initialize only the root nodes");
+    }
+
+    std::lock_guard<std::mutex> serializeInitialization(m_initializationMutex);
+
+    initialize(controlSystem);
+
+    if(pDeviceObject != 0)
+    {
+        // If we are associated with a device class that has been
+        //  created via createDevice() then hold a reference to the
+        //  root node so we don't need to remember it in the device
+        //  class.
+        controlSystem.holdNode(pDeviceObject, std::static_pointer_cast<NodeImpl>(shared_from_this()) );
+    }
+}
+
 void NodeImpl::initialize(FactoryBaseImpl& controlSystem)
 {
-    std::lock_guard<std::recursive_mutex> serializeInitialization(m_initializationMutex);
-
     BaseImpl::initialize(controlSystem);
 
     for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
@@ -56,10 +77,19 @@ void NodeImpl::initialize(FactoryBaseImpl& controlSystem)
     }
 }
 
+void NodeImpl::deinitializeRootNode()
+{
+    if(getParent().get() != 0)
+    {
+        throw std::logic_error("You can call deinitialize only on root nodes");
+    }
+
+    std::lock_guard<std::mutex> serializeInitialization(m_initializationMutex);
+    deinitialize();
+}
+
 void NodeImpl::deinitialize()
 {
-    std::lock_guard<std::recursive_mutex> serializeInitialization(m_initializationMutex);
-
     BaseImpl::deinitialize();
     for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
     {

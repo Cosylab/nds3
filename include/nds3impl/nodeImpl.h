@@ -29,7 +29,12 @@ public:
 
     void addChild(std::shared_ptr<BaseImpl> pChild);
 
+    void initializeRootNode(void* pDeviceObject, FactoryBaseImpl& controlSystem);
+
+    void deinitializeRootNode();
+
     virtual void initialize(FactoryBaseImpl& controlSystem);
+
     virtual void deinitialize();
 
     virtual state_t getLocalState() const;
@@ -37,6 +42,7 @@ public:
     state_t getChildrenState() const;
 
     virtual void setLogLevel(const logLevel_t logLevel);
+
 
 private:
 

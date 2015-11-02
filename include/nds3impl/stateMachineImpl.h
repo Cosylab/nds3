@@ -29,10 +29,6 @@ public:
 
     ~StateMachineImpl();
 
-    virtual void initialize(FactoryBaseImpl& controlSystem);
-
-    virtual void deinitialize();
-
     /**
      * @brief Instructs the state machine to start the transition to another state.
      *
@@ -63,7 +59,13 @@ public:
 
     parameters_t commandSetState(const state_t state, const parameters_t& parameters);
 
+    virtual void initialize(FactoryBaseImpl& controlSystem);
+
+    virtual void deinitialize();
+
+
 protected:
+
     void executeTransition(const state_t initialState, const state_t finalState, stateChange_t transitionFunction);
 
     void executeTransitionThread(const state_t initialState, const state_t finalState, stateChange_t transitionFunction);
