@@ -15,6 +15,7 @@ class BaseImpl;
 class NodeImpl;
 class PVBaseImpl;
 class LogStreamGetterImpl;
+class ThreadBaseImpl;
 
 /**
  * @brief This is the base class for objects that interact with specific control systems
@@ -51,7 +52,7 @@ public:
      */
     virtual void preDelete();
 
-    virtual std::thread createThread(const std::string& name, threadFunction_t function);
+    virtual ThreadBaseImpl* runInThread(const std::string& name, threadFunction_t function);
 
     void loadDriver(const std::string& libraryName);
 

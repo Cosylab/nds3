@@ -1,6 +1,7 @@
 #include "../include/nds3/factory.h"
 #include "../include/nds3impl/factoryBaseImpl.h"
 #include "../include/nds3impl/ndsFactoryImpl.h"
+#include "../include/nds3/thread.h"
 
 namespace nds
 {
@@ -40,11 +41,6 @@ void Factory::destroyDevice(const std::string& deviceName)
     m_pFactory->destroyDevice(deviceName);
 }
 
-std::thread Factory::createThread(const std::string &name, threadFunction_t function)
-{
-    return m_pFactory->createThread(name, function);
-}
-
 void Factory::subscribe(const std::string& pushFrom, const std::string& pushTo)
 {
     NdsFactoryImpl::getInstance().subscribe(pushFrom, pushTo);
@@ -63,6 +59,11 @@ void Factory::replicate(const std::string &replicateSource, const std::string &r
 void Factory::stopReplicationTo(const std::string &destination)
 {
     NdsFactoryImpl::getInstance().stopReplicationTo(destination);
+}
+
+Thread Factory::runInThread(const std::string &name, threadFunction_t function)
+{
+    return Thread(std::shared_ptr<ThreadBaseImpl>(m_pFactory->runInThread(name, function)));
 }
 
 

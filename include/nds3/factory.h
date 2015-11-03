@@ -21,6 +21,7 @@ namespace nds
 {
 
 class FactoryBaseImpl;
+class Thread;
 
 /**
  * @brief Communicates with a static instance of the control system.
@@ -156,7 +157,7 @@ public:
      */
     void stopReplicationTo(const std::string& destination);
 
-    std::thread createThread(const std::string& name, threadFunction_t function);
+    Thread runInThread(const std::string& name, threadFunction_t function);
 
 #ifndef SWIG
 private:

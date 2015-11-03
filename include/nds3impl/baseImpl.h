@@ -20,6 +20,7 @@ class PortImpl;
 class FactoryBaseImpl;
 class LogStreamBufferImpl;
 class LogStreamGetterImpl;
+class ThreadBaseImpl;
 
 /**
  * @internal
@@ -88,6 +89,8 @@ public:
     timespec getTimestamp() const;
 
     void setTimestampDelegate(getTimestampPlugin_t timestampDelegate);
+
+    ThreadBaseImpl* runInThread(const std::string& name, threadFunction_t function);
 
     /**
      * @ingroup logging

@@ -2,6 +2,7 @@
 #include "../include/nds3impl/nodeImpl.h"
 #include "../include/nds3impl/factoryBaseImpl.h"
 #include "../include/nds3impl/logStreamGetterImpl.h"
+#include "../include/nds3impl/threadBaseImpl.h"
 
 #include <stdexcept>
 
@@ -132,6 +133,11 @@ timespec BaseImpl::getTimestamp() const
 void BaseImpl::setTimestampDelegate(getTimestampPlugin_t timestampDelegate)
 {
     m_timestampFunction = timestampDelegate;
+}
+
+ThreadBaseImpl* BaseImpl::runInThread(const std::string &name, threadFunction_t function)
+{
+    return m_pFactory->runInThread(name, function);
 }
 
 timespec BaseImpl::getLocalTimestamp() const

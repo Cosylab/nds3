@@ -53,7 +53,10 @@ SOURCES +=\
     src/pvVariableIn.cpp \
     src/pvVariableInImpl.cpp \
     src/pvVariableOutImpl.cpp \
-    src/ndsFactoryImpl.cpp
+    src/ndsFactoryImpl.cpp \
+    src/threadBaseImpl.cpp \
+    src/threadStd.cpp \
+    src/thread.cpp
 
 HEADERS += \
     include/nds3/definitions.h \
@@ -91,5 +94,7 @@ HEADERS += \
     include/nds3impl/pvVariableInImpl.h \
     include/nds3impl/pvVariableOutImpl.h \
     include/nds3impl/ndsFactoryImpl.h \
-    include/nds3impl/threadImpl.h
+    include/nds3impl/threadBaseImpl.h \
+    include/nds3impl/threadStd.h \
+    include/nds3/thread.h
 

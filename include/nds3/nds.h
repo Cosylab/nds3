@@ -25,6 +25,7 @@
 #include "dataAcquisition.h"
 #include "factory.h"
 #include "stateMachine.h"
+#include "thread.h"
 
 
 #endif // NDS3_H

@@ -11,6 +11,7 @@
  */
 
 #include "definitions.h"
+#include "thread.h"
 #include <memory>
 #include <string>
 #include <ostream>
@@ -199,6 +200,30 @@ public:
      * @param function      the delegate function to call to execute the command
      */
     void defineCommand(const std::string& command, const std::string& usage, const size_t numParameters, const command_t function);
+
+    /**
+     * @brief Create and run a thread using the control system facilities.
+     *
+     * If the control system does not provide any thread facility then a std::thread
+     *  is created and executed.
+     *
+     * @param name     the name given to the thread
+     * @param function the function to execute in the thread
+     * @return         a Thread object hilding a reference to the thread
+     */
+    Thread runInThread(const std::string& name, threadFunction_t function);
+
+    /**
+     * @brief Create and run a thread using the control system facilities. The created
+     *        thread will have the node's name.
+     *
+     * If the control system does not provide any thread facility then a std::thread
+     *  is created and executed.
+     *
+     * @param function the function to execute in the thread
+     * @return         a Thread object hilding a reference to the thread
+     */
+    Thread runInThread(threadFunction_t function);
 
 #ifndef SWIG
 protected:

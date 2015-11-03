@@ -85,5 +85,15 @@ void Base::defineCommand(const std::string& command, const std::string& usage, c
     m_pImplementation->defineCommand(command, usage, numParameters, function);
 }
 
+Thread Base::runInThread(const std::string &name, threadFunction_t function)
+{
+    return Thread(std::shared_ptr<ThreadBaseImpl>(m_pImplementation->runInThread(name, function)));
+}
+
+Thread Base::runInThread(threadFunction_t function)
+{
+    return Thread(std::shared_ptr<ThreadBaseImpl>(m_pImplementation->runInThread(getFullName(), function)));
+}
+
 
 }

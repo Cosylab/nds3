@@ -2,10 +2,11 @@
 #include "../include/nds3impl/ndsFactoryImpl.h"
 #include "../include/nds3impl/baseImpl.h"
 #include "../include/nds3impl/nodeImpl.h"
-#include <thread>
-#include <sstream>
+#include "../include/nds3impl/threadStd.h"
 #include "../include/nds3/exceptions.h"
 #include "../include/nds3/factory.h"
+
+#include <sstream>
 
 namespace nds
 {
@@ -162,11 +163,9 @@ void FactoryBaseImpl::destroyDevice(const std::string& deviceName)
 }
 
 
-std::thread FactoryBaseImpl::createThread(const std::string &name, threadFunction_t function)
+ThreadBaseImpl* FactoryBaseImpl::runInThread(const std::string &name, threadFunction_t function)
 {
-    std::thread newThread(function);
-    pthread_setname_np(newThread.native_handle(), name.c_str());
-    return newThread;
+    return new ThreadStd(this, name, function);
 }
 
 
