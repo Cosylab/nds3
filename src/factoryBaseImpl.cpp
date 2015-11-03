@@ -76,7 +76,17 @@ void* FactoryBaseImpl::createDevice(const std::string& driverName, const std::st
         m_allocatedDevices[deviceName].m_pDevice = 0;
     }
 
-    std::pair<void*, deallocateDriver_t> newDevice = NdsFactoryImpl::getInstance().createDevice(*this, driverName, deviceName, parameters);
+    std::pair<void*, deallocateDriver_t> newDevice;
+    try
+    {
+        newDevice = NdsFactoryImpl::getInstance().createDevice(*this, driverName, deviceName, parameters);
+    }
+    catch(...)
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_allocatedDevices.erase(deviceName);
+        throw;
+    }
 
     {
         std::lock_guard<std::mutex> lock(m_mutex);
