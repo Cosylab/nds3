@@ -61,11 +61,25 @@ public:
     void subscribeReceiver(PVBaseOutImpl* pReceiver);
 
     /**
-     * @brief UNsubscribe an output PV from this PV.
+     * @brief Unsubscribe an output PV from this PV.
      *
      * @param pReceiver the output PV to unsubscribe
      */
     void unsubscribeReceiver(PVBaseOutImpl* pReceiver);
+
+    /**
+     * @brief Replicate the data written to this PV to another input PV.
+     *
+     * @param pDestination the PV into which the data must be copied
+     */
+    void replicateTo(PVBaseInImpl* pDestination);
+
+    /**
+     * @brief Stop the replication of data to the specified destination PV.
+     *
+     * @param pDestination the destination to unsubscribe from replication
+     */
+    void stopReplicationTo(PVBaseInImpl* pDestination);
 
     /**
      * @brief Set the decimation factor.
@@ -75,6 +89,17 @@ public:
      * @param decimation  the decimation factor
      */
     void setDecimation(const std::int32_t decimation);
+
+    /**
+     * @brief Specifies an input PV from which the data must be copied.
+     *
+     * Any push operation made on the source input PV will be replicated
+     *  to this PV.
+     *
+     * @param sourceInputPVName the full name of the input PV from which the data
+     *                           must be copied
+     */
+    void replicateFrom(const std::string& sourceInputPVName);
 
     virtual dataDirection_t getDataDirection() const;
 
@@ -90,10 +115,23 @@ protected:
      */
     subscribersList_t m_subscriberOutputPVs;
 
+    /**
+     * @brief List of destination input PVs.
+     */
+    typedef std::set<PVBaseInImpl*> destinationList_t;
+
+    /**
+     * @brief List of PVs to which the data must be pushed or written
+     */
+    destinationList_t m_replicationDestinationPVs;
+
     std::mutex m_lockSubscribersList; ///< Lock the access to m_subscriberOutputPVs.
 
     std::int32_t m_decimationFactor;  ///< Decimation factor.
     std::int32_t m_decimationCount;   ///< Keeps track of the received data/vs data pushed to the control system.
+
+private:
+    parameters_t commandReplicate(const parameters_t& parameters);
 
 };
 

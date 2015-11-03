@@ -9,6 +9,7 @@ namespace nds
 PVBaseInImpl::PVBaseInImpl(const std::string& name): PVBaseImpl(name),
     m_decimationFactor(1), m_decimationCount(1)
 {
+    defineCommand("replicate", "replicate destination source", 1, std::bind(&PVBaseInImpl::commandReplicate,this, std::placeholders::_1));
 }
 
 void PVBaseInImpl::initialize(FactoryBaseImpl &controlSystem)
@@ -21,6 +22,11 @@ void PVBaseInImpl::deinitialize()
 {
     NdsFactoryImpl::getInstance().deregisterInputPV(this);
     PVBaseImpl::deinitialize();
+}
+
+void PVBaseInImpl::replicateFrom(const std::string &sourceInputPVName)
+{
+    NdsFactoryImpl::getInstance().replicate(sourceInputPVName, this);
 }
 
 void PVBaseInImpl::read(timespec* /* pTimestamp */, std::int32_t* /* pValue */) const
@@ -82,14 +88,22 @@ void PVBaseInImpl::push(const timespec& timestamp, const T& value)
         pPort->push(std::static_pointer_cast<PVBaseImpl>(shared_from_this()), timestamp, value);
     }
 
-    // Push the value to the outputs
-    ////////////////////////////////
+    // Push the value to the outputs (subscription) and inputs (replication)
+    ////////////////////////////////////////////////////////////////////////
     std::lock_guard<std::mutex> lock(m_lockSubscribersList);
+
     for(subscribersList_t::iterator scanOutputs(m_subscriberOutputPVs.begin()), endOutputs(m_subscriberOutputPVs.end());
         scanOutputs != endOutputs;
         ++scanOutputs)
     {
         (*scanOutputs)->write(timestamp, value);
+    }
+
+    for(destinationList_t::iterator scanInputs(m_replicationDestinationPVs.begin()), endInputs(m_replicationDestinationPVs.end());
+        scanInputs != endInputs;
+        ++scanInputs)
+    {
+        (*scanInputs)->push(timestamp, value);
     }
 }
 
@@ -110,6 +124,24 @@ void PVBaseInImpl::unsubscribeReceiver(PVBaseOutImpl* pReceiver)
     }
 }
 
+void PVBaseInImpl::replicateTo(PVBaseInImpl *pDestination)
+{
+    std::lock_guard<std::mutex> lock(m_lockSubscribersList);
+    m_replicationDestinationPVs.insert(pDestination);
+}
+
+void PVBaseInImpl::stopReplicationTo(PVBaseInImpl* pDestination)
+{
+    std::lock_guard<std::mutex> lock(m_lockSubscribersList);
+
+    destinationList_t::const_iterator findDestination = m_replicationDestinationPVs.find(pDestination);
+    if(findDestination != m_replicationDestinationPVs.end())
+    {
+        m_replicationDestinationPVs.erase(findDestination);
+    }
+}
+
+
 void PVBaseInImpl::setDecimation(const std::int32_t decimation)
 {
     m_decimationFactor = decimation;
@@ -117,11 +149,17 @@ void PVBaseInImpl::setDecimation(const std::int32_t decimation)
 }
 
 
-
 dataDirection_t PVBaseInImpl::getDataDirection() const
 {
     return dataDirection_t::input;
 }
+
+parameters_t PVBaseInImpl::commandReplicate(const parameters_t &parameters)
+{
+    replicateFrom(parameters[0]);
+    return parameters_t();
+}
+
 
 template void PVBaseInImpl::push<std::int32_t>(const timespec&, const std::int32_t&);
 template void PVBaseInImpl::push<double>(const timespec&, const double&);

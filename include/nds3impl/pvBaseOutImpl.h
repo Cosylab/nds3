@@ -55,7 +55,8 @@ public:
 
     virtual dataDirection_t getDataDirection() const;
 
-
+private:
+    parameters_t commandSubscribeTo(const parameters_t& parameters);
 
 };
 

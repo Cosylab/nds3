@@ -7,7 +7,7 @@ namespace nds
 
 PVBaseOutImpl::PVBaseOutImpl(const std::string& name): PVBaseImpl(name)
 {
-
+    defineCommand("subscribe", "subscribe destination source", 1, std::bind(&PVBaseOutImpl::commandSubscribeTo, this, std::placeholders::_1));
 }
 
 void PVBaseOutImpl::initialize(FactoryBaseImpl &controlSystem)
@@ -121,6 +121,12 @@ void PVBaseOutImpl::write(const timespec& /* pTimestamp */, const std::string& /
 dataDirection_t PVBaseOutImpl::getDataDirection() const
 {
     return dataDirection_t::output;
+}
+
+parameters_t PVBaseOutImpl::commandSubscribeTo(const parameters_t &parameters)
+{
+    subscribeTo(parameters[0]);
+    return parameters_t();
 }
 
 }

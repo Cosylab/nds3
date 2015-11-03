@@ -71,6 +71,15 @@ public:
 
     void unsubscribe(const std::string& pushTo);
 
+    void replicate(const std::string& replicateSource, PVBaseInImpl* pDestination);
+
+    void replicate(const std::string& replicateSource, const std::string& replicateDestination);
+
+    void stopReplicationTo(PVBaseInImpl* pDestination);
+
+    void stopReplicationTo(const std::string& replicateDestination);
+
+
     void registerInputPV(PVBaseInImpl* pSender);
     void deregisterInputPV(PVBaseInImpl* pSender);
     void registerOutputPV(PVBaseOutImpl* pReceiver);

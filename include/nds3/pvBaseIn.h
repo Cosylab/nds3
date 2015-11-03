@@ -90,6 +90,19 @@ public:
      */
     void setDecimation(const std::int32_t decimation);
 
+    /**
+     * @brief Replicate the data from another input PV which may be located on any other
+     *         device running in the same NDS process.
+     *
+     * When the source input PV will be written via a call to PVBaseIn::push() or
+     *  PVVariableIn::setValue() then the pushed or written data will also be pushed or
+     *  written to this PV.
+     *
+     * @param inputPVName the name of the input PV from which we want to
+     *                     receive the values
+     */
+    void replicateFrom(const std::string& sourceInputPVName);
+
 };
 
 }

@@ -196,6 +196,12 @@ public:
     MissingOutputPV(const std::string& what);
 };
 
+class MissingDestinationPV: public FactoryError
+{
+public:
+    MissingDestinationPV(const std::string& what);
+};
+
 }
 
 #endif // NDSEXCEPTIONS_H

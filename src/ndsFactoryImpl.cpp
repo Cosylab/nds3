@@ -211,6 +211,13 @@ void NdsFactoryImpl::deregisterInputPV(PVBaseInImpl *pSender)
     std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
 
     m_registeredInputPVs.erase(pSender->getFullName());
+
+    for(registeredInputPVs_t::iterator scanInputs(m_registeredInputPVs.begin()), endInputs(m_registeredInputPVs.end());
+        scanInputs != endInputs;
+        ++scanInputs)
+    {
+        scanInputs->second->stopReplicationTo(pSender);
+    }
 }
 
 void NdsFactoryImpl::deregisterOutputPV(PVBaseOutImpl *pReceiver)
@@ -297,6 +304,78 @@ void NdsFactoryImpl::unsubscribe(const std::string &pushTo)
     }
     unsubscribe(findOutput->second);
 }
+
+void NdsFactoryImpl::replicate(const std::string &replicateSource, const std::string &replicateDestination)
+{
+    std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
+
+    registeredInputPVs_t::const_iterator findDestination = m_registeredInputPVs.find(replicateDestination);
+    if(findDestination == m_registeredInputPVs.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "Cannot replicate " << replicateSource << " to " << replicateDestination << " because the destination PV cannot be located";
+        throw MissingDestinationPV(errorMessage.str());
+    }
+    replicate(replicateSource, findDestination->second);
+}
+
+void NdsFactoryImpl::replicate(const std::string &replicateSource, PVBaseInImpl *pDestination)
+{
+    std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
+
+    // Sanity check
+    registeredInputPVs_t::const_iterator findDestination = m_registeredInputPVs.find(pDestination->getFullName());
+    if(findDestination == m_registeredInputPVs.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "The input PV " << pDestination->getFullName() << " was never registered";
+        throw std::logic_error(errorMessage.str());
+    }
+    if(findDestination->second != pDestination)
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "A different input PV " << pDestination->getFullName() << " was registered";
+        throw std::logic_error(errorMessage.str());
+    }
+
+    registeredInputPVs_t::iterator findInput = m_registeredInputPVs.find(replicateSource);
+    if(findInput == m_registeredInputPVs.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "Cannot replicate " << replicateSource << " to " << pDestination->getFullName() <<" because the source PV cannot be located";
+        throw MissingInputPV(errorMessage.str());
+    }
+
+    findInput->second->replicateTo(pDestination);
+}
+
+void NdsFactoryImpl::stopReplicationTo(PVBaseInImpl *pDestination)
+{
+    std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
+
+    for(registeredInputPVs_t::iterator scanInputs(m_registeredInputPVs.begin()), endInputs(m_registeredInputPVs.end());
+        scanInputs != endInputs;
+        ++scanInputs)
+    {
+        scanInputs->second->stopReplicationTo(pDestination);
+    }
+}
+
+void NdsFactoryImpl::stopReplicationTo(const std::string &replicateDestination)
+{
+    std::lock_guard<std::recursive_mutex> lockRegisteredPVs(m_lockRegisteredPVs);
+
+    registeredInputPVs_t::const_iterator findDestination = m_registeredInputPVs.find(replicateDestination);
+    if(findDestination == m_registeredInputPVs.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "Cannot stop the replication of " << replicateDestination << " because the input PV cannot be located";
+        throw MissingInputPV(errorMessage.str());
+    }
+    stopReplicationTo(findDestination->second);
+
+}
+
 
 std::shared_ptr<FactoryBaseImpl> NdsFactoryImpl::getControlSystem(const std::string& controlSystem)
 {

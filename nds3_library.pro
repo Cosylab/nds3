@@ -90,5 +90,6 @@ HEADERS += \
     include/nds3/pvVariableOut.h \
     include/nds3impl/pvVariableInImpl.h \
     include/nds3impl/pvVariableOutImpl.h \
-    include/nds3impl/ndsFactoryImpl.h
+    include/nds3impl/ndsFactoryImpl.h \
+    include/nds3impl/threadImpl.h
 

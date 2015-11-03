@@ -30,6 +30,11 @@ void PVBaseIn::setDecimation(const std::int32_t decimation)
     std::static_pointer_cast<PVBaseInImpl>(m_pImplementation)->setDecimation(decimation);
 }
 
+void PVBaseIn::replicateFrom(const std::string &sourceInputPVName)
+{
+    std::static_pointer_cast<PVBaseInImpl>(m_pImplementation)->replicateFrom(sourceInputPVName);
+}
+
 template void PVBaseIn::read<std::int32_t>(timespec*, std::int32_t*) const;
 template void PVBaseIn::push<std::int32_t>(const timespec&, const std::int32_t&);
 

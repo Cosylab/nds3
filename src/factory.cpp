@@ -55,5 +55,15 @@ void Factory::unsubscribe(const std::string& pushTo)
     NdsFactoryImpl::getInstance().unsubscribe(pushTo);
 }
 
+void Factory::replicate(const std::string &replicateSource, const std::string &replicateDestination)
+{
+    NdsFactoryImpl::getInstance().replicate(replicateSource, replicateDestination);
+}
+
+void Factory::stopReplicationTo(const std::string &destination)
+{
+    NdsFactoryImpl::getInstance().stopReplicationTo(destination);
+}
+
 
 }

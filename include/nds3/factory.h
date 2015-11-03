@@ -134,6 +134,28 @@ public:
      */
     void unsubscribe(const std::string& pushTo);
 
+    /**
+     * @brief Replicate an input PV (derived from PVBaseIn) to another input PV.
+     *
+     * Each time data is pushed to the source input PV then the same data is also pushed
+     *  to the destination PV immediately and in the same thread used by the original
+     *  push/write operation.
+     *
+     * This method works also across control systems running in the same NDS process.
+     *
+     * @param replicateSource      the full name of the input PV from which the data is replicated
+     * @param replicateDestination the full name of the input PV to which the data must be copied
+     */
+    void replicate(const std::string& replicateSource, const std::string& replicateDestination);
+
+    /**
+     * @brief Stop the replication to the specified PV.
+     *
+     * @param destinationthe full name of the input PV that should stop receiving copies of the
+     *                       data pushed to the source PV
+     */
+    void stopReplicationTo(const std::string& destination);
+
     std::thread createThread(const std::string& name, threadFunction_t function);
 
 #ifndef SWIG

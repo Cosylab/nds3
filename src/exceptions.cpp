@@ -75,4 +75,8 @@ MissingOutputPV::MissingOutputPV(const std::string& what): FactoryError(what)
 {
 }
 
+MissingDestinationPV::MissingDestinationPV(const std::string &what): FactoryError(what)
+{
+}
+
 }
