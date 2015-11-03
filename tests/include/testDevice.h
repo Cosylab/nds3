@@ -40,9 +40,15 @@ private:
 
     void acquire(size_t numAcquisition, size_t numSamples);
 
+    void readDelegate(timespec* pTimestamp, std::string* pValue);
+    void writeDelegate(const timespec& timestamp, const std::string& value);
+
     std::thread m_acquisitionThread;
 
     std::string m_name;
+
+    std::string m_writtenByDelegate;
+    timespec m_timestamp;
 
 
 };

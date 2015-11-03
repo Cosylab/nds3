@@ -53,14 +53,7 @@ void NodeImpl::initializeRootNode(void *pDeviceObject, FactoryBaseImpl &controlS
 
     initialize(controlSystem);
 
-    if(pDeviceObject != 0)
-    {
-        // If we are associated with a device class that has been
-        //  created via createDevice() then hold a reference to the
-        //  root node so we don't need to remember it in the device
-        //  class.
-        controlSystem.holdNode(pDeviceObject, std::static_pointer_cast<NodeImpl>(shared_from_this()) );
-    }
+    controlSystem.holdNode(pDeviceObject, std::static_pointer_cast<NodeImpl>(shared_from_this()) );
 }
 
 void NodeImpl::initialize(FactoryBaseImpl& controlSystem)

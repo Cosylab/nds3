@@ -104,4 +104,7 @@ TEST(testLogging, testLotOfPVs)
 
         EXPECT_EQ(scanPVs < 8000 ? 1 : 0, pFactory->countStringInLog(errorString.str()));
     }
+
+    factory.destroyDevice("");
+
 }

@@ -20,7 +20,8 @@ SOURCES += \
     src/ndsTestFactory.cpp \
     src/main.cpp \
     src/testStateMachine.cpp \
-    src/testLogging.cpp
+    src/testLogging.cpp \
+    src/testPVs.cpp
 
 
 HEADERS += \

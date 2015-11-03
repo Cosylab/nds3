@@ -86,5 +86,6 @@ TEST(testStateMachine, testAllowedTransitions)
     ::sleep(1);
     EXPECT_EQ(nds::state_t::on, stateMachine2.getLocalState());
 
+    factory.destroyDevice("");
 }
 

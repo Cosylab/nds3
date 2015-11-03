@@ -144,6 +144,7 @@ void FactoryBaseImpl::destroyDevice(const std::string& deviceName)
 {
     void* pDevice(0);
 
+    if(!deviceName.empty())
     {
         std::lock_guard<std::mutex> lock(m_mutex);
 

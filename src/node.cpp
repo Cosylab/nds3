@@ -27,7 +27,6 @@ void Node::initialize(void* pDeviceObject, Factory& factory)
     std::static_pointer_cast<NodeImpl>(m_pImplementation)->initializeRootNode(pDeviceObject, *(pFactory.get()));
 }
 
-
 Node Node::addNode(Node& node)
 {
     addChildInternal(node);

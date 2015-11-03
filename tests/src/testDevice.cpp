@@ -3,6 +3,7 @@
 #include <nds3/nds.h>
 #include <mutex>
 #include <unistd.h>
+#include <functional>
 
 static std::map<std::string, TestDevice*> m_devicesMap;
 static std::mutex m_lockDevicesMap;
@@ -36,6 +37,9 @@ TestDevice::TestDevice(nds::Factory &factory, const std::string &parameter): m_n
                                                                                                      std::placeholders::_3)));
 
     m_numberAcquisitions = channel1.addChild(nds::PVVariableOut<std::int32_t>("numAcquisitions"));
+
+    channel1.addChild(nds::PVDelegateIn<std::string>("delegateIn", std::bind(&TestDevice::readDelegate, this, std::placeholders::_1, std::placeholders::_2)));
+    channel1.addChild(nds::PVDelegateOut<std::string>("delegateOut", std::bind(&TestDevice::writeDelegate, this, std::placeholders::_1, std::placeholders::_2)));
 
     rootNode.initialize(this, factory);
 }
@@ -128,3 +132,16 @@ void TestDevice::acquire(size_t numAcquisition, size_t numSamples)
         }
     }
 }
+
+void TestDevice::readDelegate(timespec* pTimestamp, std::string* pValue)
+{
+    *pTimestamp = m_timestamp;
+    *pValue = m_writtenByDelegate;
+}
+
+void TestDevice::writeDelegate(const timespec& timestamp, const std::string& value)
+{
+    m_timestamp = timestamp;
+    m_writtenByDelegate = value;
+}
+
