@@ -7,12 +7,28 @@
 namespace nds
 {
 
+/*
+ * Constructor (with initialization function)
+ *
+ ********************************************/
 template <typename T>
 PVDelegateOut<T>::PVDelegateOut(const std::string& name, write_t writeFunction, initValue_t initValueFunction):
     PVBaseOut(std::shared_ptr<PVBaseOutImpl>(new PVDelegateOutImpl<T>(name, writeFunction, initValueFunction)))
 {}
 
 
+/*
+ * Constructor (without initialization function)
+ *
+ ***********************************************/
+template <typename T>
+PVDelegateOut<T>::PVDelegateOut(const std::string& name, write_t writeFunction):
+    PVBaseOut(std::shared_ptr<PVBaseOutImpl>(new PVDelegateOutImpl<T>(name, writeFunction)))
+{}
+
+
+// Instantiate all the needed data types
+////////////////////////////////////////
 template class PVDelegateOut<std::int32_t>;
 template class PVDelegateOut<double>;
 template class PVDelegateOut<std::vector<std::int8_t> >;

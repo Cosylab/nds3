@@ -72,6 +72,15 @@ public:
      */
     void setEnumeration(const enumerationStrings_t& enumerations);
 
+    /** @brief Specifies if the read() function of the PV should be called during
+     *         the device initialization
+     *
+     *  @param bProcessAtInit if true the the PVBaseIn::read() or PVBaseOut::read()
+     *                        function of the PV should be called during the device
+     *                        initialization.
+     */
+    void processAtInit(const bool bProcessAtInit);
+
 };
 
 }

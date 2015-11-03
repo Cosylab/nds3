@@ -32,6 +32,11 @@ class NDS3_API PVVariableIn: public PVBaseIn
 {
 public:
 
+    /**
+     * @brief Initializes an empty PVVariableIn PV.
+     *
+     * You must assign a valid PVVariableIn PV before calling Node::initialize() on the root node.
+     */
     PVVariableIn();
 
     /**

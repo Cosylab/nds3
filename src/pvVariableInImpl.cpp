@@ -4,6 +4,10 @@
 namespace nds
 {
 
+/*
+ * Constructor
+ *
+ *************/
 template <typename T>
 PVVariableInImpl<T>::PVVariableInImpl(const std::string& name): PVBaseInImpl(name), m_value()
 {
@@ -12,6 +16,11 @@ PVVariableInImpl<T>::PVVariableInImpl(const std::string& name): PVBaseInImpl(nam
 
 }
 
+
+/*
+ * Called by the control system to read the stored value
+ *
+ *******************************************************/
 template <typename T>
 void PVVariableInImpl<T>::read(timespec* pTimestamp, T* pValue) const
 {
@@ -20,10 +29,17 @@ void PVVariableInImpl<T>::read(timespec* pTimestamp, T* pValue) const
     *pTimestamp = m_timestamp;
 }
 
+
+/*
+ * Store a new value and its timestamp in the PV
+ *
+ ***********************************************/
 template <typename T>
 void PVVariableInImpl<T>::setValue(const timespec& timestamp, const T& value)
 {
     {
+        // Store the value
+        //////////////////
         std::unique_lock<std::mutex> lock(m_pvMutex);
         m_value =value;
         m_timestamp = timestamp;
@@ -40,18 +56,31 @@ void PVVariableInImpl<T>::setValue(const timespec& timestamp, const T& value)
     }
 }
 
+
+/*
+ * Store a new value in the PV
+ *
+ *****************************/
 template <typename T>
 void PVVariableInImpl<T>::setValue(const T& value)
 {
     setValue(getTimestamp(), value);
 }
 
+
+/*
+ * Return the PV's data type
+ *
+ ***************************/
 template <typename T>
 dataType_t PVVariableInImpl<T>::getDataType() const
 {
     return getDataTypeForCPPType<T>();
 }
 
+
+// Instantiate all the needed data types
+////////////////////////////////////////
 template class PVVariableInImpl<std::int32_t>;
 template class PVVariableInImpl<double>;
 template class PVVariableInImpl<std::vector<std::int8_t> >;

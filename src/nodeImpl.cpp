@@ -106,18 +106,19 @@ state_t NodeImpl::getLocalState() const
     return m_pStateMachine->getLocalState();
 }
 
-state_t NodeImpl::getGlobalState() const
+void NodeImpl::getGlobalState(timespec* pTimestamp, state_t* pState) const
 {
     if(m_pStateMachine.get() == 0)
     {
-        return getChildrenState();
+        getChildrenState(pTimestamp, pState);
+        return;
     }
-    return m_pStateMachine->getGlobalState();
+    m_pStateMachine->getGlobalState(pTimestamp, pState);
 }
 
-state_t NodeImpl::getChildrenState() const
+void NodeImpl::getChildrenState(timespec* pTimestamp, state_t* pState) const
 {
-    state_t returnState = state_t::unknown;
+    *pState = state_t::unknown;
     for(tChildren::const_iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
     {
         if(scanChildren->second.get() != m_pStateMachine.get())
@@ -125,15 +126,22 @@ state_t NodeImpl::getChildrenState() const
             std::shared_ptr<NodeImpl> child = std::dynamic_pointer_cast<NodeImpl>(scanChildren->second);
             if(child.get() != 0)
             {
-                state_t childState = child->getGlobalState();
-                if((int)childState > (int)returnState)
+                timespec childTimestamp;
+                state_t childState;
+                child->getGlobalState(&childTimestamp, &childState);
+
+                if(
+                        ((int)*pState < (int)childState) ||
+                        ((int)*pState == (int)childState &&
+                         (pTimestamp->tv_sec < childTimestamp.tv_sec ||
+                          (pTimestamp->tv_sec == childTimestamp.tv_sec && pTimestamp->tv_nsec < childTimestamp.tv_nsec))))
                 {
-                    returnState = childState;
+                    *pTimestamp = childTimestamp;
+                    *pState = childState;
                 }
             }
         }
     }
-    return returnState;
 }
 
 void NodeImpl::setLogLevel(const logLevel_t logLevel)

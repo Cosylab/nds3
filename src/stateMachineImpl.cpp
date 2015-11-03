@@ -10,12 +10,17 @@
 namespace nds
 {
 
-// The state change mutex is the same across all the state machines.
-// This allows to read consistent states across the hierarchical state
-// machine
-//////////////////////////////////////////////////////////////////////
+/* The state change mutex is the same across all the state machines.
+ * This allows to read consistent states across the hierarchical state
+ * machine
+ */
 std::recursive_mutex m_stateMutex;
 
+
+/*
+ * Constructor
+ *
+ *************/
 StateMachineImpl::StateMachineImpl(bool bAsync,
                                    stateChange_t switchOnFunction,
                                    stateChange_t switchOffFunction,
@@ -53,6 +58,7 @@ StateMachineImpl::StateMachineImpl(bool bAsync,
     m_pGetStatePV->setDescription("Get local state");
     m_pGetStatePV->setScanType(scanType_t::interrupt, 0);
     m_pGetStatePV->setEnumeration(enumerationStrings);
+    m_pGetStatePV->processAtInit(true);
     addChild(m_pGetStatePV);
 
     std::shared_ptr<PVDelegateInImpl<std::int32_t> > pGetGlobalStatePV(
@@ -60,6 +66,7 @@ StateMachineImpl::StateMachineImpl(bool bAsync,
                                                  std::bind(&StateMachineImpl::readGlobalState, this, std::placeholders::_1, std::placeholders::_2)));
     pGetGlobalStatePV->setScanType(scanType_t::passive, 0);
     pGetGlobalStatePV->setEnumeration(enumerationStrings);
+    pGetGlobalStatePV->processAtInit(true);
     addChild(pGetGlobalStatePV);
 
     // Register state transition commands
@@ -70,8 +77,15 @@ StateMachineImpl::StateMachineImpl(bool bAsync,
     defineCommand("stop", "", 0, std::bind(&StateMachineImpl::commandSetState, this, state_t::on, std::placeholders::_1));
 }
 
+
+/*
+ * Destructor
+ *
+ ************/
 StateMachineImpl::~StateMachineImpl()
 {
+    // Wait for pending transitions
+    ///////////////////////////////
     std::lock_guard<std::mutex> lockThread(m_lockTransitionThread);
     if(m_transitionThread.joinable())
     {
@@ -79,6 +93,11 @@ StateMachineImpl::~StateMachineImpl()
     }
 }
 
+
+/*
+ * Register the PVs and initialize the state to state_t::off
+ *
+ ***********************************************************/
 void StateMachineImpl::initialize(FactoryBaseImpl& controlSystem)
 {
     NodeImpl::initialize(controlSystem);
@@ -89,6 +108,11 @@ void StateMachineImpl::initialize(FactoryBaseImpl& controlSystem)
     m_pGetStatePV->push(m_stateTimestamp, (std::int32_t)m_localState);
 }
 
+
+/*
+ * Deregister the PVs
+ *
+ ********************/
 void StateMachineImpl::deinitialize()
 {
     std::lock_guard<std::mutex> lockThread(m_lockTransitionThread);
@@ -97,16 +121,21 @@ void StateMachineImpl::deinitialize()
         m_transitionThread.join();
     }
     NodeImpl::deinitialize();
-
 }
 
 
+/*
+ * Returns true if the state can be changed and it is not vetoed
+ *
+ ***************************************************************/
 bool StateMachineImpl::canChange(state_t newState) const
 {
-    state_t localState, globalState;
+    state_t localState(state_t::unknown), globalState(state_t::unknown);
     {
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
-        globalState = getGlobalState();
+        state_t globalState;
+        timespec unused;
+        getGlobalState(&unused, &globalState);
         localState = getLocalState();
     }
 
@@ -128,7 +157,8 @@ void StateMachineImpl::setState(const state_t newState)
     {
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
         localState = getLocalState();
-        globalState = getGlobalState();
+        timespec unused;
+        getGlobalState(&unused, &globalState);
 
         // Find the transitional state that we have to set and
         //  the function to call to perform the transition
@@ -173,6 +203,9 @@ void StateMachineImpl::setState(const state_t newState)
             buildErrorMessage << "The transition from state " << getStateName(localState) << " to state " << getStateName(newState) << " has been denied";
             throw StateMachineTransitionDenied(buildErrorMessage.str());
         }
+
+        // The transition will be executed. Set the intermediate state
+        //////////////////////////////////////////////////////////////
         m_localState = transitionState;
         m_stateTimestamp = getTimestamp();
         m_pGetStatePV->push(m_stateTimestamp, (std::int32_t)m_localState);
@@ -195,6 +228,12 @@ void StateMachineImpl::setState(const state_t newState)
     }
 }
 
+
+/*
+ * Execute the state transition in a separate thread
+ * Exceptions are caught in the thread and just logged
+ *
+ *****************************************************/
 void StateMachineImpl::executeTransitionThread(const state_t initialState, const state_t finalState, stateChange_t transitionFunction)
 {
     try
@@ -206,6 +245,7 @@ void StateMachineImpl::executeTransitionThread(const state_t initialState, const
         ndsErrorStream(*this) << "Error while asyncronously changing the state: " << e.what() << std::endl;
     }
 }
+
 
 /*
  * Execute the transition from a state to another. It may get executed
@@ -229,6 +269,9 @@ void StateMachineImpl::executeTransition(const state_t initialState, const state
     }
     catch(StateMachineRollBack& e)
     {
+        // Roll back if StateMachineRollBack is thrown
+        //////////////////////////////////////////////
+
         ndsWarningStream(*this) << "Warning: " << e.what() << " - Rolling back to state " << getStateName(initialState) << std::endl;
 
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
@@ -239,6 +282,9 @@ void StateMachineImpl::executeTransition(const state_t initialState, const state
     }
     catch(std::runtime_error& e)
     {
+        // Go to fault if an error happens
+        //////////////////////////////////
+
         ndsErrorStream(*this) << "Error: " << e.what() << " - Switching to state " << getStateName(state_t::fault) << std::endl;
 
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
@@ -249,6 +295,11 @@ void StateMachineImpl::executeTransition(const state_t initialState, const state
     }
 }
 
+
+/*
+ * Return the local state
+ *
+ ************************/
 state_t StateMachineImpl::getLocalState() const
 {
     std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
@@ -257,24 +308,39 @@ state_t StateMachineImpl::getLocalState() const
 }
 
 
-state_t StateMachineImpl::getGlobalState() const
+/*
+ * Return the global state
+ *
+ *************************/
+void StateMachineImpl::getGlobalState(timespec* pTimestamp, state_t* pState) const
 {
     std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
 
-    state_t returnState = m_localState;
+    *pTimestamp = m_stateTimestamp;
+    *pState = m_localState;
 
     std::shared_ptr<NodeImpl> pParentNode(getParent());
 
-    state_t childrenState = pParentNode->getChildrenState();
+    timespec childrenTimestamp;
+    state_t childrenState;
+    pParentNode->getChildrenState(&childrenTimestamp, &childrenState);
 
-    if((int)returnState > (int)childrenState)
+    if(
+            ((int)*pState < (int)childrenState) ||
+            ((int)*pState == (int)childrenState &&
+             (pTimestamp->tv_sec < childrenTimestamp.tv_sec ||
+              (pTimestamp->tv_sec == childrenTimestamp.tv_sec && pTimestamp->tv_nsec < childrenTimestamp.tv_nsec))))
     {
-        return returnState;
+        *pTimestamp = childrenTimestamp;
+        *pState = childrenState;
     }
-    return childrenState;
-
 }
 
+
+/*
+ * Return true if the requested state transition is legal
+ *
+ ********************************************************/
 bool StateMachineImpl::isAllowedTransition(const state_t currentState, const state_t newState) const
 {
     return isIntermediateState(currentState) ||
@@ -287,6 +353,11 @@ bool StateMachineImpl::isAllowedTransition(const state_t currentState, const sta
 
 }
 
+
+/*
+ * Return true if the state in the parameter is an intermediate state
+ *
+ ********************************************************************/
 bool StateMachineImpl::isIntermediateState(const state_t state) const
 {
     return state == state_t::switchingOff ||
@@ -295,6 +366,11 @@ bool StateMachineImpl::isIntermediateState(const state_t state) const
             state == state_t::stopping;
 }
 
+
+/*
+ * Delegate function that read the local state
+ *
+ *********************************************/
 void StateMachineImpl::readLocalState(timespec* pTimestamp, std::int32_t* pValue)
 {
     std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
@@ -302,28 +378,46 @@ void StateMachineImpl::readLocalState(timespec* pTimestamp, std::int32_t* pValue
     *pValue = (std::int32_t)m_localState;
 }
 
-void StateMachineImpl::writeLocalState(const timespec& /* pTimestamp */, const std::int32_t& value)
+
+/*
+ * Delegate function that writes the local state
+ *
+ ***********************************************/
+void StateMachineImpl::writeLocalState(const timespec& /* timestamp */, const std::int32_t& value)
 {
+    // Transition to the new state
+    //////////////////////////////
     setState((state_t)value);
 }
 
+
+/*
+ * Delegate function that read the global state
+ *
+ **********************************************/
 void StateMachineImpl::readGlobalState(timespec* pTimestamp, std::int32_t* pValue)
 {
-    *pValue = (std::int32_t)getGlobalState();
-    *pTimestamp = getTimestamp();
+    state_t globalState;
+    getGlobalState(pTimestamp, &globalState);
+    *pValue = (std::int32_t)globalState;
 }
 
-void StateMachineImpl::writeGlobalState(const timespec& /* pTimestamp */, const std::int32_t& /* value */)
-{
 
-}
-
+/*
+ * Delegate function executed when the registered state commands are executed
+ *
+ ****************************************************************************/
 parameters_t StateMachineImpl::commandSetState(const state_t state, const parameters_t& /* parameters */)
 {
     setState(state);
     return parameters_t();
 }
 
+
+/*
+ * Convert a state enumeration to a string
+ *
+ *****************************************/
 std::string StateMachineImpl::getStateName(const state_t state)
 {
     switch(state)

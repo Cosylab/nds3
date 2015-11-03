@@ -27,11 +27,24 @@ namespace nds
  * Transitions between the different states can happen on the same
  *  thread that requested the transition or on a different thread when
  *  the StateMachine is created with the bAsync flag set to true.
+ *
+ * The StateMachine node also registers the following commands on the
+ *  state machine node itself and on the parent node:
+ * - switchOn (causes a transition to the state ON)
+ * - start (causes a transition to the state RUNNING)
+ * - stop (causes a transition to the state ON)
+ * - switchOff (causes a transition to the state OFF)
+ * - recover (causes a transition to the state OFF)
  */
 class NDS3_API StateMachine: public Node
 {
 
 public:
+    /**
+     * @brief Initializes an empty state machine node.
+     *
+     * You must assign a valid StateMachine node before calling Node::initialize() on the root node.
+     */
     StateMachine();
 
     /**
@@ -40,24 +53,36 @@ public:
      * @param bAsync                   if true then the state transitions are executed
      *                                  in a dedicated thread, if false then the state
      *                                  transitions block
-     * @param switchOnFunction         function to be called to switch the node on.
+     * @param switchOnFunction         function to be called to switch the node state_t::on.
      *                                 The function is guaranteed to be called only when
-     *                                  the current state is off.
-     *                                 The state machine sets the state to initializing before
-     *                                  calling the function and to on after the function returns.
-     * @param switchOffFunction        function to be called to switch the node off.
+     *                                  the current state is state_t::off.
+     *                                 The state machine sets the state to state_t::initializing before
+     *                                  calling the function and to state_t::on after the function returns.
+     * @param switchOffFunction        function to be called to switch the node state_t::off.
      *                                 The function is guaranteed to be called only when
-     *                                  the current state is on.
-     *                                 The state machine sets the state to switchingOff before
-     *                                  calling the function and to off after the function returns.
-     * @param startFunction            function to be called to switch to the running state.
+     *                                  the current state is state_t::on.
+     *                                 The state machine sets the state to state_t::switchingOff before
+     *                                  calling the function and to state_t::off after the function returns.
+     * @param startFunction            function to be called to switch to the state_t::running state.
      *                                 The function is guaranteed to be called only when
-     *                                  the current state is on.
-     *                                 The state machine sets the state to starting before
-     *                                  calling the function and to running after the function returns.
-     * @param stopFunction
-     * @param recoverFunction
-     * @param allowStateChangeFunction
+     *                                  the current state is state_t::on.
+     *                                 The state machine sets the state to state_t::starting before
+     *                                  calling the function and to state_t::running after the function returns.
+     * @param stopFunction             function to be called to switch to the state_t::off state.
+     *                                 The function is guaranteed to be called only when the current
+     *                                  state is state_t::running.
+     *                                 The state machine sets the state to state_t::switchingOff before
+     *                                  calling the function and to state_t::off after the function returns
+     * @param recoverFunction          function to be called to switch the state fron state_t::fault to
+     *                                  state_t::off.
+     *                                 The function is guaranteed to be called only when the current
+     *                                  state is state_t::fault.
+     *                                 The state machine sets the state to state_t::switchingOff before
+     *                                  calling the function and to state_t::off after the function returns
+     * @param allowStateChangeFunction function to be called before every state switching to receive
+     *                                  a confirmation that the state switch is allowed.
+     *                                 The function is called only after other internal checks clear
+     *                                  the state switch
      */
     StateMachine(bool bAsync,
                  stateChange_t switchOnFunction,
@@ -89,7 +114,12 @@ public:
      *           then exceptions thrown in state change functions are silenced and only the log messages
      *           are sent to the control system.
      *
-     * @param newState
+     * @param newState the new desidered local state. Intermediate states can be set only by
+     *                 the state machine. The user can set only the following states:
+     *                 - state_t::off
+     *                 - state_t::on
+     *                 - state_t::running
+     *                 - state_t::fault
      */
     void setState(const state_t newState);
 

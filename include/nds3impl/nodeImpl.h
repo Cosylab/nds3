@@ -38,8 +38,9 @@ public:
     virtual void deinitialize();
 
     virtual state_t getLocalState() const;
-    virtual state_t getGlobalState() const;
-    state_t getChildrenState() const;
+
+    virtual void getGlobalState(timespec* pTimestamp, state_t* pState) const;
+    void getChildrenState(timespec* pTimestamp, state_t* pState) const;
 
     virtual void setLogLevel(const logLevel_t logLevel);
 

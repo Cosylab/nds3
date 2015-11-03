@@ -17,6 +17,12 @@ class PVBaseInImpl;
 class NDS3_API PVBaseIn: public PVBase
 {
 public:
+    /**
+     * @brief Construct an empty PVBaseIn.
+     *
+     * @warning Assign a PVDelegateIn or a PVVariableIn to this object before initializing
+     *          the parent root node.
+     */
     PVBaseIn();
 
 #ifndef SWIG
@@ -43,8 +49,8 @@ public:
      * @ingroup datareadwrite
      * @brief Pushes a value to the control system.
      *
-     * The control system will receive the value immediately, regardless of
-     * when it calls the read() function.
+     * Depending on the decimation value set with setDecimation() the control system will receive
+     *  the value immediately, regardless of when it calls the read() function.
      *
      * If one or more output PVs have been suscribed to this PV via Factory::subscribe()
      * then the value will be pushed immediately to all the subscribed PVs via PVBaseOut::write().
@@ -71,11 +77,11 @@ public:
      *  PVBaseOut::subscribeTo() ) and to the control system. However, the data pushed
      *  to the control system also takes into account the decimation factor.
      *
-     * If the decimation factor is 1 then all the pushed data is also passed to the control
-     *  system, if the decimation factor is 0 then none of the data is passed to the
-     *  control system, if the decimation factor is higher than one then it specifies
-     *  the ratio pushed_data/passed_to_CS which express the number of pushed data versus
-     *  the number of data actually passed to the control system.
+     * If the decimation factor is 1 (the default value) then all the pushed data is also
+     *  passed to the control system, if the decimation factor is 0 then none of the data
+     *  is passed to the control system, if the decimation factor is higher than one then
+     *  it specifies the ratio pushed_data/passed_to_CS which express the number of pushed
+     *  data versus the number of data actually passed to the control system.
      *
      * @warning It is not safe to set the decimation factor while push() is being called.
      *          The decimation factor should be set before starting the data acquisition.

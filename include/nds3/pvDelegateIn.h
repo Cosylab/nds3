@@ -10,7 +10,7 @@ namespace nds
 {
 
 /**
- * @brief An input PV that delegates the read operation to a external
+ * @brief An input PV that delegates the read operation to an external
  *        function.
  *
  * Calling PVDelegateIn::read() will result in a call to the delegated functions.

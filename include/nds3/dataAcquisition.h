@@ -51,6 +51,12 @@ public:
      */
     DataAcquisition();
 
+    /**
+     * @brief Copies a data acquisition reference from another object.
+     *
+     * @param right a data acquisition holder from which the reference to
+     *        the acquisition object implementation is copied
+     */
     DataAcquisition(const DataAcquisition<T>& right);
 
     DataAcquisition& operator=(const DataAcquisition<T>& right);

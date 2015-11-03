@@ -13,22 +13,30 @@ namespace nds
 class PVBase;
 
 /**
- * @brief Base class for all the PVs.
+ * @brief Base class for all the output PVs.
  */
 class PVBaseOutImpl: public PVBaseImpl
 {
 public:
+    /**
+     * @brief Constructor.
+     *
+     * @param name the PV's name
+     */
     PVBaseOutImpl(const std::string& name);
 
+    /**
+     * @brief Subscribe the PV to another input PV.
+     *
+     * @param inputPVName the name of the input PV from which we want to receive
+     *                    the values
+     */
     void subscribeTo(const std::string& inputPVName);
 
     virtual void initialize(FactoryBaseImpl& controlSystem);
 
     virtual void deinitialize();
 
-    // All the base versions throw.
-    // Only the overwritten ones in the derived classes will function correctly.
-    ////////////////////////////////////////////////////////////////////////////
     virtual void read(timespec* pTimestamp, std::int32_t* pValue) const;
     virtual void read(timespec* pTimestamp, double* pValue) const;
     virtual void read(timespec* pTimestamp, std::vector<std::int8_t>* pValue) const;

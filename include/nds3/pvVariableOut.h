@@ -11,7 +11,7 @@ namespace nds
  * @brief An output PV object that also stores the value so it does not need to
  *        delegate the read and write functions.
  *
- * The application can use PVVariable::getValue()to retrieve the PV's value;
+ * The application can use PVVariableOut::getValue()to retrieve the PV's value;
  * the control system will use the methods read() and write() to read and set the value.
  *
  * @warning for all the vector data types and for std::string remember to call
@@ -32,10 +32,16 @@ class NDS3_API PVVariableOut: public PVBaseOut
 {
 public:
 
+
+    /**
+     * @brief Initializes an empty PVVariableOut PV.
+     *
+     * You must assign a valid PVVariableOut PV before calling Node::initialize() on the root node.
+     */
     PVVariableOut();
 
     /**
-     * @brief Construct the PVVariable object.
+     * @brief Construct the PVVariableOut object.
      *
      * @param name          name of the PV
      */

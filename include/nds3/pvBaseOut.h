@@ -17,6 +17,12 @@ class PVBaseOutImpl;
 class NDS3_API PVBaseOut: public PVBase
 {
 public:
+    /**
+     * @brief Construct an empty PVBaseOut.
+     *
+     * @warning Assign a PVDelegateOut or a PVVariableOut to this object before initializing
+     *          the parent root node.
+     */
     PVBaseOut();
 
 #ifndef SWIG
@@ -55,7 +61,7 @@ public:
 
     /**
      * @brief Subscribe the PV to an input PV which may be located on any other
-     *         device running in the NDS process.
+     *         device running in the same NDS process.
      *
      * When the input PV will be written by the device via a PVBaseIn::push() operation
      *  or via a PVVariableIn::setValue() then the input PV will forward the value

@@ -57,11 +57,23 @@ public:
      * @brief Construct the PVDelegateOut object and specifies the external functions
      *        that must be called to write the data and to retrieve the initial value.
      *
-     * @param name          name of the PV
-     * @param readFunction  function to be used for reading
-     * @param initValueFunction function to be used for initializing the value
+     * The constructor also call processAtInit(true) in order to cause the call to
+     *  the initValueFunction during the initialization.
+     *
+     * @param name           name of the PV
+     * @param writeFunction  function to be used to write the value
+     * @param initValueFunction function to be used for reading the initial value
      */
     PVDelegateOut(const std::string& name, write_t writeFunction, initValue_t initValueFunction);
+
+    /**
+     * @brief Construct the PVDelegateOut object and specifies the external function
+     *        that must be called to write the data.
+     *
+     * @param name          name of the PV
+     * @param readFunction  function to be used to write the value
+     */
+    PVDelegateOut(const std::string& name, write_t writeFunction);
 
 #ifndef SWIG
 private:

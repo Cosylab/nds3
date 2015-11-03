@@ -8,12 +8,25 @@ namespace nds
 {
 
 /**
- * @brief Delegating PV. Delegates the read/write to another object
+ * @brief Delegating Output PV. Delegates the read/write user defined functions.
+ *
+ * @tparam T  the PV data type.
+ *            The following data types are supported:
+ *            - std::int32_t
+ *            - std::double
+ *            - std::vector<std::int8_t>
+ *            - std::vector<std::uint8_t>
+ *            - std::vector<std::int32_t>
+ *            - std::vector<double>
+ *            - std::string
  */
 template <typename T>
 class PVDelegateOutImpl: public PVBaseOutImpl
 {
 public:
+    /**
+     * @brief Definition of the method used to read the initial value.
+     */
     typedef std::function<void (timespec*, T*)> initValue_t;
 
     /**
@@ -22,7 +35,7 @@ public:
     typedef std::function<void (const timespec&, const T&)> write_t;
 
     /**
-     * @brief Constructor. Specify the methods used for read/write
+     * @brief Constructor. Specifies the methods used for read/write
      *
      * @param name          PV's name
      * @param readFunction  read method
@@ -30,21 +43,52 @@ public:
      */
     PVDelegateOutImpl(const std::string& name, write_t writeFunction, initValue_t initValueFunction);
 
+    /**
+     * @brief Constructor. Specifies the method used to write.
+     *
+     * The read method is not specified and does nothing if the control system tries to call it.
+     *
+     * @param name          the PV's name
+     * @param writeFunction write method
+     */
     PVDelegateOutImpl(const std::string& name, write_t writeFunction);
 
+    /**
+     * @brief Called when the control system wants to read the value.
+     *
+     * Internally it calls the delegate read method.
+     *
+     * @param pTimestamp a variable that will be filled with the correct timestamp
+     * @param pValue     a variable that will be filled with the correct value
+     */
     virtual void read(timespec* pTimestamp, T* pValue) const;
 
+    /**
+     * @brief Called when the control system wants to write a value.
+     *
+     * Internally it calls the delegate write method.
+     *
+     * @param timestamp timestamp related to the new value
+     * @param value     new value for the PV
+     */
     virtual void write(const timespec& timestamp, const T& value);
 
+    /**
+     * @brief Returns the PV's data type.
+     *
+     * @return the PV's data type
+     */
     virtual dataType_t getDataType() const;
 
 
 private:
-    write_t m_writer;
-    initValue_t m_initializer;
+    write_t m_writer;          ///< Method used to write the value
+    initValue_t m_initializer; ///< Method used to read the initial value
 
-    bool m_bInitialize;
-
+    /**
+     * @brief Delegate method used when the read method is not specified.
+     *        It does nothing.
+     */
     void dontInitialize(timespec*, T*);
 
 };
