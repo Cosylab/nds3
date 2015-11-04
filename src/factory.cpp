@@ -1,7 +1,9 @@
 #include "../include/nds3/factory.h"
 #include "../include/nds3impl/factoryBaseImpl.h"
 #include "../include/nds3impl/ndsFactoryImpl.h"
+#include "../include/nds3impl/threadBaseImpl.h"
 #include "../include/nds3/thread.h"
+
 
 namespace nds
 {
