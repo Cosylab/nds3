@@ -2,22 +2,34 @@ cmake_minimum_required(VERSION 2.6)
 
 project (nds3)
 
+# Set compiler flags
+#-------------------
 set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -pedantic -fPIC -pthread -fvisibility=hidden -fvisibility-inlines-hidden" )
 set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -fPIC -Wl,-as-needed" )
 
+# Set pre-processor definitions
+#------------------------------
 add_definitions(-DNDS3_DLL)
 add_definitions(-DNDS3_DLL_EXPORTS)
 
+# Specify include and source files
+#---------------------------------
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 file(GLOB nds_include_interface "${CMAKE_CURRENT_SOURCE_DIR}/../include/nds3/*.h")
 file(GLOB nds_include_implementation "${CMAKE_CURRENT_SOURCE_DIR}/../include/nds3impl/*.h")
 file(GLOB nds_sources "${CMAKE_CURRENT_SOURCE_DIR}/../src/*.cpp")
 
+# Add the source files to the nds3 library
+#-----------------------------------------
 add_library(nds3 SHARED  ${nds_sources})
 
+# Add dependencies to the nds3 library
+#-------------------------------------
 target_link_libraries(nds3 rt dl pthread)
 
+# Settings for installers
+#------------------------
 set( CPACK_PACKAGE_NAME "NDS3Core")
 set( CPACK_PACKAGE_VENDOR "Cosylab d.o.o.")
 set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Nominal device support for control systems (core libraries)")
