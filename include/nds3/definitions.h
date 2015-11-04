@@ -77,6 +77,9 @@ enum class logLevel_t: std::uint8_t
     none     ///< Nothing is logger
 };
 
+/**
+ * @brief Defines in which direction the data is being transferred.
+ */
 enum class dataDirection_t
 {
     input, ///< The data is being written by the control system and read by the device support

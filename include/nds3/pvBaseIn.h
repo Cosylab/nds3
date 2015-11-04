@@ -98,8 +98,8 @@ public:
      *  PVVariableIn::setValue() then the pushed or written data will also be pushed or
      *  written to this PV.
      *
-     * @param inputPVName the name of the input PV from which we want to
-     *                     receive the values
+     * @param sourceInputPVName the name of the input PV from which we want to
+     *                          receive the values
      */
     void replicateFrom(const std::string& sourceInputPVName);
 

@@ -19,8 +19,8 @@ class ThreadBaseImpl;
  * To take full advantage of the thread features provided by some control system it is
  *  suggested that you launch the thread by using this class.
  *
- * Thread can be created by using the control system factory method factory::runInThread()
- *  or by calling base::runInThread() on any node or PV.
+ * Thread can be created by using the control system factory method Factory::runInThread()
+ *  or by calling Base::runInThread() on any node or PV.
  */
 class NDS3_API Thread
 {

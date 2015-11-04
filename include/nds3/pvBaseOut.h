@@ -54,7 +54,7 @@ public:
      *
      * @tparam T           the data type to write
      * @param timestamp    the timestamp to assign to the new value
-     * @param pValue       the new value for the PV
+     * @param value       the new value for the PV
      */
     template<typename T>
     void write(const timespec& timestamp, const T& value);

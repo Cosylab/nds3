@@ -152,11 +152,18 @@ public:
     /**
      * @brief Stop the replication to the specified PV.
      *
-     * @param destinationthe full name of the input PV that should stop receiving copies of the
-     *                       data pushed to the source PV
+     * @param destination the full name of the input PV that should stop receiving copies of the
+     *                    data pushed to the source PV
      */
     void stopReplicationTo(const std::string& destination);
 
+    /**
+     * @brief Creates a new thread and executes the specified function in it.
+     *
+     * @param name     the thread name
+     * @param function the function to execute in the new thread
+     * @return         a Thread object that references the new thread
+     */
     Thread runInThread(const std::string& name, threadFunction_t function);
 
 #ifndef SWIG

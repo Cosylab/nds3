@@ -22,9 +22,8 @@ VERSION = 3
 # Source code files used in this project
 SRCS = $(wildcard src/*.cpp)
  
-
- 
 OBJS = $(SRCS:.cpp=.o)
+
 # Rules for building
 $(TARGET): $(OBJS)
 	$(CXX) $(LINK) -o $@ $^ $(LIBS)

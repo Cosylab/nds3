@@ -71,7 +71,7 @@ public:
      *        that must be called to write the data.
      *
      * @param name          name of the PV
-     * @param readFunction  function to be used to write the value
+     * @param writeFunction function to be used to write the value
      */
     PVDelegateOut(const std::string& name, write_t writeFunction);
 

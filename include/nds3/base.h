@@ -209,7 +209,7 @@ public:
      *
      * @param name     the name given to the thread
      * @param function the function to execute in the thread
-     * @return         a Thread object hilding a reference to the thread
+     * @return         a Thread object referencing the new thread
      */
     Thread runInThread(const std::string& name, threadFunction_t function);
 
@@ -221,7 +221,7 @@ public:
      *  is created and executed.
      *
      * @param function the function to execute in the thread
-     * @return         a Thread object hilding a reference to the thread
+     * @return         a Thread object referencing the new thread
      */
     Thread runInThread(threadFunction_t function);
 
