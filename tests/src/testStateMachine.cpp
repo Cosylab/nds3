@@ -59,32 +59,32 @@ TEST(testStateMachine, testAllowedTransitions)
     rootNode.initialize(0, factory);
 
     // Check the local and global state: should be 0
-    EXPECT_EQ(nds::state_t::off, stateMachine0.getGlobalState());
-    EXPECT_EQ(nds::state_t::off, stateMachine0.getLocalState());
+    EXPECT_EQ((int)nds::state_t::off, (int)stateMachine0.getGlobalState());
+    EXPECT_EQ((int)nds::state_t::off, (int)stateMachine0.getLocalState());
 
     // Switch on state machine 1
     stateMachine1.setState(nds::state_t::on);
-    EXPECT_EQ(nds::state_t::initializing, stateMachine0.getGlobalState());
-    EXPECT_EQ(nds::state_t::off, stateMachine0.getLocalState());
+    EXPECT_EQ((int)nds::state_t::initializing, (int)stateMachine0.getGlobalState());
+    EXPECT_EQ((int)nds::state_t::off, (int)stateMachine0.getLocalState());
 
     ::sleep(2);
-    EXPECT_EQ(nds::state_t::on, stateMachine0.getGlobalState());
-    EXPECT_EQ(nds::state_t::off, stateMachine0.getLocalState());
+    EXPECT_EQ((int)nds::state_t::on, (int)stateMachine0.getGlobalState());
+    EXPECT_EQ((int)nds::state_t::off, (int)stateMachine0.getLocalState());
 
     // Switch state machine 2 to on and then to running.
     // Should go back to on because of the rollback
     stateMachine2.setState(nds::state_t::on);
-    EXPECT_EQ(nds::state_t::initializing, stateMachine2.getLocalState());
+    EXPECT_EQ((int)nds::state_t::initializing, (int)stateMachine2.getLocalState());
 
     ::sleep(2);
-    EXPECT_EQ(nds::state_t::on, stateMachine2.getLocalState());
+    EXPECT_EQ((int)nds::state_t::on, (int)stateMachine2.getLocalState());
     stateMachine2.setState(nds::state_t::running);
-    EXPECT_EQ(nds::state_t::starting, stateMachine0.getGlobalState());
-    EXPECT_EQ(nds::state_t::off, stateMachine0.getLocalState());
-    EXPECT_EQ(nds::state_t::starting, stateMachine2.getLocalState());
+    EXPECT_EQ((int)nds::state_t::starting, (int)stateMachine0.getGlobalState());
+    EXPECT_EQ((int)nds::state_t::off, (int)stateMachine0.getLocalState());
+    EXPECT_EQ((int)nds::state_t::starting, (int)stateMachine2.getLocalState());
 
     ::sleep(1);
-    EXPECT_EQ(nds::state_t::on, stateMachine2.getLocalState());
+    EXPECT_EQ((int)nds::state_t::on, (int)stateMachine2.getLocalState());
 
     factory.destroyDevice("");
 }

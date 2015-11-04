@@ -64,11 +64,19 @@ TEST(testDataAcquisition, testPushData)
         }
         if((numAcquisitions & 1) == 0)
         {
-            EXPECT_EQ(pushData0, *pRetrievedPushedValues);
+            ASSERT_EQ(pushData0.size(), pRetrievedPushedValues->size());
+            for(size_t compare(0); compare != pushData0.size(); ++compare)
+            {
+                EXPECT_EQ(pushData0[compare], (*pRetrievedPushedValues)[compare]);
+            }
         }
         else
         {
-            EXPECT_EQ(pushData1, *pRetrievedPushedValues);
+            ASSERT_EQ(pushData1.size(), pRetrievedPushedValues->size());
+            for(size_t compare(0); compare != pushData1.size(); ++compare)
+            {
+                EXPECT_EQ(pushData1[compare], (*pRetrievedPushedValues)[compare]);
+            }
         }
     }
 
