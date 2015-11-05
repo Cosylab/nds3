@@ -4,7 +4,11 @@ project (nds3)
 
 # Set compiler flags
 #-------------------
-set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -pedantic -fPIC -pthread -fvisibility=hidden -fvisibility-inlines-hidden" )
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -pedantic -fPIC -pthread -fvisibility=hidden -fvisibility-inlines-hidden --coverage" )
+else(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -pedantic -fPIC -pthread -fvisibility=hidden -fvisibility-inlines-hidden -g" )
+endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 set( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -fPIC -Wl,-as-needed" )
 
 # Set pre-processor definitions
@@ -27,6 +31,9 @@ add_library(nds3 SHARED  ${nds_sources})
 # Add dependencies to the nds3 library
 #-------------------------------------
 target_link_libraries(nds3 rt dl pthread)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	target_link_libraries(nds3 gcov)
+endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 # Settings for installers
 #------------------------

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="NDS3" default="ZIP" basedir="." xmlns:if="ant:if" xmlns:unless="ant:unless">
+
+	<!-- This is an ant build file" -->
+
+
+	<!-- Initialize the version number -->
+	<target name="version" description="Initialize the build number">
+		<property environment="env"/>
+                <property name="fileVersion" value="${env.BUILD_BRANCH}_build_${env.BUILD_VERSION}"/>
+                <property name="fullVersionReadable" value="${env.BUILD_BRANCH} build ${env.BUILD_VERSION}"/>
+                <property name="productName" value="NDS3 ${fullVersionReadable}"/>
+	</target>
+
+
+	<!-- Create the directory for the final build -->
+	<target name="create_build_dir" depends="version" description="Create the directory for the final build">
+		<property name="artifacts_dir" value="./artifacts" />
+		<delete dir="${artifacts_dir}" failonerror="false" />
+		<mkdir dir="${artifacts_dir}" />
+
+		<property name="build_dir_tests" value="./build_tests_reports" />
+		<delete dir="${build_dir_tests}" failonerror="false" />
+		<mkdir dir="${build_dir_tests}" />
+
+		<copy todir="${build_dir_tests}">
+			 <fileset dir=".">
+			 	<include name="src/**/*.cpp" />
+			 	<include name="include/**/*.h" />
+			 	<include name="CMake/**/CMakeLists.txt" />
+			 </fileset>
+			 <fileset dir=".">
+			 	<include name="tests/src/**/*.cpp" />
+			 	<include name="tests/include/**/*.h" />
+			 	<include name="tests/CMake/**/CMakeLists.txt" />
+			 </fileset>
+			 <fileset dir=".">
+			 	<include name="doc/**/*.h" />
+			 	<include name="doc/**/*.md" />
+			 	<include name="doc/**/Doxyfile" />
+			 	<include name="doc/**/*.xml" />
+			 </fileset>
+		</copy>
+
+		<property name="build_dir" value="./build" />
+		<delete dir="${build_dir}" failonerror="false" />
+		<mkdir dir="${build_dir}" />
+
+		<copy todir="${build_dir}">
+			 <fileset dir=".">
+			 	<include name="src/**/*.cpp" />
+			 	<include name="include/**/*.h" />
+			 	<include name="CMake/**/CMakeLists.txt" />
+			 </fileset>
+		</copy>
+
+	</target>
+
+
+	<!-- Replace the version number and license info -->
+	<target name="replace_version" depends="create_build_dir">
+
+		<!-- Replace version for tests and reports -->
+		<replace file="${build_dir_tests}/doc/api/Doxyfile" token="1.0.0" value='"${fullVersionReadable}"'/>
+		<replace file="${build_dir_tests}/CMake/CMakeLists.txt" token="1.0.0" value='"${fullVersionReadable}"'/>
+		<replace dir="${build_dir_tests}" includes="*.rc,*.h,*.cpp" token="1.0.0" value="${fullVersionReadable}" />
+		<replace dir="${build_dir_tests}" includes="*.rc,*.h,*.cpp" token="&quot;1.0.0&quot;" value="&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${build_dir_tests}" includes="*.rc,*.h,*.cpp" token="L&quot;1.0.0&quot;" value="L&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${build_dir_tests}" token="$fileHeader$">
+			<replacevalue><![CDATA[
+$ndsVersion$
+
+NDS3: Nominal device support
+
+License goes here
+
+]]></replacevalue>
+		</replace>
+		<replace dir="${build_dir_tests}" token="$ndsVersion$" value="${productName}" />
+
+		<!-- Replace version for final library build -->
+		<replace file="${build_dir}/CMake/CMakeLists.txt" token="1.0.0" value='"${fullVersionReadable}"'/>
+		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="1.0.0" value="${fullVersionReadable}" />
+		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="&quot;1.0.0&quot;" value="&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="L&quot;1.0.0&quot;" value="L&quot;${fullVersionReadable}&quot;" />
+		<replace dir="${build_dir}" token="$fileHeader$">
+			<replacevalue><![CDATA[
+$ndsVersion$
+
+NDS3: Nominal device support
+
+License goes here
+
+]]></replacevalue>
+		</replace>
+		<replace dir="${build_dir}" token="$ndsVersion$" value="${productName}" />
+
+	</target>
+
+	<!-- Build the library -->
+	<target name="build_library" depends="replace_version" description="Build the NDS3 library">
+		<exec executable="cmake" failonerror="true" dir="${build_dir_tests}/CMake">
+            <arg value="--verbose"/>
+            <arg value="-DCMAKE_BUILD_TYPE=Debug" />
+            <arg path="${build_dir_tests}/CMake"/>
+		</exec>
+		<exec executable="make" failonerror="true" dir="${build_dir_tests}/CMake" />
+	</target>
+
+	<!-- Build the test cases -->
+	<target name="build_test_cases" depends="replace_version, build_library" description="Build the NDS3 test cases">
+        <exec executable="cmake" failonerror="true" dir="${build_dir_tests}/tests/CMake">
+            <arg value="--verbose"/>
+            <arg path="${build_dir_tests}/tests/CMake"/>
+            <arg value="-DCMAKE_BUILD_TYPE=Debug" />
+            <arg value="-DADDITIONAL_INCLUDE=../../include" />
+            <arg value="-DLIBRARY_LOCATION=../../CMake" />
+        </exec>
+		<exec executable="make" failonerror="true" dir="${build_dir_tests}/tests/CMake" />
+	</target>
+
+    <target name="clear_coverage" depends="build_test_cases" if="coverage.set" description="Initializes the coverage data">
+        <exec executable="lcov" dir="${build_dir_tests}/CMake" resolveexecutable="true" failonerror="true">
+            <arg value="--zerocounters" />
+            <arg value="--directory" />
+            <arg path="${build_dir_tests}/CMake" />
+        </exec>
+        <exec executable="lcov" dir="${build_dir_tests}/CMake" resolveexecutable="true" failonerror="true">
+            <arg value="--capture" />
+            <arg value="--initial" />
+            <arg value="--directory" />
+            <arg path="${build_dir_tests}/CMake" />
+            <arg value="--output-file" />
+            <arg path="${build_dir_tests}/CMake/test.info" />
+        </exec>
+    </target>
+
+	<!-- Run the test cases -->
+    <target name="run_test_cases" depends="build_test_cases, clear_coverage" description="Run the test cases">
+        <exec executable="${build_dir_tests}/tests/CMake/nds3tests" dir="${build_dir_tests}/tests/CMake" resolveexecutable="true" failonerror="true" />
+    </target>
+
+    <target name="collect_coverage" depends="run_test_cases" if="coverage.set" description="Collect the coverage data">
+        <exec executable="lcov" dir="${build_dir_tests}/CMake" resolveexecutable="true" failonerror="true">
+            <arg value="--capture" />
+            <arg value="--no-checksum" />
+            <arg value="--directory" />
+            <arg path="${build_dir_tests}/CMake" />
+            <arg value="--output-file" />
+            <arg path="${build_dir_tests}/CMake/test.info" />
+        </exec>
+        <exec executable="genhtml" dir="${build_dir_tests}/CMake" resolveexecutable="true" failonerror="true">
+            <arg value="--output-directory" />
+            <arg path="${build_dir_tests}/CMake/coverage" />
+            <arg path="${build_dir_tests}/CMake/test.info" />
+        </exec>
+    </target>
+
+
+	<!-- Build the HTML documentation -->
+	<target name="HTML" depends="run_test_cases" description="Build the HTML documents">
+		<exec dir="${build_dir_tests}/doc/api" executable="doxygen" failonerror="true">
+			<arg value="Doxyfile"/>
+		</exec>
+    	<replace dir="${build_dir_tests}/doc/api/html" token="Related Pages" value="User manual"/>
+		<replace dir="${build_dir_tests}/doc/api/html" token="Main Page" value="Introduction"/>
+		<replace dir="${build_dir_tests}/doc/api/html" token="Related&amp;#160;Pages" value="User&amp;#160;manual"/>
+		<replace dir="${build_dir_tests}/doc/api/html" token="Main&amp;#160;Page" value="Introduction"/>
+	</target>
+
+	<!--
+    <target name="make_distribution" depends="run_test_cases, collect_coverage, HTML">
+        <property name="librarySource" value="${artifacts_dir}/library" />
+		<mkdir dir="${librarySource}" />
+		<mkdir dir="${documentation}/html" />
+		<property name="examples" value="${distribution}/examples" />
+		<mkdir dir="${examples}/dicom2jpeg" />
+		<mkdir dir="${examples}/dicomdirItems" />
+		<mkdir dir="${examples}/changeTransferSyntax" />
+
+                <property name="reports" value="${distribution}/reports" />
+                <property name="coverage" value="${reports}/coverage" />
+                <mkdir dir="${coverage}" if:set="coverage.set"/>
+                <copy todir="${coverage}" failonerror="false" if:set="coverage.set">
+                    <fileset dir="${build_dir_tests}/coverage" />
+                </copy>
+
+		<property name="tests" value="${distribution}/tests" />
+		<mkdir dir="${tests}" />
+
+		<copy todir="${librarySource}">
+			<fileset dir="${build_dir_tests}/library" />
+		</copy>
+                <copy todir="${objectivecSource}">
+                        <fileset dir="${build_dir_tests}/objectivec" />
+                </copy>
+                <copy todir="${documentation}/html">
+			<fileset dir="${build_dir_tests}/generated_doc/html" />
+		</copy>
+		<copy file="${build_dir_tests}/docs/documentation.html" tofile="${documentation}/documentation.html" />
+		<copy todir="${examples}/dicom2jpeg">
+			<fileset dir="${build_dir_tests}/examples/dicom2jpeg" />
+		</copy>
+		<copy todir="${examples}/dicomdirItems">
+			<fileset dir="${build_dir_tests}/examples/dicomdirItems" />
+		</copy>
+		<copy todir="${examples}/changeTransferSyntax">
+			<fileset dir="${build_dir_tests}/examples/changeTransferSyntax" />
+		</copy>
+                <copy todir="${tests}">
+			<fileset dir="${build_dir_tests}/tests" />
+		</copy>
+		<copy file="${build_dir_tests}/docs/gpl.txt" tofile="${distribution}/license_gpl.txt" />
+	</target>
+
+	<target name="ZIP" depends="make_distribution" description ="Compress the build">
+		<zip basedir="${build_dir_tests}/distribution" destfile="${builds}/nds3_${fileVersion}.zip" />
+	</target> -->
+
+</project>
