@@ -15,9 +15,9 @@
 
 	<!-- Create the directory for the final build -->
 	<target name="create_build_dir" depends="version" description="Create the directory for the final build">
-		<property name="artifacts_dir" value="./artifacts" />
-		<delete dir="${artifacts_dir}" failonerror="false" />
-		<mkdir dir="${artifacts_dir}" />
+                <property name="artifacts" value="./artifacts" />
+                <delete dir="${artifacts}" failonerror="false" />
+                <mkdir dir="${artifacts}" />
 
 		<property name="build_dir_tests" value="./build_tests_reports" />
 		<delete dir="${build_dir_tests}" failonerror="false" />
@@ -182,7 +182,7 @@ License goes here
             <fileset dir="${build_dir_tests}/doc/api/html" />
         </copy>
         <copy todir="${artifacts}/documentation">
-            <fileset file="${build_dir_tests}/doc/api/documentation" />
+            <fileset file="${build_dir_tests}/doc/api/documentation.html" />
         </copy>
     </target>
 
