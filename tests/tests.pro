@@ -21,7 +21,8 @@ SOURCES += \
     src/main.cpp \
     src/testStateMachine.cpp \
     src/testLogging.cpp \
-    src/testPVs.cpp
+    src/testPVs.cpp \
+    src/testThreads.cpp
 
 
 HEADERS += \

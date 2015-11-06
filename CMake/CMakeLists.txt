@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.6)
 
 project (nds3)
 
+set( VERSION "1.0.0")
+
 # Set compiler flags
 #-------------------
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -37,10 +39,21 @@ endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 
 # Settings for installers
 #------------------------
-set( CPACK_PACKAGE_NAME "NDS3Core")
+set( CPACK_PACKAGE_NAME "nds3Core")
+set( CPACK_PACKAGE_VERSION ${VERSION})
 set( CPACK_PACKAGE_VENDOR "Cosylab d.o.o.")
-set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Nominal device support for control systems (core libraries)")
+set( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Nominal device support for control systems drivers (core libraries)")
 set( CMAKE_INSTALL_PREFIX "/usr")
+
+set( CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
+set( CPACK_RPM_PACKAGE_RELEASE 1)
+set( CPACK_RPM_PACKAGE_REQUIRES "libstdc++-devel, glibc-devel")
+
+set( CPACK_DEBIAN_PACKAGE_ARCHITECTURE "x86_64")
+
+set( CPACK_RPM_PACKAGE_DEBUG 1)
+
+set( CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
 
 install(TARGETS nds3 LIBRARY DESTINATION lib64 COMPONENT "Shared library")
 install(FILES ${nds_include_interface} DESTINATION include/nds3 COMPONENT "Included files")
