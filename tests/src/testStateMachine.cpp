@@ -22,7 +22,7 @@ bool returnTrue(const nds::state_t, const nds::state_t, const nds::state_t)
     return true;
 }
 
-TEST(testStateMachine, testAllowedTransitions)
+TEST(testStateMachine, testLocalGlobalState)
 {
     nds::Port rootNode("rootNode");
     nds::StateMachine stateMachine0 = rootNode.addChild(nds::StateMachine(true,
@@ -74,16 +74,20 @@ TEST(testStateMachine, testAllowedTransitions)
     // Should go back to on because of the rollback
     stateMachine2.setState(nds::state_t::on);
     EXPECT_EQ((int)nds::state_t::initializing, (int)stateMachine2.getLocalState());
-
     ::sleep(2);
     EXPECT_EQ((int)nds::state_t::on, (int)stateMachine2.getLocalState());
+
     stateMachine2.setState(nds::state_t::running);
     EXPECT_EQ((int)nds::state_t::starting, (int)stateMachine0.getGlobalState());
     EXPECT_EQ((int)nds::state_t::off, (int)stateMachine0.getLocalState());
     EXPECT_EQ((int)nds::state_t::starting, (int)stateMachine2.getLocalState());
-
     ::sleep(1);
     EXPECT_EQ((int)nds::state_t::on, (int)stateMachine2.getLocalState());
+
+    stateMachine2.setState(nds::state_t::off);
+    EXPECT_EQ((int)nds::state_t::switchingOff, (int)stateMachine2.getLocalState());
+    ::sleep(2);
+    EXPECT_EQ((int)nds::state_t::off, (int)stateMachine2.getLocalState());
 
     factory.destroyDevice("");
 }
