@@ -36,10 +36,11 @@
 			 </fileset>
 			 <fileset dir=".">
 			 	<include name="doc/**/*.h" />
-			 	<include name="doc/**/*.md" />
+                                <include name="doc/**/*.md" />
 			 	<include name="doc/**/Doxyfile" />
 			 	<include name="doc/**/*.xml" />
-			 </fileset>
+                                <include name="doc/api/documentation.html" />
+                         </fileset>
 		</copy>
 
 		<property name="build_dir" value="./build" />
@@ -157,64 +158,43 @@ License goes here
     </target>
 
 
-	<!-- Build the HTML documentation -->
-	<target name="HTML" depends="run_test_cases" description="Build the HTML documents">
-		<exec dir="${build_dir_tests}/doc/api" executable="doxygen" failonerror="true">
-			<arg value="Doxyfile"/>
-		</exec>
-    	<replace dir="${build_dir_tests}/doc/api/html" token="Related Pages" value="User manual"/>
-		<replace dir="${build_dir_tests}/doc/api/html" token="Main Page" value="Introduction"/>
-		<replace dir="${build_dir_tests}/doc/api/html" token="Related&amp;#160;Pages" value="User&amp;#160;manual"/>
-		<replace dir="${build_dir_tests}/doc/api/html" token="Main&amp;#160;Page" value="Introduction"/>
-	</target>
+    <!-- Build the HTML documentation -->
+    <target name="HTML" depends="run_test_cases" description="Build the HTML documents">
+        <exec dir="${build_dir_tests}/doc/api" executable="doxygen" failonerror="true">
+            <arg value="Doxyfile"/>
+	</exec>
+        <replace dir="${build_dir_tests}/doc/api/html" token="Related Pages" value="User manual"/>
+        <replace dir="${build_dir_tests}/doc/api/html" token="Main Page" value="Introduction"/>
+        <replace dir="${build_dir_tests}/doc/api/html" token="Related&amp;#160;Pages" value="User&amp;#160;manual"/>
+        <replace dir="${build_dir_tests}/doc/api/html" token="Main&amp;#160;Page" value="Introduction"/>
+    </target>
 
-	<!--
-    <target name="make_distribution" depends="run_test_cases, collect_coverage, HTML">
-        <property name="librarySource" value="${artifacts_dir}/library" />
-		<mkdir dir="${librarySource}" />
-		<mkdir dir="${documentation}/html" />
-		<property name="examples" value="${distribution}/examples" />
-		<mkdir dir="${examples}/dicom2jpeg" />
-		<mkdir dir="${examples}/dicomdirItems" />
-		<mkdir dir="${examples}/changeTransferSyntax" />
+    <target name="artifacts_coverage" depends="collect_coverage">
+        <mkdir dir="${artifacts}/coverage_report" />
+        <copy todir="${artifacts}/coverage_report">
+            <fileset dir="${build_dir_tests}/CMake/coverage" />
+        </copy>
+    </target>
 
-                <property name="reports" value="${distribution}/reports" />
-                <property name="coverage" value="${reports}/coverage" />
-                <mkdir dir="${coverage}" if:set="coverage.set"/>
-                <copy todir="${coverage}" failonerror="false" if:set="coverage.set">
-                    <fileset dir="${build_dir_tests}/coverage" />
-                </copy>
+    <target name="artifacts_documentation" depends="HTML" >
+        <mkdir dir="${artifacts}/documentation/html" />
+        <copy todir="${artifacts}/documentation/html">
+            <fileset dir="${build_dir_tests}/doc/api/html" />
+        </copy>
+        <copy todir="${artifacts}/documentation">
+            <fileset file="${build_dir_tests}/doc/api/documentation" />
+        </copy>
+    </target>
 
-		<property name="tests" value="${distribution}/tests" />
-		<mkdir dir="${tests}" />
+    <target name="artifacts_source" depends="run_test_cases">
+        <mkdir dir="${artifacts}/sources" />
+        <copy todir="${artifacts}/sources">
+            <fileset dir="${build_dir}" />
+        </copy>
+    </target>
 
-		<copy todir="${librarySource}">
-			<fileset dir="${build_dir_tests}/library" />
-		</copy>
-                <copy todir="${objectivecSource}">
-                        <fileset dir="${build_dir_tests}/objectivec" />
-                </copy>
-                <copy todir="${documentation}/html">
-			<fileset dir="${build_dir_tests}/generated_doc/html" />
-		</copy>
-		<copy file="${build_dir_tests}/docs/documentation.html" tofile="${documentation}/documentation.html" />
-		<copy todir="${examples}/dicom2jpeg">
-			<fileset dir="${build_dir_tests}/examples/dicom2jpeg" />
-		</copy>
-		<copy todir="${examples}/dicomdirItems">
-			<fileset dir="${build_dir_tests}/examples/dicomdirItems" />
-		</copy>
-		<copy todir="${examples}/changeTransferSyntax">
-			<fileset dir="${build_dir_tests}/examples/changeTransferSyntax" />
-		</copy>
-                <copy todir="${tests}">
-			<fileset dir="${build_dir_tests}/tests" />
-		</copy>
-		<copy file="${build_dir_tests}/docs/gpl.txt" tofile="${distribution}/license_gpl.txt" />
-	</target>
+    <target name="make_distribution" depends="artifacts_coverage, artifacts_documentation, artifacts_source">
 
-	<target name="ZIP" depends="make_distribution" description ="Compress the build">
-		<zip basedir="${build_dir_tests}/distribution" destfile="${builds}/nds3_${fileVersion}.zip" />
-	</target> -->
+    </target>
 
 </project>
