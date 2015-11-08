@@ -16,6 +16,7 @@ class NodeImpl;
 class PVBaseImpl;
 class LogStreamGetterImpl;
 class ThreadBaseImpl;
+class IniFileParserImpl;
 
 /**
  * @brief This is the base class for objects that interact with specific control systems
@@ -54,7 +55,7 @@ public:
 
     virtual ThreadBaseImpl* runInThread(const std::string& name, threadFunction_t function);
 
-    void loadDriver(const std::string& libraryName);
+    static void loadDriver(const std::string& libraryName);
 
     /**
      * @brief Allocate a device. The device driver must have been registered via
@@ -80,6 +81,8 @@ public:
     void holdNode(void* pDeviceObject, std::shared_ptr<NodeImpl> pHoldNode);
 
     virtual const std::string getName() const = 0;
+
+    virtual std::string getDefaultSeparator(const std::uint32_t nodeLevel) = 0;
 
     /**
      * @brief This method is called by a PortNodeImpl object in order to create a
@@ -137,6 +140,9 @@ private:
     heldNodes_t m_heldNodes;
 
     std::mutex m_mutex;
+
+    std::unique_ptr<IniFileParserImpl> m_namingRules;
+    std::string m_namingRulesName;
 
 };
 

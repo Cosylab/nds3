@@ -62,7 +62,7 @@ void NodeImpl::initialize(FactoryBaseImpl& controlSystem)
 
     for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
     {
-        scanChildren->second->setParent(std::static_pointer_cast<NodeImpl>(shared_from_this()) );
+        scanChildren->second->setParent(std::static_pointer_cast<NodeImpl>(shared_from_this()), m_nodeLevel);
     }
     for(tChildren::iterator scanChildren(m_children.begin()), endScan(m_children.end()); scanChildren != endScan; ++scanChildren)
     {

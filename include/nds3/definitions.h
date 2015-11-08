@@ -87,6 +87,27 @@ enum class dataDirection_t
 };
 
 /**
+ * @brief Defines the type of nodes in the tree structure: it is used to build the node's
+ *        external name (the name with which the node is visible from the control system side).
+ */
+enum class nodeType
+{
+    rootNode = 0,
+    genericChannel = 10,
+    inputChannel = 11,
+    outputChannel = 12,
+    dataAcquisitionChannel = 13,
+    stateMachineNode = 20,
+    setLocalStatePV  = 21,
+    getLocalStatePV  = 22,
+    getGlobalStatePV = 23,
+    genericPV = 40,
+    inputPV = 41,
+    outputPV = 42
+
+};
+
+/**
  * @ingroup logging
  * @brief If the logging is enabled for the specified severity level then the
  *        macro returns the proper logging stream, otherwise it skips the logging
@@ -213,7 +234,9 @@ typedef std::function<void ()> threadFunction_t;
  *        the enumeration field.
  */
 typedef std::list<std::string> enumerationStrings_t;
-}
+
+
+} // namespace nds
 
 // Generic helper definitions for shared library support
 #if defined _WIN32 || defined __CYGWIN__

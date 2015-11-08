@@ -3,6 +3,7 @@
 #include "../include/nds3impl/baseImpl.h"
 #include "../include/nds3impl/nodeImpl.h"
 #include "../include/nds3impl/threadStd.h"
+#include "../include/nds3impl/iniFileParserImpl.h"
 #include "../include/nds3/exceptions.h"
 #include "../include/nds3/factory.h"
 

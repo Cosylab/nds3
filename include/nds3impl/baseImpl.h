@@ -60,7 +60,7 @@ public:
      */
     const std::string& getFullName() const;
 
-    void setParent(std::shared_ptr<NodeImpl> pParent);
+    void setParent(std::shared_ptr<NodeImpl> pParent, const std::uint32_t parentLevel);
 
     std::shared_ptr<NodeImpl> getParent() const;
 
@@ -164,6 +164,11 @@ protected:
      * @brief The node name
      */
     std::string m_name;
+
+    /**
+     * @brief The level in the tree structure: 0 = root node.
+     */
+    std::uint32_t m_nodeLevel;
 
     /**
      * @brief Pointer to the parent node.

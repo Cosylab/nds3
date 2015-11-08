@@ -9,7 +9,7 @@
 namespace nds
 {
 
-BaseImpl::BaseImpl(const std::string& name): m_name(name), m_pFactory(0),
+BaseImpl::BaseImpl(const std::string& name): m_name(name), m_nodeLevel(0), m_pFactory(0),
     m_timestampFunction(std::bind(&BaseImpl::getLocalTimestamp, this)),
     m_logLevel(logLevel_t::warning), m_cachedFullName(name), m_cachedFullNameFromPort()
 {
@@ -57,7 +57,7 @@ std::string BaseImpl::buildFullName(const FactoryBaseImpl& controlSystem) const
     return temporaryPointer->buildFullName(controlSystem) + "-" + getComponentName();
 }
 
-void BaseImpl::setParent(std::shared_ptr<NodeImpl> pParent)
+void BaseImpl::setParent(std::shared_ptr<NodeImpl> pParent, const std::uint32_t parentLevel)
 {
     {
         std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();
@@ -66,7 +66,9 @@ void BaseImpl::setParent(std::shared_ptr<NodeImpl> pParent)
             throw std::logic_error("The object already has a parent");
         }
     }
+    m_nodeLevel = parentLevel + 1;
     m_pParent = pParent;
+
 }
 
 const std::string& BaseImpl::getFullName() const

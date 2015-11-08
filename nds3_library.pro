@@ -56,7 +56,8 @@ SOURCES +=\
     src/ndsFactoryImpl.cpp \
     src/threadBaseImpl.cpp \
     src/threadStd.cpp \
-    src/thread.cpp
+    src/thread.cpp \
+    src/iniFileParserImpl.cpp
 
 HEADERS += \
     include/nds3/definitions.h \
@@ -96,5 +97,6 @@ HEADERS += \
     include/nds3impl/ndsFactoryImpl.h \
     include/nds3impl/threadBaseImpl.h \
     include/nds3impl/threadStd.h \
-    include/nds3/thread.h
+    include/nds3/thread.h \
+    include/nds3impl/iniFileParserImpl.h
 
