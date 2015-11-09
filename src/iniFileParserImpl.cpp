@@ -46,6 +46,11 @@ IniFileParserImpl::IniFileParserImpl(std::istream& inputStream)
     }
 }
 
+IniFileParserImpl::~IniFileParserImpl()
+{
+
+}
+
 const std::string& IniFileParserImpl::getString(const std::string &section, const std::string &key, const std::string &defaultValue) const
 {
     if(key.empty())
@@ -111,7 +116,7 @@ std::string IniFileParserImpl::trim(const std::string& string)
 std::string IniFileParserImpl::getSection(const std::string &line)
 {
     std::string section(trim(line));
-    if(section.empty() || section.at(0) == '[')
+    if(section.empty() || section.at(0) != '[')
     {
         return "";
     }
@@ -156,7 +161,7 @@ IniFileParserImpl::keyValue_t IniFileParserImpl::getKeyValue(const std::string& 
         throw INIParserSyntaxError("Syntax error");
     }
 
-    std::string variable(trim(line.substr(equalSign)));
+    std::string variable(trim(line.substr(0, equalSign)));
     if(variable.empty())
     {
         throw;

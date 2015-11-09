@@ -12,6 +12,8 @@ class IniFileParserImpl
 public:
     IniFileParserImpl(std::istream& inputStream);
 
+    ~IniFileParserImpl();
+
     /**
      * @brief Retrieve the value for a specific key in the parsed INI file.
      *

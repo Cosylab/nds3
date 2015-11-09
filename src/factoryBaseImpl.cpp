@@ -13,6 +13,11 @@
 namespace nds
 {
 
+FactoryBaseImpl::FactoryBaseImpl()
+{
+
+}
+
 /*
  * Destructor
  */
@@ -273,6 +278,11 @@ std::string FactoryBaseImpl::buildNameFromRule(const std::string& name,
                                                const std::string& rule4
                                                ) const
 {
+    if(m_namingRules.get() == 0 || m_namingRulesName.empty())
+    {
+        return name;
+    }
+
     const std::string& rule = m_namingRules->getString(m_namingRulesName, rule0,
                                m_namingRules->getString(m_namingRulesName, rule1,
                                 m_namingRules->getString(m_namingRulesName, rule2,

@@ -63,6 +63,11 @@ public:
      */
     const std::string& getComponentName() const;
 
+    void setParent(std::shared_ptr<NodeImpl> pParent, const std::uint32_t parentLevel);
+
+    std::shared_ptr<NodeImpl> getParent() const;
+
+
     /**
      * @brief Return the full node's name, prepending the parents' names if necessary
      *        (e.g. "ROOT-CHANNEL1-THISNODE")
@@ -70,11 +75,6 @@ public:
      * @return the fully qualified node's name
      */
     const std::string& getFullName() const;
-
-    void setParent(std::shared_ptr<NodeImpl> pParent, const std::uint32_t parentLevel);
-
-    std::shared_ptr<NodeImpl> getParent() const;
-
 
     /**
      * @brief Return the node's name as seen by the parent AsynPort.
@@ -86,6 +86,12 @@ public:
      * @return the node's name relative to the AsynPort that contains it.
      */
     const std::string& getFullNameFromPort() const;
+
+    const std::string& getFullExternalName() const;
+
+    const std::string& getFullExternalNameFromPort() const;
+
+
 
     /**
      * @brief Return the current time.

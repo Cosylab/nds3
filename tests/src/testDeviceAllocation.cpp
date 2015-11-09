@@ -74,18 +74,18 @@ TEST(testDeviceAllocation, testTwoAllocations)
     nds::tests::TestControlSystemInterfaceImpl* pInterface1 = nds::tests::TestControlSystemInterfaceImpl::getInstance("rootNode1-Channel1");
 
     timespec timestamp = {0, 0};
-    pInterface0->writeCSValue("rootNode0-Channel1-data-StateMachine-setState", timestamp, (std::int32_t)nds::state_t::on);
+    pInterface0->writeCSValue("/rootNode0-Channel1.data.StateMachine.setState", timestamp, (std::int32_t)nds::state_t::on);
 
     const timespec* pStateMachineSwitchTime;
     const std::int32_t* pStateMachineState;
-    pInterface0->getPushedInt32("rootNode0-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState);
+    pInterface0->getPushedInt32("/rootNode0-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::off, *pStateMachineState);
-    pInterface0->getPushedInt32("rootNode0-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState);
+    pInterface0->getPushedInt32("/rootNode0-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::initializing, *pStateMachineState);
 
     timespec readTimestamp;
     std::int32_t readValue;
-    pInterface1->readCSValue("rootNode1-Channel1-numAcquisitions", &readTimestamp, &readValue);
+    pInterface1->readCSValue("/rootNode1-Channel1.numAcquisitions", &readTimestamp, &readValue);
     EXPECT_EQ((std::int32_t)nds::state_t::initializing, readValue);
 
     factory.destroyDevice("rootNode0");

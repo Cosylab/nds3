@@ -43,6 +43,8 @@ class NDS3_API FactoryBaseImpl: public std::enable_shared_from_this<FactoryBaseI
 {
     friend class InterfaceBaseImpl;
 public:
+    FactoryBaseImpl();
+
     virtual ~FactoryBaseImpl();
 
     /**

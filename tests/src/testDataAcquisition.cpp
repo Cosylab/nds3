@@ -15,27 +15,27 @@ TEST(testDataAcquisition, testPushData)
 
     const timespec* pStateMachineSwitchTime;
     const std::int32_t* pStateMachineState;
-    pInterface->getPushedInt32("rootNode-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState);
+    pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::off, *pStateMachineState);
 
     timespec timestamp = {0, 0};
-    pInterface->writeCSValue("rootNode-Channel1-data-StateMachine-setState", timestamp, (std::int32_t)nds::state_t::on);
-    pInterface->getPushedInt32("rootNode-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState);
+    pInterface->writeCSValue("/rootNode-Channel1.data.StateMachine.setState", timestamp, (std::int32_t)nds::state_t::on);
+    pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::initializing, *pStateMachineState);
 
     // Wait for the switch on state (it should take one second)
     ///////////////////////////////////////////////////////////
     ::sleep(2);
-    pInterface->getPushedInt32("rootNode-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState);
+    pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::on, *pStateMachineState);
 
     // Start the data acquisition
     /////////////////////////////
-    pInterface->writeCSValue("rootNode-Channel1-numAcquisitions", timestamp, (std::int32_t)100);
-    pInterface->writeCSValue("rootNode-Channel1-data-StateMachine-setState", timestamp, (std::int32_t)nds::state_t::running);
+    pInterface->writeCSValue("/rootNode-Channel1.numAcquisitions", timestamp, (std::int32_t)100);
+    pInterface->writeCSValue("/rootNode-Channel1.data.StateMachine.setState", timestamp, (std::int32_t)nds::state_t::running);
     ::sleep(1);
-    pInterface->getPushedInt32("rootNode-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState); // Retrieve the starting state
-    pInterface->getPushedInt32("rootNode-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState);
+    pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState); // Retrieve the starting state
+    pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::running, *pStateMachineState);
 
     ::sleep(1);
@@ -55,7 +55,7 @@ TEST(testDataAcquisition, testPushData)
     const timespec* pTime;
     for(size_t numAcquisitions(0); numAcquisitions != 100; ++numAcquisitions)
     {
-        pInterface->getPushedVectorInt32("rootNode-Channel1-data-Data", pTime, pRetrievedPushedValues);
+        pInterface->getPushedVectorInt32("/rootNode-Channel1.data.Data", pTime, pRetrievedPushedValues);
         lastTime = *pTime;
 
         if(numAcquisitions == 0)
@@ -84,8 +84,8 @@ TEST(testDataAcquisition, testPushData)
     std::int64_t nanosecondsEnd = lastTime.tv_sec * 1000000000 + lastTime.tv_nsec;
     std::cout << "Nanoseconds spent pushing 100 values (10000 samples each) " << (nanosecondsEnd - nanosecondsStart) << std::endl;
 
-    pInterface->writeCSValue("rootNode-Channel1-data-StateMachine-setState", timestamp, (std::int32_t)nds::state_t::on);
-    pInterface->getPushedInt32("rootNode-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState);
+    pInterface->writeCSValue("/rootNode-Channel1.data.StateMachine.setState", timestamp, (std::int32_t)nds::state_t::on);
+    pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::stopping, *pStateMachineState);
 
     factory.destroyDevice("rootNode");
@@ -105,28 +105,28 @@ TEST(testDataAcquisition, testDecimation)
 
     const timespec* pStateMachineSwitchTime;
     const std::int32_t* pStateMachineState;
-    pInterface->getPushedInt32("rootNode-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState);
+    pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::off, *pStateMachineState);
 
     timespec timestamp = {0, 0};
-    pInterface->writeCSValue("rootNode-Channel1-data-StateMachine-setState", timestamp, (std::int32_t)nds::state_t::on);
-    pInterface->getPushedInt32("rootNode-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState);
+    pInterface->writeCSValue("/rootNode-Channel1.data.StateMachine.setState", timestamp, (std::int32_t)nds::state_t::on);
+    pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::initializing, *pStateMachineState);
 
     // Wait for the switch on state (it should take one second)
     ///////////////////////////////////////////////////////////
     ::sleep(2);
-    pInterface->getPushedInt32("rootNode-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState);
+    pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::on, *pStateMachineState);
 
     // Start the data acquisition
     /////////////////////////////
-    pInterface->writeCSValue("rootNode-Channel1-data-decimation", timestamp, (std::int32_t)2);
-    pInterface->writeCSValue("rootNode-Channel1-numAcquisitions", timestamp, (std::int32_t)100);
-    pInterface->writeCSValue("rootNode-Channel1-data-StateMachine-setState", timestamp, (std::int32_t)nds::state_t::running);
+    pInterface->writeCSValue("/rootNode-Channel1.data.decimation", timestamp, (std::int32_t)2);
+    pInterface->writeCSValue("/rootNode-Channel1.numAcquisitions", timestamp, (std::int32_t)100);
+    pInterface->writeCSValue("/rootNode-Channel1.data.StateMachine.setState", timestamp, (std::int32_t)nds::state_t::running);
     ::sleep(1);
-    pInterface->getPushedInt32("rootNode-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState); // Retrieve the starting state
-    pInterface->getPushedInt32("rootNode-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState);
+    pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState); // Retrieve the starting state
+    pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::running, *pStateMachineState);
 
     ::sleep(1);
@@ -144,7 +144,7 @@ TEST(testDataAcquisition, testDecimation)
     {
         if((numAcquisitions & 1) == 1)
         {
-            pInterface->getPushedVectorInt32("rootNode-Channel1-data-Data", pTime, pRetrievedPushedValues);
+            pInterface->getPushedVectorInt32("/rootNode-Channel1.data.Data", pTime, pRetrievedPushedValues);
             ASSERT_EQ(pushData.size(), pRetrievedPushedValues->size());
             for(size_t compare(0); compare != pushData.size(); ++compare)
             {
@@ -153,8 +153,8 @@ TEST(testDataAcquisition, testDecimation)
         }
     }
 
-    pInterface->writeCSValue("rootNode-Channel1-data-StateMachine-setState", timestamp, (std::int32_t)nds::state_t::on);
-    pInterface->getPushedInt32("rootNode-Channel1-data-StateMachine-getState", pStateMachineSwitchTime, pStateMachineState);
+    pInterface->writeCSValue("/rootNode-Channel1.data.StateMachine.setState", timestamp, (std::int32_t)nds::state_t::on);
+    pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::stopping, *pStateMachineState);
 
     factory.destroyDevice("rootNode");

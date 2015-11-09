@@ -53,6 +53,23 @@ void TestControlSystemFactoryImpl::deregisterCommand(const BaseImpl& node)
 {
 }
 
+const std::string& TestControlSystemFactoryImpl::getDefaultSeparator(const uint32_t nodeLevel) const
+{
+    static const std::string separator0("/");
+    static const std::string separator1("-");
+    static const std::string separator2(".");
+
+    if(nodeLevel == 0)
+    {
+        return separator0;
+    }
+    else if(nodeLevel == 1)
+    {
+        return separator1;
+    }
+    return separator2;
+}
+
 void TestControlSystemFactoryImpl::log(const std::string& logString, const logLevel_t logLevel)
 {
     std::lock_guard<std::mutex> lock(m_logMutex);

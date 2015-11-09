@@ -29,6 +29,8 @@ public:
 
     virtual void deregisterCommand(const BaseImpl& node);
 
+    virtual const std::string& getDefaultSeparator(const uint32_t nodeLevel) const;
+
     void log(const std::string& logString, const logLevel_t logLevel);
 
     size_t countStringInLog(const std::string& string);

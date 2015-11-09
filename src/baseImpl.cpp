@@ -91,6 +91,17 @@ const std::string& BaseImpl::getFullNameFromPort() const
     return m_cachedFullNameFromPort;
 }
 
+const std::string& BaseImpl::getFullExternalName() const
+{
+    return m_cachedFullExternalName;
+}
+
+const std::string& BaseImpl::getFullExternalNameFromPort() const
+{
+    return m_cahcedFullExternalNameFromPort;
+}
+
+
 std::string BaseImpl::buildFullNameFromPort(const FactoryBaseImpl& controlSystem) const
 {
     std::string parentName;
@@ -113,6 +124,9 @@ void BaseImpl::initialize(FactoryBaseImpl &controlSystem)
 
     m_cachedFullName = buildFullName(controlSystem);
     m_cachedFullNameFromPort = buildFullNameFromPort(controlSystem);
+
+    m_cachedFullExternalName = buildFullExternalName(controlSystem);
+    m_cahcedFullExternalNameFromPort = buildFullExternalNameFromPort(controlSystem);
 
     // Remember where we can go get our logging streams
     ///////////////////////////////////////////////////

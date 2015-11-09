@@ -17,11 +17,11 @@ TEST(testPVs, testDelegate)
     timespec timestamp;
     timestamp.tv_sec = 2;
     timestamp.tv_nsec = 12;
-    pInterface->writeCSValue("rootNode-Channel1-delegateOut", timestamp, std::string("this is a test"));
+    pInterface->writeCSValue("/rootNode-Channel1.delegateOut", timestamp, std::string("this is a test"));
 
     std::string readValue;
     timespec readTimestamp;
-    pInterface->readCSValue("rootNode-Channel1-delegateIn", &readTimestamp, &readValue);
+    pInterface->readCSValue("/rootNode-Channel1.delegateIn", &readTimestamp, &readValue);
     EXPECT_EQ("this is a test", readValue);
     EXPECT_EQ(2, readTimestamp.tv_sec);
     EXPECT_EQ(12, readTimestamp.tv_nsec);
