@@ -119,16 +119,6 @@ void PVBaseImpl::setDescription(const std::string& description)
 
 
 /*
- * Set the external name
- *
- ***********************/
-void PVBaseImpl::setInterfaceName(const std::string& interfaceName)
-{
-    m_interfaceName = interfaceName;
-}
-
-
-/*
  * Set the scan type
  *
  *******************/
@@ -176,16 +166,6 @@ void PVBaseImpl::processAtInit(const bool bProcessAtInit)
 const std::string& PVBaseImpl::getDescription() const
 {
     return m_description;
-}
-
-
-/*
- * Retrieve the name visible by external clients
- *
- ***********************************************/
-const std::string& PVBaseImpl::getInterfaceName() const
-{
-    return m_interfaceName;
 }
 
 

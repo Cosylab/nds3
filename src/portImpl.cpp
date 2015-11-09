@@ -7,7 +7,7 @@ namespace nds
 {
 
 
-PortImpl::PortImpl(const std::string& name): NodeImpl(name)
+PortImpl::PortImpl(const std::string& name, const nodeType_t nodeType): NodeImpl(name, nodeType)
 {
 }
 
@@ -23,6 +23,11 @@ std::shared_ptr<PortImpl> PortImpl::getPort()
 }
 
 std::string PortImpl::buildFullNameFromPort(const FactoryBaseImpl& /* controlSystem */) const
+{
+    return "";
+}
+
+std::string PortImpl::buildFullExternalNameFromPort(const FactoryBaseImpl& /* controlSystem */) const
 {
     return "";
 }

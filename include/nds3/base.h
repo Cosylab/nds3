@@ -69,6 +69,17 @@ public:
     virtual ~Base();
 
     /**
+     * @brief Set the string to pass to the naming rules in order to build
+     *        the full node name as seen by the control system.
+     *
+     * If this method is not called then the external name is the same as the
+     * node name.
+     *
+     * @param externalName the name of the node to pass to the naming rules
+     */
+    void setExternalName(const std::string& externalName);
+
+    /**
      * @brief Get the Node that communicate with the device (ASYN port on EPICS, Device on Tango).
      *        Query the parent nodes if necessary.
      *

@@ -1,5 +1,7 @@
 #include "../include/nds3impl/iniFileParserImpl.h"
+#include "../include/nds3/exceptions.h"
 #include <iostream>
+#include <sstream>
 
 namespace nds
 {
@@ -12,24 +14,73 @@ IniFileParserImpl::IniFileParserImpl(std::istream& inputStream)
     std::string lastSection;
 
     std::string line;
+    size_t lineCounter(0);
     for(
         std::getline(inputStream, line);
         (inputStream.rdstate() & std::istream::failbit) == 0;
         std::getline(inputStream, line))
     {
-        std::string section = getSection(line);
-        if(!section.empty())
-        {
-            lastSection = section;
-            continue;
-        }
+        ++lineCounter;
 
-        keyValue_t valueKey(getKeyValue(line));
-        if(!valueKey.first.empty())
+        try
         {
-            m_sections[lastSection][valueKey.first] = valueKey.second;
+            std::string section = getSection(line);
+            if(!section.empty())
+            {
+                lastSection = section;
+                continue;
+            }
+
+            keyValue_t valueKey(getKeyValue(line));
+            if(!valueKey.first.empty())
+            {
+                m_sections[lastSection][valueKey.first] = valueKey.second;
+            }
+        }
+        catch(const INIParserError& e)
+        {
+            std::ostringstream errorMessage;
+            errorMessage << "Syntax error on line " << lineCounter << ": " << e.what();
+            throw INIParserSyntaxError(errorMessage.str());
         }
     }
+}
+
+const std::string& IniFileParserImpl::getString(const std::string &section, const std::string &key, const std::string &defaultValue) const
+{
+    if(key.empty())
+    {
+        return defaultValue;
+    }
+
+    sectionKeyMap_t::const_iterator findSection(m_sections.find(section));
+    if(findSection == m_sections.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "The section " << section << " is missing from the INI file";
+        throw INIParserMissingSection(errorMessage.str());
+    }
+
+    keyValueMap_t::const_iterator findKey(findSection->second.find(key));
+    if(findKey == findSection->second.end())
+    {
+        return defaultValue;
+    }
+    return findKey->second;
+}
+
+bool IniFileParserImpl::keyExists(const std::string &section, const std::string &key) const
+{
+    sectionKeyMap_t::const_iterator findSection(m_sections.find(section));
+    if(findSection == m_sections.end())
+    {
+        std::ostringstream errorMessage;
+        errorMessage << "The section " << section << " is missing from the INI file";
+        throw INIParserMissingSection(errorMessage.str());
+    }
+
+    keyValueMap_t::const_iterator findKey(findSection->second.find(key));
+    return (findKey != findSection->second.end());
 }
 
 std::string IniFileParserImpl::trim(const std::string& string)
@@ -102,7 +153,7 @@ IniFileParserImpl::keyValue_t IniFileParserImpl::getKeyValue(const std::string& 
         {
             return keyValue_t("", "");
         }
-        throw;
+        throw INIParserSyntaxError("Syntax error");
     }
 
     std::string variable(trim(line.substr(equalSign)));

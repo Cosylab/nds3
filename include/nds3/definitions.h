@@ -90,21 +90,27 @@ enum class dataDirection_t
  * @brief Defines the type of nodes in the tree structure: it is used to build the node's
  *        external name (the name with which the node is visible from the control system side).
  */
-enum class nodeType
+enum class nodeType_t
 {
-    rootNode = 0,
-    genericChannel = 10,
-    inputChannel = 11,
-    outputChannel = 12,
-    dataAcquisitionChannel = 13,
-    stateMachineNode = 20,
-    setLocalStatePV  = 21,
-    getLocalStatePV  = 22,
-    getGlobalStatePV = 23,
-    genericPV = 40,
-    inputPV = 41,
-    outputPV = 42
+    generic,
+    inputChannel,
+    outputChannel,
+    dataSourceChannel,
+    dataSinkChannel,
+    stateMachine
+};
 
+enum class inputPvType_t
+{
+    generic,
+    getLocalState,
+    getGlobalState
+};
+
+enum class outputPvType_t
+{
+    generic,
+    setLocalState
 };
 
 /**

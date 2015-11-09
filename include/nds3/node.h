@@ -41,7 +41,7 @@ public:
      *
      * @param name  node's name (e.g. "CHANNEL0" or "CHANNELGROUP1")
      */
-    Node(const std::string& name);
+    Node(const std::string& name, const nodeType_t nodeType = nodeType_t::generic);
 
     /**
      * @brief Add a child node or record to this node. This node will

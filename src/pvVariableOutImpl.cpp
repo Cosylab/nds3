@@ -8,7 +8,7 @@ namespace nds
  *
  *************/
 template <typename T>
-PVVariableOutImpl<T>::PVVariableOutImpl(const std::string& name): PVBaseOutImpl(name), m_value()
+PVVariableOutImpl<T>::PVVariableOutImpl(const std::string& name, const outputPvType_t pvType): PVBaseOutImpl(name, pvType), m_value()
 {
     m_timestamp.tv_sec = 0;
     m_timestamp.tv_nsec = 0;

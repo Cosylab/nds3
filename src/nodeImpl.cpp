@@ -11,7 +11,7 @@ namespace nds
 
 static std::mutex m_initializationMutex;
 
-NodeImpl::NodeImpl(const std::string &name): BaseImpl(name)
+NodeImpl::NodeImpl(const std::string &name, const nodeType_t nodeType): BaseImpl(name), m_nodeType(nodeType)
 {}
 
 void NodeImpl::addChild(std::shared_ptr<BaseImpl> pChild)
@@ -147,5 +147,66 @@ void NodeImpl::setLogLevel(const logLevel_t logLevel)
     }
 
 }
+
+std::string NodeImpl::buildFullExternalName(const FactoryBaseImpl& controlSystem) const
+{
+    return buildFullExternalName(controlSystem, false);
+}
+
+std::string NodeImpl::buildFullExternalNameFromPort(const FactoryBaseImpl& controlSystem) const
+{
+    return buildFullExternalName(controlSystem, true);
+}
+
+std::string NodeImpl::buildFullExternalName(const FactoryBaseImpl& controlSystem, const bool bStopAtPort) const
+{
+    std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();
+    if(temporaryPointer == 0)
+    {
+        return controlSystem.getSeparator(0) + controlSystem.getRootNodeName(m_externalName);
+    }
+
+    std::string name;
+    switch(m_nodeType)
+    {
+    case nodeType_t::generic:
+        name = controlSystem.getGenericChannelName(m_externalName);
+        break;
+    case nodeType_t::inputChannel:
+        name = controlSystem.getInputChannelName(m_externalName);
+        break;
+    case nodeType_t::outputChannel:
+        name = controlSystem.getOutputChannelName(m_externalName);
+        break;
+    case nodeType_t::dataSourceChannel:
+        name = controlSystem.getSourceChannelName(m_externalName);
+        break;
+    case nodeType_t::dataSinkChannel:
+        name = controlSystem.getSinkChannelName(m_externalName);
+        break;
+    case nodeType_t::stateMachine:
+        name = controlSystem.getStateMachineNodeName(m_externalName);
+        break;
+    }
+
+    if(name.empty())
+    {
+        if(bStopAtPort)
+        {
+            return temporaryPointer->buildFullExternalNameFromPort(controlSystem);
+        }
+        else
+        {
+            return temporaryPointer->buildFullExternalName(controlSystem);
+        }
+    }
+
+    if(bStopAtPort)
+    {
+        return temporaryPointer->buildFullExternalNameFromPort(controlSystem) + controlSystem.getSeparator(m_nodeLevel) + name;
+    }
+    return temporaryPointer->buildFullExternalName(controlSystem) + controlSystem.getSeparator(m_nodeLevel) + name;
+}
+
 
 }

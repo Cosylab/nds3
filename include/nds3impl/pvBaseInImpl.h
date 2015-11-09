@@ -26,7 +26,7 @@ public:
      *
      * @param name the PV's name
      */
-    PVBaseInImpl(const std::string& name);
+    PVBaseInImpl(const std::string& name, const inputPvType_t pvType);
 
     virtual void initialize(FactoryBaseImpl& controlSystem);
 
@@ -103,7 +103,13 @@ public:
 
     virtual dataDirection_t getDataDirection() const;
 
+    virtual std::string buildFullExternalName(const FactoryBaseImpl& controlSystem) const;
+    virtual std::string buildFullExternalNameFromPort(const FactoryBaseImpl& controlSystem) const;
+
 protected:
+    std::string buildFullExternalName(const FactoryBaseImpl& controlSystem, const bool bStopAtPort) const;
+
+    inputPvType_t m_pvType;
 
     /**
      * @brief List of subscribed PVs.

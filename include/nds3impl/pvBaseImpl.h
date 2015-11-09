@@ -85,13 +85,6 @@ public:
     void setDescription(const std::string& description);
 
     /**
-     * @brief Set the name with which the PV is available to the clients of the control system.
-     *
-     * @param interfaceName name visible from external clients
-     */
-    void setInterfaceName(const std::string& interfaceName);
-
-    /**
      * @brief Set the scan type.
      *
      * @param scanType      scan type
@@ -127,13 +120,6 @@ public:
      * @return the description associated with the PV
      */
     const std::string& getDescription() const;
-
-    /**
-     * @brief Return the PV name visible from external clients.
-     *
-     * @return the name used by external clients to access the PV
-     */
-    const std::string& getInterfaceName() const;
 
     /**
      * @brief Return the scan type.
@@ -197,7 +183,6 @@ public:
 
 protected:
     std::string m_description;          ///< The PV's description.
-    std::string m_interfaceName;        ///< The PV's external name.
     scanType_t m_scanType;              ///< The PV's scan type.
     double m_periodicScanSeconds;       ///< The interval between data polling (in seconds).
     size_t m_maxElements;               ///< Maximum number of elements that can be stored in the PV.

@@ -30,7 +30,7 @@ public:
      *
      * @param name the PV name
      */
-    PVVariableInImpl(const std::string& name);
+    PVVariableInImpl(const std::string& name, const inputPvType_t pvType = inputPvType_t::generic);
 
     /**
      * @brief Called by the control system to read the value stored in the PV

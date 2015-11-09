@@ -9,7 +9,7 @@
 namespace nds
 {
 
-BaseImpl::BaseImpl(const std::string& name): m_name(name), m_nodeLevel(0), m_pFactory(0),
+BaseImpl::BaseImpl(const std::string& name): m_name(name), m_externalName(name), m_nodeLevel(0), m_pFactory(0),
     m_timestampFunction(std::bind(&BaseImpl::getLocalTimestamp, this)),
     m_logLevel(logLevel_t::warning), m_cachedFullName(name), m_cachedFullNameFromPort()
 {
@@ -25,6 +25,16 @@ BaseImpl::~BaseImpl()
 {
 
 }
+
+/*
+ * Set the external name
+ *
+ ***********************/
+void BaseImpl::setExternalName(const std::string& externalName)
+{
+    m_externalName = externalName;
+}
+
 
 std::shared_ptr<PortImpl> BaseImpl::getPort()
 {

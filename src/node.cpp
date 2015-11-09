@@ -17,7 +17,7 @@ Node::Node(std::shared_ptr<NodeImpl> nodeImpl): Base(std::static_pointer_cast<Ba
 {
 }
 
-Node::Node(const std::string &name): Base(std::shared_ptr<BaseImpl>(new NodeImpl(name)))
+Node::Node(const std::string &name, const nodeType_t nodeType): Base(std::shared_ptr<BaseImpl>(new NodeImpl(name, nodeType)))
 {
 }
 

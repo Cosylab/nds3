@@ -38,6 +38,17 @@ public:
     virtual ~BaseImpl();
 
     /**
+     * @brief Set the string to pass to the naming rules in order to build
+     *        the full node name as seen by the control system.
+     *
+     * If this method is not called then the external name is the same as the
+     * node name.
+     *
+     * @param externalName the name of the node to pass to the naming rules
+     */
+    void setExternalName(const std::string& externalName);
+
+    /**
      * @brief Get the Node that holds an ASYN port. Query the parent nodes if necessary.
      *
      * @return a reference to the parent AsynNode, which can be used to communicate directly with
@@ -146,10 +157,13 @@ public:
     virtual void deinitialize();
 
 
-protected:
     virtual std::string buildFullName(const FactoryBaseImpl& controlSystem) const ;
     virtual std::string buildFullNameFromPort(const FactoryBaseImpl& controlSystem) const ;
 
+    virtual std::string buildFullExternalName(const FactoryBaseImpl& controlSystem) const = 0;
+    virtual std::string buildFullExternalNameFromPort(const FactoryBaseImpl& controlSystem) const = 0;
+
+protected:
     timespec getLocalTimestamp() const;
 
     /**
@@ -164,6 +178,11 @@ protected:
      * @brief The node name
      */
     std::string m_name;
+
+    /**
+     * @brief The node's external name (used for the naming rules).
+     */
+    std::string m_externalName;
 
     /**
      * @brief The level in the tree structure: 0 = root node.
@@ -206,6 +225,8 @@ protected:
 protected:
     std::string m_cachedFullName;
     std::string m_cachedFullNameFromPort;
+    std::string m_cachedFullExternalName;
+    std::string m_cahcedFullExternalNameFromPort;
 };
 
 

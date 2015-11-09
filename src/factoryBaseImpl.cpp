@@ -8,6 +8,7 @@
 #include "../include/nds3/factory.h"
 
 #include <sstream>
+#include <cstdio>
 
 namespace nds
 {
@@ -177,5 +178,115 @@ void FactoryBaseImpl::holdNode(void* pDeviceObject, std::shared_ptr<NodeImpl> pH
     m_heldNodes[pDeviceObject].push_back(pHoldNode);
 
 }
+
+const std::string& FactoryBaseImpl::getSeparator(const std::uint32_t nodeLevel) const
+{
+    if(m_namingRules.get() == 0 || m_namingRulesName.empty())
+    {
+        return getDefaultSeparator(nodeLevel);
+    }
+    if(nodeLevel == 0)
+    {
+        return m_namingRules->getString(m_namingRulesName, "separator0", getDefaultSeparator(0));
+    }
+
+    std::ostringstream thisLevelKey;
+    thisLevelKey << "separator" << nodeLevel;
+    if(m_namingRules->keyExists(m_namingRulesName, "separator1") || m_namingRules->keyExists(m_namingRulesName, "separator0"))
+    {
+        // At leas one separator rule has been defined
+        return m_namingRules->getString(m_namingRulesName, thisLevelKey.str(), getSeparator(nodeLevel - 1));
+    }
+    return m_namingRules->getString(m_namingRulesName, thisLevelKey.str(), getDefaultSeparator(nodeLevel));
+}
+
+std::string FactoryBaseImpl::getRootNodeName(const std::string& name) const
+{
+    return buildNameFromRule(name, "rootNode", "genericNode");
+}
+
+std::string FactoryBaseImpl::getGenericChannelName(const std::string& name) const
+{
+    return buildNameFromRule(name, "genericNode");
+}
+
+std::string FactoryBaseImpl::getInputChannelName(const std::string& name) const
+{
+    return buildNameFromRule(name, "inputNode", "genericNode");
+}
+
+std::string FactoryBaseImpl::getOutputChannelName(const std::string& name) const
+{
+    return buildNameFromRule(name, "outputNode", "genericNode");
+}
+
+std::string FactoryBaseImpl::getSourceChannelName(const std::string& name) const
+{
+    return buildNameFromRule(name, "sourceNode", "genericNode");
+}
+
+std::string FactoryBaseImpl::getSinkChannelName(const std::string& name) const
+{
+    return buildNameFromRule(name, "sinkNode", "genericNode");
+}
+
+std::string FactoryBaseImpl::getInputPVName(const std::string& name) const
+{
+    return buildNameFromRule(name, "inputPV", "genericPV");
+}
+
+std::string FactoryBaseImpl::getOutputPVName(const std::string& name) const
+{
+    return buildNameFromRule(name, "outputPV", "genericPV");
+}
+
+std::string FactoryBaseImpl::getStateMachineNodeName(const std::string& name) const
+{
+    return buildNameFromRule(name, "stateMachineNode", "genericNode");
+}
+
+std::string FactoryBaseImpl::getStateMachineSetStateName(const std::string& name) const
+{
+    return buildNameFromRule(name, "setStatePV", "outputPV", "genericPV");
+}
+
+std::string FactoryBaseImpl::getStateMachineGetStateName(const std::string& name) const
+{
+    return buildNameFromRule(name, "getStatePV", "inputPV", "genericPV");
+}
+
+std::string FactoryBaseImpl::getStateMachineGetGlobalStateName(const std::string& name) const
+{
+    return buildNameFromRule(name, "getGlobalStatePV", "inputPV", "genericPV");
+}
+
+std::string FactoryBaseImpl::getDecimationPVName(const std::string& name) const
+{
+    return buildNameFromRule(name, "setDecimationPV", "outputPV", "genericPV");
+}
+
+std::string FactoryBaseImpl::buildNameFromRule(const std::string& name,
+                                               const std::string& rule0,
+                                               const std::string& rule1,
+                                               const std::string& rule2,
+                                               const std::string& rule3,
+                                               const std::string& rule4
+                                               ) const
+{
+    const std::string& rule = m_namingRules->getString(m_namingRulesName, rule0,
+                               m_namingRules->getString(m_namingRulesName, rule1,
+                                m_namingRules->getString(m_namingRulesName, rule2,
+                                 m_namingRules->getString(m_namingRulesName, rule3,
+                                  m_namingRules->getString(m_namingRulesName, rule4, "%s")))));
+
+    char buffer[1024];
+    snprintf(buffer, sizeof(buffer), rule.c_str(), name.c_str());
+    return buffer;
+
+
+}
+
+
+
 
 }

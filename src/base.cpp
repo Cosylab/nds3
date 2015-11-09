@@ -29,6 +29,15 @@ Base::~Base()
 {
 }
 
+/*
+ * Set the external name
+ *
+ ***********************/
+void Base::setExternalName(const std::string& externalName)
+{
+    std::static_pointer_cast<BaseImpl>(m_pImplementation)->setExternalName(externalName);
+}
+
 Port Base::getPort()
 {
     if(m_pImplementation == 0)

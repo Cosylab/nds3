@@ -41,7 +41,7 @@ public:
      * @param readFunction  read method
      * @param writeFunction write method
      */
-    PVDelegateOutImpl(const std::string& name, write_t writeFunction, initValue_t initValueFunction);
+    PVDelegateOutImpl(const std::string& name, write_t writeFunction, initValue_t initValueFunction, const outputPvType_t pvType = outputPvType_t::generic);
 
     /**
      * @brief Constructor. Specifies the method used to write.
@@ -51,7 +51,7 @@ public:
      * @param name          the PV's name
      * @param writeFunction write method
      */
-    PVDelegateOutImpl(const std::string& name, write_t writeFunction);
+    PVDelegateOutImpl(const std::string& name, write_t writeFunction, const outputPvType_t pvType = outputPvType_t::generic);
 
     /**
      * @brief Called when the control system wants to read the value.

@@ -10,6 +10,7 @@ class FactoryBaseImpl;
 class InterfaceBaseImpl;
 class PVBaseImpl;
 
+
 /**
  * @brief Node that holds an ASYN port
  *
@@ -24,7 +25,7 @@ public:
      *
      * @param port's name. Used also as port name in the AsynDriver
      */
-    PortImpl(const std::string& name);
+    PortImpl(const std::string& name, const nodeType_t nodeType);
 
     virtual ~PortImpl();
 
@@ -38,7 +39,6 @@ public:
      */
     virtual std::shared_ptr<PortImpl> getPort();
 
-    virtual std::string buildFullNameFromPort(const FactoryBaseImpl& controlSystem) const;
 
     void registerPV(std::shared_ptr<PVBaseImpl> pv);
 
@@ -46,6 +46,9 @@ public:
 
     template<typename T>
     void push(std::shared_ptr<PVBaseImpl> pv, const timespec& timestamp, const T& value);
+
+    virtual std::string buildFullNameFromPort(const FactoryBaseImpl& controlSystem) const;
+    virtual std::string buildFullExternalNameFromPort(const FactoryBaseImpl& controlSystem) const;
 
 private:
     std::unique_ptr<InterfaceBaseImpl> m_pInterface;

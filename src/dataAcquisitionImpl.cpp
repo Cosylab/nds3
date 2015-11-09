@@ -17,7 +17,7 @@ DataAcquisitionImpl<T>::DataAcquisitionImpl(
         stateChange_t stopFunction,
         stateChange_t recoverFunction,
         allowChange_t allowStateChangeFunction):
-    NodeImpl(name),
+    NodeImpl(name, nodeType_t::dataSourceChannel),
     m_onStartDelegate(startFunction),
     m_startTimestampFunction(std::bind(&BaseImpl::getTimestamp, this))
 {

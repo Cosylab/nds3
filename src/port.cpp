@@ -10,8 +10,8 @@ Port::Port(std::shared_ptr<PortImpl> portImpl): Node(std::static_pointer_cast<No
 {
 }
 
-Port::Port(const std::string &name):
-    Node(std::shared_ptr<NodeImpl>(new PortImpl(name)))
+Port::Port(const std::string &name, const nodeType_t nodeType):
+    Node(std::shared_ptr<NodeImpl>(new PortImpl(name, nodeType)))
 {
 }
 

@@ -25,7 +25,6 @@ SOURCES +=\
     src/baseImpl.cpp \
     src/dataAcquisition.cpp \
     src/dataAcquisitionImpl.cpp \
-    src/delegate.cpp \
     src/exceptions.cpp \
     src/factory.cpp \
     src/factoryBaseImpl.cpp \
@@ -36,8 +35,6 @@ SOURCES +=\
     src/portImpl.cpp \
     src/pvBase.cpp \
     src/pvBaseImpl.cpp \
-    src/pvHoldDelegate.cpp \
-    src/pvHoldDelegateImpl.cpp \
     src/stateMachine.cpp \
     src/stateMachineImpl.cpp \
     src/logStreamGetterImpl.cpp \
@@ -64,13 +61,11 @@ HEADERS += \
     include/nds3/nds.h \
     include/nds3/base.h \
     include/nds3/dataAcquisition.h \
-    include/nds3/delegate.h \
     include/nds3/exceptions.h \
     include/nds3/factory.h \
     include/nds3/node.h \
     include/nds3/port.h \
     include/nds3/pvBase.h \
-    include/nds3/pvHoldDelegate.h \
     include/nds3/stateMachine.h \
     include/nds3impl/dataAcquisitionImpl.h \
     include/nds3impl/factoryBaseImpl.h \
@@ -78,7 +73,6 @@ HEADERS += \
     include/nds3impl/nodeImpl.h \
     include/nds3impl/portImpl.h \
     include/nds3impl/pvBaseImpl.h \
-    include/nds3impl/pvHoldDelegateImpl.h \
     include/nds3impl/stateMachineImpl.h \
     include/nds3impl/baseImpl.h \
     include/nds3impl/logStreamGetterImpl.h \

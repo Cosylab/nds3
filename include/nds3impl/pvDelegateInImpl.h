@@ -39,7 +39,7 @@ public:
      * @param name          PV's name
      * @param readFunction  read method
      */
-    PVDelegateInImpl(const std::string& name, read_t readFunction);
+    PVDelegateInImpl(const std::string& name, read_t readFunction, const inputPvType_t pvType = inputPvType_t::generic);
 
     /**
      * @brief Called when the control system wants to read a value.

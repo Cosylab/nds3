@@ -2,11 +2,13 @@
 #include "../include/nds3impl/pvBaseOutImpl.h"
 #include "../include/nds3impl/portImpl.h"
 #include "../include/nds3impl/ndsFactoryImpl.h"
+#include "../include/nds3impl/factoryBaseImpl.h"
+
 #include <cstring>
 namespace nds
 {
 
-PVBaseInImpl::PVBaseInImpl(const std::string& name): PVBaseImpl(name),
+PVBaseInImpl::PVBaseInImpl(const std::string& name, const inputPvType_t pvType): PVBaseImpl(name), m_pvType(pvType),
     m_decimationFactor(1), m_decimationCount(1)
 {
     defineCommand("replicate", "replicate destination source", 1, std::bind(&PVBaseInImpl::commandReplicate,this, std::placeholders::_1));
@@ -158,6 +160,59 @@ parameters_t PVBaseInImpl::commandReplicate(const parameters_t &parameters)
 {
     replicateFrom(parameters[0]);
     return parameters_t();
+}
+
+
+std::string PVBaseInImpl::buildFullExternalName(const FactoryBaseImpl& controlSystem) const
+{
+    return buildFullExternalName(controlSystem, false);
+
+}
+std::string PVBaseInImpl::buildFullExternalNameFromPort(const FactoryBaseImpl& controlSystem) const
+{
+    return buildFullExternalName(controlSystem, true);
+}
+
+std::string PVBaseInImpl::buildFullExternalName(const FactoryBaseImpl& controlSystem, const bool bStopAtPort) const
+{
+    std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();
+    if(temporaryPointer == 0)
+    {
+        return controlSystem.getSeparator(0) + controlSystem.getRootNodeName(m_externalName);
+    }
+
+    std::string name;
+    switch(m_pvType)
+    {
+    case inputPvType_t::generic:
+        name = controlSystem.getInputPVName(m_externalName);
+        break;
+    case inputPvType_t::getLocalState:
+        name = controlSystem.getStateMachineGetStateName(m_externalName);
+        break;
+    case inputPvType_t::getGlobalState:
+        name = controlSystem.getStateMachineGetGlobalStateName(m_externalName);
+        break;
+    }
+
+    if(name.empty())
+    {
+        if(bStopAtPort)
+        {
+            return temporaryPointer->buildFullExternalNameFromPort(controlSystem);
+        }
+        else
+        {
+            return temporaryPointer->buildFullExternalName(controlSystem);
+        }
+    }
+
+    if(bStopAtPort)
+    {
+        return temporaryPointer->buildFullExternalNameFromPort(controlSystem) + controlSystem.getSeparator(m_nodeLevel) + name;
+    }
+
+    return temporaryPointer->buildFullExternalName(controlSystem) + controlSystem.getSeparator(m_nodeLevel) + name;
 }
 
 

@@ -25,7 +25,7 @@ public:
      *
      * @param name  node's name (e.g. "CHANNEL0" or "CHANNELGROUP1")
      */
-    NodeImpl(const std::string& name);
+    NodeImpl(const std::string& name, const nodeType_t nodeType);
 
     void addChild(std::shared_ptr<BaseImpl> pChild);
 
@@ -44,9 +44,15 @@ public:
 
     virtual void setLogLevel(const logLevel_t logLevel);
 
+    virtual std::string buildFullExternalName(const FactoryBaseImpl& controlSystem) const;
+    virtual std::string buildFullExternalNameFromPort(const FactoryBaseImpl& controlSystem) const;
+
+protected:
+    std::string buildFullExternalName(const FactoryBaseImpl& controlSystem, const bool bStopAtPort) const;
+
+    nodeType_t m_nodeType;
 
 private:
-
     typedef std::map<std::string, std::shared_ptr<BaseImpl> > tChildren;
     tChildren m_children;
 

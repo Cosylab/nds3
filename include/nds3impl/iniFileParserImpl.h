@@ -12,7 +12,18 @@ class IniFileParserImpl
 public:
     IniFileParserImpl(std::istream& inputStream);
 
+    /**
+     * @brief Retrieve the value for a specific key in the parsed INI file.
+     *
+     * Throws
+     * @param section
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     const std::string& getString(const std::string& section, const std::string& key, const std::string& defaultValue) const;
+
+    bool keyExists(const std::string& section, const std::string& key) const;
 
 private:
 

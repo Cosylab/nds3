@@ -80,9 +80,47 @@ public:
 
     void holdNode(void* pDeviceObject, std::shared_ptr<NodeImpl> pHoldNode);
 
+    /**
+     * @brief Returns the separator to use between the node names.
+     *
+     * Considers the naming rules set via setNamingRules(). If the naming rules don't
+     *  define a separator then passes the request to getDefaultSeparator().
+     *
+     * @param nodeLevel the node level for which the separator is required. The level 0
+     *                   is the separator inserted righ before the root node name.
+     * @return the separator for the specified level. Can be empty if no separator is
+     *         required.
+     *
+     */
+    const std::string& getSeparator(const std::uint32_t nodeLevel) const;
+
+
+    std::string getRootNodeName(const std::string& name) const;
+    std::string getGenericChannelName(const std::string& name) const;
+    std::string getInputChannelName(const std::string& name) const;
+    std::string getOutputChannelName(const std::string& name) const;
+    std::string getSourceChannelName(const std::string& name) const;
+    std::string getSinkChannelName(const std::string& name) const;
+    std::string getInputPVName(const std::string& name) const;
+    std::string getOutputPVName(const std::string& name) const;
+    std::string getStateMachineNodeName(const std::string& name) const;
+    std::string getStateMachineSetStateName(const std::string& name) const;
+    std::string getStateMachineGetStateName(const std::string& name) const;
+    std::string getStateMachineGetGlobalStateName(const std::string& name) const;
+    std::string getDecimationPVName(const std::string& name) const;
+
+    std::string buildNameFromRule(const std::string& name,
+                                  const std::string& rule0,
+                                  const std::string& rule1 = "",
+                                  const std::string& rule2 = "",
+                                  const std::string& rule3 = "",
+                                  const std::string& rule4 = ""
+                                  ) const;
+
+    virtual const std::string& getDefaultSeparator(const std::uint32_t nodeLevel) const = 0;
+
     virtual const std::string getName() const = 0;
 
-    virtual std::string getDefaultSeparator(const std::uint32_t nodeLevel) = 0;
 
     /**
      * @brief This method is called by a PortNodeImpl object in order to create a

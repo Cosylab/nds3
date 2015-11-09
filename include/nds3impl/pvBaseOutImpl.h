@@ -23,7 +23,7 @@ public:
      *
      * @param name the PV's name
      */
-    PVBaseOutImpl(const std::string& name);
+    PVBaseOutImpl(const std::string& name, const outputPvType_t pvType);
 
     /**
      * @brief Subscribe the PV to another input PV.
@@ -55,7 +55,16 @@ public:
 
     virtual dataDirection_t getDataDirection() const;
 
+    virtual std::string buildFullExternalName(const FactoryBaseImpl& controlSystem) const;
+    virtual std::string buildFullExternalNameFromPort(const FactoryBaseImpl& controlSystem) const;
+
+protected:
+    std::string buildFullExternalName(const FactoryBaseImpl& controlSystem, const bool bStopAtPort) const;
+
+    outputPvType_t m_pvType;
+
 private:
+
     parameters_t commandSubscribeTo(const parameters_t& parameters);
 
 };

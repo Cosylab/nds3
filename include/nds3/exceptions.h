@@ -202,6 +202,24 @@ public:
     MissingDestinationPV(const std::string& what);
 };
 
+class INIParserError: public std::runtime_error
+{
+public:
+    INIParserError(const std::string& what);
+};
+
+class INIParserMissingSection: public INIParserError
+{
+public:
+    INIParserMissingSection(const std::string& what);
+};
+
+class INIParserSyntaxError: public INIParserError
+{
+public:
+    INIParserSyntaxError(const std::string& what);
+};
+
 }
 
 #endif // NDSEXCEPTIONS_H

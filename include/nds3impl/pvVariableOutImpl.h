@@ -30,7 +30,7 @@ public:
      *
      * @param name the name of the PV
      */
-    PVVariableOutImpl(const std::string& name);
+    PVVariableOutImpl(const std::string& name, const outputPvType_t pvType = outputPvType_t::generic);
 
     /**
      * @brief Called when the control system wants to read a value from the PV.

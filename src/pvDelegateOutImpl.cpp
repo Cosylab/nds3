@@ -8,7 +8,7 @@ namespace nds
  *
  ********************************************/
 template <typename T>
-PVDelegateOutImpl<T>::PVDelegateOutImpl(const std::string& name, write_t writeFunction, initValue_t initValueFunction): PVBaseOutImpl(name),
+PVDelegateOutImpl<T>::PVDelegateOutImpl(const std::string& name, write_t writeFunction, initValue_t initValueFunction, outputPvType_t pvType): PVBaseOutImpl(name, pvType),
     m_writer(writeFunction),
     m_initializer(initValueFunction)
 {
@@ -24,7 +24,7 @@ PVDelegateOutImpl<T>::PVDelegateOutImpl(const std::string& name, write_t writeFu
  *
  ***********************************************/
 template <typename T>
-PVDelegateOutImpl<T>::PVDelegateOutImpl(const std::string& name, write_t writeFunction): PVBaseOutImpl(name),
+PVDelegateOutImpl<T>::PVDelegateOutImpl(const std::string& name, write_t writeFunction, const outputPvType_t pvType): PVBaseOutImpl(name, pvType),
     m_writer(writeFunction),
     m_initializer(std::bind(&PVDelegateOutImpl::dontInitialize, this, std::placeholders::_1, std::placeholders::_2))
 {

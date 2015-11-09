@@ -45,16 +45,6 @@ void PVBase::setDescription(const std::string& description)
 
 
 /*
- * Set the external name
- *
- ***********************/
-void PVBase::setInterfaceName(const std::string& interfaceName)
-{
-    std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->setInterfaceName(interfaceName);
-}
-
-
-/*
  * Set the scan type
  *
  *******************/

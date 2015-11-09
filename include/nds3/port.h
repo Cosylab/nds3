@@ -29,7 +29,7 @@ public:
      * @param name port's name. The port name is linked to the parents' names to form
      *             the identifier used to register the AsynPort.
      */
-    Port(const std::string& name);
+    Port(const std::string& name, const nodeType_t nodeType = nodeType_t::generic);
 
 };
 
