@@ -11,9 +11,20 @@ namespace nds
 
 class IniFileParserImpl;
 
+/**
+ * @brief Parses an INI file and stores all the found sections and keys
+ *        for future retrieval via getString().
+ *
+ */
 class NDS3_API IniFileParser
 {
 public:
+    /**
+     * @brief Parses the INI file in the input stream and stores all the found
+     *        sections and keys with the corresponding values.
+     *
+     * @param inputStream the stream to parse
+     */
     IniFileParser(std::istream& inputStream);
 
     ~IniFileParser();
@@ -21,14 +32,25 @@ public:
     /**
      * @brief Retrieve the value for a specific key in the parsed INI file.
      *
-     * Throws
-     * @param section
-     * @param key
-     * @param defaultValue
-     * @return
+     * Throws INIParserMissingSection if the specified section cannot be found.
+     *
+     * @param section      the section to which the key belongs
+     * @param key          the key to retrieve
+     * @param defaultValue the default value to return in the case that the key cannot be found
+     * @return             the value related to the key or defaultValue if the key doesn't exist
      */
     const std::string& getString(const std::string& section, const std::string& key, const std::string& defaultValue) const;
 
+    /**
+     * @brief Return true if the requested key exists and has a value (even an empty one),
+     *               false otherwise.
+     *
+     * Throws INIParserMissingSection if the specified section cannot be found.
+     *
+     * @param section the section to which the key belongs
+     * @param key     the key
+     * @return        true if the key exists in the INI file, false otherwise
+     */
     bool keyExists(const std::string& section, const std::string& key) const;
 
 private:

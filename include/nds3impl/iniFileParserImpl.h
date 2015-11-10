@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <list>
 
 namespace nds
 {
@@ -26,6 +27,9 @@ public:
     const std::string& getString(const std::string& section, const std::string& key, const std::string& defaultValue) const;
 
     bool keyExists(const std::string& section, const std::string& key) const;
+
+    typedef std::list<std::string> sectionsList_t;
+    sectionsList_t getSections() const;
 
 private:
 

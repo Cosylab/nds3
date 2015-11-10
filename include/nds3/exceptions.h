@@ -202,7 +202,7 @@ public:
     MissingDestinationPV(const std::string& what);
 };
 
-class INIParserError: public std::runtime_error
+class INIParserError: public NdsError
 {
 public:
     INIParserError(const std::string& what);

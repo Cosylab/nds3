@@ -77,16 +77,21 @@ public:
     const std::string& getFullName() const;
 
     /**
-     * @brief Return the node's name as seen by the parent AsynPort.
+     * @brief Return the node's name as seen by the parent Port.
      *
      * For instance, for a record "TIME" contained in the channel "CH0" that is part of
-     * an AsynPort named "DEVICE" the return value will be "CH0-TIME": node that the "DEVICE"
+     * a Port named "DEVICE" the return value will be "CH0-TIME": node that the "DEVICE"
      * part is missing.
      *
-     * @return the node's name relative to the AsynPort that contains it.
+     * @return the node's name relative to the Port that contains it.
      */
     const std::string& getFullNameFromPort() const;
 
+    /**
+     * @brief Return the full node name as seen by the control system clients.
+     *
+     * @return the full node name as seen by the control system clients.
+     */
     const std::string& getFullExternalName() const;
 
     const std::string& getFullExternalNameFromPort() const;

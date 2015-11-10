@@ -9,6 +9,7 @@
 
 #include <sstream>
 #include <cstdio>
+#include <algorithm>
 
 namespace nds
 {
@@ -205,6 +206,27 @@ const std::string& FactoryBaseImpl::getSeparator(const std::uint32_t nodeLevel) 
     return m_namingRules->getString(m_namingRulesName, thisLevelKey.str(), getDefaultSeparator(nodeLevel));
 }
 
+void FactoryBaseImpl::loadNamingRules(std::istream& rules)
+{
+    m_namingRules.reset(new IniFileParserImpl(rules));
+
+    IniFileParserImpl::sectionsList_t sections(m_namingRules->getSections());
+    if(sections.size() == 1)
+    {
+        m_namingRulesName = sections.front();
+    }
+    else
+    {
+        m_namingRulesName.clear();
+    }
+}
+
+void FactoryBaseImpl::setNamingRules(const std::string& rulesName)
+{
+    m_namingRulesName = rulesName;
+}
+
+
 std::string FactoryBaseImpl::getRootNodeName(const std::string& name) const
 {
     return buildNameFromRule(name, "rootNode", "genericNode");
@@ -289,9 +311,26 @@ std::string FactoryBaseImpl::buildNameFromRule(const std::string& name,
                                  m_namingRules->getString(m_namingRulesName, rule3,
                                   m_namingRules->getString(m_namingRulesName, rule4, "%s")))));
 
+    std::string adjustedName(name);
+    bool toUpper = m_namingRules->getString(m_namingRulesName, "toUpper", "0") == "1";
+    bool toLower = m_namingRules->getString(m_namingRulesName, "toLower", "0") == "1";
+    if(toUpper)
+    {
+        std::transform(name.begin(), name.end(), adjustedName.begin(), ::toupper);
+    }
+    if(toLower)
+    {
+        std::transform(name.begin(), name.end(), adjustedName.begin(), ::tolower);
+    }
+
     char buffer[1024];
-    snprintf(buffer, sizeof(buffer), rule.c_str(), name.c_str());
-    return buffer;
+    snprintf(buffer, sizeof(buffer), rule.c_str(), adjustedName.c_str());
+
+    // Replace spaces with 0
+    std::string returnString(buffer);
+    std::replace(returnString.begin(), returnString.end(), ' ', '0');
+
+    return returnString;
 
 
 }

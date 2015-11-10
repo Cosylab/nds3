@@ -244,6 +244,30 @@ typedef std::list<std::string> enumerationStrings_t;
 
 } // namespace nds
 
+/**
+ * @brief Defines the global functions that are called by NDS when the device class needs
+ *        to be allocated.
+ *
+ * @param driverName   a string that specifies the driver name
+ * @param className    the name of the class that implements the driver
+ */
+#define NDS_DEFINE_DRIVER(driverName, className)\
+extern "C" \
+{ \
+void* allocateDevice(nds::Factory& factory, const std::string& device, const nds::namedParameters_t& parameters) \
+{ \
+    return new className(factory, device, parameters); \
+} \
+void deallocateDevice(void* device) \
+{ \
+    delete (className*)device; \
+} \
+const char* getDeviceName() \
+{ \
+    return driverName; \
+} \
+} // extern "C"
+
 // Generic helper definitions for shared library support
 #if defined _WIN32 || defined __CYGWIN__
   #define NDS3_HELPER_DLL_IMPORT __declspec(dllimport)

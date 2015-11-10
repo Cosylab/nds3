@@ -107,6 +107,17 @@ public:
 
     /**
      * @ingroup naming
+     * @brief Return the full node's name as seen by the control system clients.
+     *
+     * The external name is calculated from the node's full name (see getFullName)
+     *  by applying the rules specified in the naming rules.
+     *
+     * @return the full node name as seen by the control system clients.
+     */
+    const std::string& getFullExternalName() const;
+
+    /**
+     * @ingroup naming
      * @brief Return the node's name as seen by the parent Port node (the node that communicates
      *        with the device).
      *

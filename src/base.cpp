@@ -60,6 +60,12 @@ const std::string& Base::getFullName() const
 }
 
 
+const std::string& Base::getFullExternalName() const
+{
+    return m_pImplementation->getFullExternalName();
+}
+
+
 const std::string& Base::getFullNameFromPort() const
 {
     return m_pImplementation->getFullNameFromPort();

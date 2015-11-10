@@ -157,6 +157,14 @@ void StateMachineImpl::setState(const state_t newState)
     {
         std::lock_guard<std::recursive_mutex> lock(m_stateMutex);
         localState = getLocalState();
+
+        // Nothing to do if we are already in the desidered state
+        /////////////////////////////////////////////////////////
+        if(localState == newState)
+        {
+            return;
+        }
+
         timespec unused;
         getGlobalState(&unused, &globalState);
 

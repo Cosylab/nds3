@@ -79,7 +79,7 @@ MissingDestinationPV::MissingDestinationPV(const std::string &what): FactoryErro
 {
 }
 
-INIParserError::INIParserError(const std::string& what): std::runtime_error(what)
+INIParserError::INIParserError(const std::string& what): NdsError(what)
 {
 }
 

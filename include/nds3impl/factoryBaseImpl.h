@@ -96,6 +96,8 @@ public:
      */
     const std::string& getSeparator(const std::uint32_t nodeLevel) const;
 
+    void loadNamingRules(std::istream& rules);
+    void setNamingRules(const std::string& rulesName);
 
     std::string getRootNodeName(const std::string& name) const;
     std::string getGenericChannelName(const std::string& name) const;

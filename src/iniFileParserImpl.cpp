@@ -88,6 +88,20 @@ bool IniFileParserImpl::keyExists(const std::string &section, const std::string 
     return (findKey != findSection->second.end());
 }
 
+IniFileParserImpl::sectionsList_t IniFileParserImpl::getSections() const
+{
+    sectionsList_t sectionsList;
+    for(sectionKeyMap_t::const_iterator scanSections(m_sections.begin()), endSections(m_sections.end());
+        scanSections != endSections;
+        ++scanSections)
+    {
+        sectionsList.push_back(scanSections->first);
+    }
+
+    return sectionsList;
+
+}
+
 std::string IniFileParserImpl::trim(const std::string& string)
 {
     size_t lastChar = string.find_last_not_of(m_spaces);

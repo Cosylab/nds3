@@ -5,16 +5,6 @@ This section will guide you through the development of a simple Device Support b
 Here we assume that you already installed the NDS3 library and the NDS3 control system layer of your choice.
 
 
-### Forget everything
-
-NDS3 is an abstraction layer over traditional control system frameworks like EPICS or Tango. Altought it takes some
-concepts from the control systems that it allows to use, NDS3 introduces some new concepts and limits that should
-speed up the development of control system agnostic Device Support.
-
-Before trying to use NDS, try to clear your mind from concepts, limits and terminology related to your control system
-of choice.
-
-
 ### NDS3 concepts
 
 Device Supports for the NDS3 framework must declare the device functionalities using a tree-like structure: the tree 
@@ -110,24 +100,7 @@ Let's put this in C++ form:
     //  as a dynamic module and we have to provide the functions to allocate it,
     //  deallocate it and retrieve its name
     ////////////////////////////////////////////////////////////////////////////////
-    extern "C"
-    {
-    void* allocateDevice(nds::Factory& factory, const std::string& device, const nds::namedParameters_t& parameters)
-    {
-        return new Thermometer(factory, device, parameters);
-    }
-
-    void deallocateDevice(void* device)
-    {
-        delete (Thermometer*)device;
-    }
-
-    const char* getDeviceName()
-    {
-        return "Thermometer";
-    }
-
-    } // extern "C"    
+    NDS_DEFINE_DRIVER("Thermometer", Thermometer);
 
 What did we do with this code?
 
