@@ -1,6 +1,6 @@
 /**
 
-@section naming_rules Naming rules
+@page naming_rules Naming rules
 
 Each node or PV can have an external name set via nds::Base::setExternalName().
 If the external name is not set then it has the same value as the node or PV's name.
@@ -65,7 +65,7 @@ The naming rules definition file contains the transformations to apply to each n
 and also defines the separator to insert between the component names.
 
 
-@subsection naming_rules_file Naming rules definition file
+@section naming_rules_file Naming rules definition file
 
 The naming rules definition file is an INI file that can contain one or more sections, which in turn can have
 several lines defining the naming rules (one rule per line).
@@ -120,3 +120,4 @@ The default value is 0.
 
 
 */
+

@@ -73,7 +73,7 @@ Each node can be exposed to the control system by using a name that is different
 For each node you can set the external name via nds::Base::setExternalName(). The default value of the
 external name is the same as the component name.
 
-The external name is also processed by the naming rules in order to calculate the full name with which the
+The external name is also processed by the @ref naming_rules in order to calculate the full name with which the
 node is exposed to the control system.
 
 
