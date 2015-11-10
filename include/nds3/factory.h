@@ -7,7 +7,7 @@
  * @brief Define the class that interfaces with the NDS factory and
  *        the chosen control system.
  *
- * Include nds3.h instead of this one, since nds3.h takes care of including all the
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
  * necessary header files (including this one).
  */
 

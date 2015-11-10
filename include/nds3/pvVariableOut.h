@@ -1,6 +1,16 @@
 #ifndef NDSPVVARIABLEOUT_H
 #define NDSPVVARIABLEOUT_H
 
+/**
+ * @file pvVariableOut.h
+ *
+ * @brief Defines the nds::PVVariableOut class, an outputput PV that stores the values
+ *        received from the control system.
+ *
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include "definitions.h"
 #include "pvBaseOut.h"
 

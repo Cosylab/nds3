@@ -1,6 +1,16 @@
 #ifndef NDSPORT_H
 #define NDSPORT_H
 
+/**
+ * @file port.h
+ *
+ * @brief Defines the nds::Port, an nds::Node derived class that can communicate with
+ *        the control system.
+ *
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include "definitions.h"
 #include "node.h"
 
@@ -28,6 +38,9 @@ public:
      *
      * @param name port's name. The port name is linked to the parents' names to form
      *             the identifier used to register the AsynPort.
+     * @param nodeType specifies the node's role. This information is used to
+     *                 calculate the external node name when the @ref naming_rules
+     *                 naming rules are used.
      */
     Port(const std::string& name, const nodeType_t nodeType = nodeType_t::generic);
 

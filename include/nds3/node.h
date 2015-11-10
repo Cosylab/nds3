@@ -4,10 +4,10 @@
 /**
  * @file node.h
  *
- * @brief Defines the Node class, a class that can contain other device's nodes, ports
+ * @brief Defines the nds::Node class, a class that can contain other device's nodes, ports
  *         or PVs.
  *
- * Include nds3.h instead of this one, since nds3.h takes care of including all the
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
  * necessary header files (including this one).
  */
 
@@ -39,7 +39,10 @@ public:
     /**
      * @brief Construct the node.
      *
-     * @param name  node's name (e.g. "CHANNEL0" or "CHANNELGROUP1")
+     * @param name     node's name (e.g. "CHANNEL0" or "CHANNELGROUP1")
+     * @param nodeType specifies the node's role. This information is used to
+     *                 calculate the external node name when the @ref naming_rules
+     *                 naming rules are used.
      */
     Node(const std::string& name, const nodeType_t nodeType = nodeType_t::generic);
 

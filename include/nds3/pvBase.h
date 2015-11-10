@@ -1,6 +1,15 @@
 #ifndef NDSPVBASE_H
 #define NDSPVBASE_H
 
+/**
+ * @file pvBase.h
+ *
+ * @brief Defines the base class for all the input and output PVs.
+ *
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include "definitions.h"
 #include "base.h"
 #include <cstdint>

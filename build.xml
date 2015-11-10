@@ -37,7 +37,10 @@
 			 <fileset dir=".">
 			 	<include name="doc/**/*.h" />
                                 <include name="doc/**/*.md" />
-			 	<include name="doc/**/Doxyfile" />
+			 	<include name="doc/**/*.dox" />
+			 	<include name="doc/**/DoxyfileHTML" />
+			 	<include name="doc/**/DoxyfilePDF" />
+			 	<include name="doc/**/DoxyfilePDFH" />
 			 	<include name="doc/**/*.xml" />
                                 <include name="doc/api/documentation.html" />
                          </fileset>
@@ -49,6 +52,8 @@
 
 		<copy todir="${build_dir}">
 			 <fileset dir=".">
+				<include name="Makefile" />
+				<include name="readme.md" />
 			 	<include name="src/**/*.cpp" />
 			 	<include name="include/**/*.h" />
 			 	<include name="CMake/**/CMakeLists.txt" />
@@ -62,7 +67,9 @@
 	<target name="replace_version" depends="create_build_dir">
 
 		<!-- Replace version for tests and reports -->
-		<replace file="${build_dir_tests}/doc/api/Doxyfile" token="1.0.0" value='"${fullVersionReadable}"'/>
+		<replace file="${build_dir_tests}/doc/api/DoxyfileHTML" token="1.0.0" value='"${fullVersionReadable}"'/>
+		<replace file="${build_dir_tests}/doc/api/DoxyfilePDF" token="1.0.0" value='"${fullVersionReadable}"'/>
+		<replace file="${build_dir_tests}/doc/api/DoxyfilePDFH" token="1.0.0" value='"${fullVersionReadable}"'/>
 		<replace file="${build_dir_tests}/CMake/CMakeLists.txt" token="1.0.0" value='"${fullVersionReadable}"'/>
 		<replace dir="${build_dir_tests}" includes="*.rc,*.h,*.cpp" token="1.0.0" value="${fullVersionReadable}" />
 		<replace dir="${build_dir_tests}" includes="*.rc,*.h,*.cpp" token="&quot;1.0.0&quot;" value="&quot;${fullVersionReadable}&quot;" />
@@ -161,7 +168,7 @@ License goes here
     <!-- Build the HTML documentation -->
     <target name="HTML" depends="run_test_cases" description="Build the HTML documents">
         <exec dir="${build_dir_tests}/doc/api" executable="doxygen" failonerror="true">
-            <arg value="Doxyfile"/>
+            <arg value="DoxyfileHTML"/>
 	</exec>
         <replace dir="${build_dir_tests}/doc/api/html" token="Related Pages" value="User manual"/>
         <replace dir="${build_dir_tests}/doc/api/html" token="Main Page" value="Introduction"/>
@@ -169,6 +176,23 @@ License goes here
         <replace dir="${build_dir_tests}/doc/api/html" token="Main&amp;#160;Page" value="Introduction"/>
     </target>
 
+    <!-- Build the hyperlinked PDF documentation -->
+    <target name="PDFH" depends="run_test_cases" description="Build the PDFH documents">
+        <exec dir="${build_dir_tests}/doc/api" executable="doxygen" failonerror="true">
+            <arg value="DoxyfilePDFH"/>
+	</exec>
+        <exec dir="${build_dir_tests}/doc/api/hlatex" executable="make" failonerror="true" />
+    </target>
+
+    <!-- Build the printable PDF documentation -->
+    <target name="PDF" depends="run_test_cases" description="Build the PDF documents">
+        <exec dir="${build_dir_tests}/doc/api" executable="doxygen" failonerror="true">
+            <arg value="DoxyfilePDF"/>
+	</exec>
+        <exec dir="${build_dir_tests}/doc/api/latex" executable="make" failonerror="true" />
+    </target>
+
+    <!-- Copy the coverage report to the artifacts -->
     <target name="artifacts_coverage" depends="collect_coverage">
         <mkdir dir="${artifacts}/coverage_report" />
         <copy todir="${artifacts}/coverage_report">
@@ -176,7 +200,8 @@ License goes here
         </copy>
     </target>
 
-    <target name="artifacts_documentation" depends="HTML" >
+    <!-- Copy the documentation to the artifacts -->
+    <target name="artifacts_documentation" depends="HTML, PDFH, PDF" >
         <mkdir dir="${artifacts}/documentation/html" />
         <copy todir="${artifacts}/documentation/html">
             <fileset dir="${build_dir_tests}/doc/api/html" />
@@ -184,8 +209,11 @@ License goes here
         <copy todir="${artifacts}/documentation">
             <fileset file="${build_dir_tests}/doc/api/documentation.html" />
         </copy>
+        <copy tofile="${artifacts}/documentation/nds3_hyperlinked.pdf" file="${build_dir_tests}/doc/api/hlatex/refman.pdf" />
+        <copy tofile="${artifacts}/documentation/nds3_print.pdf" file="${build_dir_tests}/doc/api/latex/refman.pdf" />
     </target>
 
+    <!-- Copy the source to the artifacts -->
     <target name="artifacts_source" depends="run_test_cases">
         <mkdir dir="${artifacts}/sources" />
         <copy todir="${artifacts}/sources">

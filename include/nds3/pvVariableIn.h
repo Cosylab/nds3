@@ -1,6 +1,16 @@
 #ifndef NDSPVVARIABLEIN_H
 #define NDSPVVARIABLEIN_H
 
+/**
+ * @file pvVariableIn.h
+ *
+ * @brief Defines the nds::PVVariableIn class, an input PV that stores the values
+ *        to be supplied to the control system.
+ *
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include "definitions.h"
 #include "pvBaseIn.h"
 

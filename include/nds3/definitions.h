@@ -6,7 +6,7 @@
  * @file definitions.h
  * @brief Defines all the enumeration and common types used across the NDS library.
  *
- * Include nds3.h instead of this one, since nds3.h takes care of including all the
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
  * necessary header files (including this one).
  */
 
@@ -87,30 +87,41 @@ enum class dataDirection_t
 };
 
 /**
- * @brief Defines the type of nodes in the tree structure: it is used to build the node's
- *        external name (the name with which the node is visible from the control system side).
+ * @ingroup naming
+ * @brief Defines the nodes' roles in the tree structure: it is used to build the node's
+ *        external name when using the @ref naming_rules.
  */
 enum class nodeType_t
 {
-    generic,
-    inputChannel,
-    outputChannel,
-    dataSourceChannel,
-    dataSinkChannel,
-    stateMachine
+    generic,           ///< The node's role is not specified
+    inputChannel,      ///< The node contains mainly input PVs
+    outputChannel,     ///< The node contains mainly output PVs
+    dataSourceChannel, ///< The node contains a PV that pushes acquired data
+    dataSinkChannel,   ///< The node contains a PV that receives pushed data
+    stateMachine       ///< The node implements a state machine
 };
 
+/**
+ * @ingroup naming
+ * @brief Defines an input PV's role: this information is used to build the PV's
+ *        external name when using the @ref naming_rules.
+ */
 enum class inputPvType_t
 {
-    generic,
-    getLocalState,
-    getGlobalState
+    generic,        ///< The PV's role is not specified
+    getLocalState,  ///< The PV is used to retrieve the local state of a state machine
+    getGlobalState  ///< The PV is used to retrieve the global state
 };
 
+/**
+ * @ingroup naming
+ * @brief Defines an output PV's role: this information is used to build the PV's
+ *        external name when using the @ref naming_rules.
+ */
 enum class outputPvType_t
 {
-    generic,
-    setLocalState
+    generic,       ///< The PV's role is not specified
+    setLocalState  ///< The PV is used to change the local state of a state machine
 };
 
 /**
@@ -149,7 +160,33 @@ enum class outputPvType_t
  * @endcode
  */
 #define ndsInfoStream(node) ndsLogStream(node, nds::logLevel_t::info)
+
+/**
+ * @ingroup logging
+ * @brief Log to the warning stream if the warning log level is enabled on the
+ *        selected node.
+ *
+ * The last logged element must be std::endl.
+ *
+ * Example:
+ * @code
+ * ndsWarningStream(node) << "The value could not be changed from " << value0 << " to " << value1 << std::endl
+ * @endcode
+ */
 #define ndsWarningStream(node) ndsLogStream(node, nds::logLevel_t::warning)
+
+/**
+ * @ingroup logging
+ * @brief Log to the error stream if the error log level is enabled on the
+ *        selected node.
+ *
+ * The last logged element must be std::endl.
+ *
+ * Example:
+ * @code
+ * ndsErrorStream(node) << "An error has occurred while updating the value to " << value << std::endl
+ * @endcode
+ */
 #define ndsErrorStream(node) ndsLogStream(node, nds::logLevel_t::error)
 
 /**

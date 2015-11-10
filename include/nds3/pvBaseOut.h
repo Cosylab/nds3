@@ -1,6 +1,15 @@
 #ifndef NDSPVBASEOUT_H
 #define NDSPVBASEOUT_H
 
+/**
+ * @file pvBaseOut.h
+ *
+ * @brief Defines the base class for the output PVs.
+ *
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include "pvBase.h"
 
 namespace nds

@@ -7,7 +7,7 @@
  * @brief Defines all the exceptions that may be thrown by the library or
  *        recognized and processed by the library.
  *
- * Include nds3.h instead of this one, since nds3.h takes care of including all the
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
  * necessary header files (including this one).
  */
 
@@ -154,6 +154,10 @@ public:
     DriverAlreadyRegistered(const std::string& what);
 };
 
+/**
+ * @brief This exception is thrown when a loaded shared module containing a
+ *        NDS device does not contain the export functions (see @ref NDS_DEFINE_DRIVER)
+ */
 class NDS3_API DriverDoesNotExportRegistrationFunctions: public FactoryError
 {
 public:

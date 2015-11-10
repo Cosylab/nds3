@@ -1,6 +1,16 @@
 #ifndef NDSPVDELEGATEOUT_H
 #define NDSPVDELEGATEOUT_H
 
+/**
+ * @file pvDelegateOut.h
+ *
+ * @brief Defines the nds::PVDelegateOut class, an output PV that delegates the write
+ *        operation to an user defined function.
+ *
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include "definitions.h"
 #include "pvBaseOut.h"
 

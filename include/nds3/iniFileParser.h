@@ -1,6 +1,15 @@
 #ifndef NDSINIFILEPARSER_H
 #define NDSINIFILEPARSER_H
 
+/**
+ * @file iniFileParser.h
+ *
+ * @brief Defines the class nds::IniFileParser used to read and parse the INI files.
+ *
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include <istream>
 #include <string>
 #include <memory>

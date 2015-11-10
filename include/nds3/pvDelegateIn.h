@@ -1,6 +1,16 @@
 #ifndef NDSPVDELEGATEIN_H
 #define NDSPVDELEGATEIN_H
 
+/**
+ * @file pvDelegateIn.h
+ *
+ * @brief Defines the nds::PVDelegateIn class, an input PV that delegates the read
+ *        operation to an user defined function.
+ *
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include "definitions.h"
 #include "pvBaseIn.h"
 

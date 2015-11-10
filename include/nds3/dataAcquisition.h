@@ -3,10 +3,10 @@
 
 /**
  * @file dataAcquisition.h
- * @brief Defines the DataAcquisition node, which provides basic services for data
+ * @brief Defines the nds::DataAcquisition node, which provides basic services for data
  *        acquisition.
  *
- * Include nds3.h instead of this one, since nds3.h takes care of including all the
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
  * necessary header files (including this one).
  */
 

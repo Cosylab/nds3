@@ -1,6 +1,15 @@
 #ifndef NDSPVBASEIN_H
 #define NDSPVBASEIN_H
 
+/**
+ * @file pvBaseIn.h
+ *
+ * @brief Defines the base class for the input PVs.
+ *
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include "pvBase.h"
 
 namespace nds

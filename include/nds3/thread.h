@@ -1,6 +1,15 @@
 #ifndef NDSTHREAD_H
 #define NDSTHREAD_H
 
+/**
+ * @file thread.h
+ *
+ * @brief Defines the nds::Thread class used to execute tasks on parallel threads.
+ *
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include "definitions.h"
 #include <string>
 #include <memory>

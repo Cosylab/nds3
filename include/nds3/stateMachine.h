@@ -1,6 +1,15 @@
 #ifndef NDSSTATEMACHINE_H
 #define NDSSTATEMACHINE_H
 
+/**
+ * @file stateMachine.h
+ *
+ * @brief Defines the nds::StateMachine class.
+ *
+ * Include nds.h instead of this one, since nds3.h takes care of including all the
+ * necessary header files (including this one).
+ */
+
 #include <cstdint>
 
 #include "node.h"

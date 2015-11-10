@@ -5,7 +5,7 @@
 Each node or PV can have an external name set via nds::Base::setExternalName().
 If the external name is not set then it has the same value as the node or PV's name.
 
-The following code creates a Thermometer device with a single input PV named "Temperature"; not however
+The following code creates a Thermometer device with a single input PV named "Temperature"; note however
 that we add a line of code that changes the external name of the PV to "temp".\n
 
 @code

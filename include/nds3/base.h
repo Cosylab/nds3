@@ -6,7 +6,7 @@
  * @brief Defines the base class used for nodes, PVs, state machines and acquisition
  *        devices.
  *
- * Include nds3.h instead of this file, since nds3.h takes care of including all the
+ * Include nds.h instead of this file, since nds3.h takes care of including all the
  * necessary header files (including this one).
  */
 
@@ -69,6 +69,7 @@ public:
     virtual ~Base();
 
     /**
+     * @ingroup naming
      * @brief Set the string to pass to the naming rules in order to build
      *        the full node name as seen by the control system.
      *

@@ -1,0 +1,7 @@
+*.o
+*.so
+*.user.*
+*.user
+*.zip
+*.autosave
+
