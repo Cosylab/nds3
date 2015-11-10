@@ -166,6 +166,10 @@ public:
      */
     Thread runInThread(const std::string& name, threadFunction_t function);
 
+    void loadNamingRules(std::istream& rules);
+    void setNamingRules(const std::string& rulesName);
+
+
 #ifndef SWIG
 private:
     std::shared_ptr<FactoryBaseImpl> m_pFactory;

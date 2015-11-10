@@ -24,6 +24,8 @@ TEST(testThreads, testThreads)
     EXPECT_EQ(10, counter);
     runThread.join();
     EXPECT_EQ(4, counter);
+
+    factory.destroyDevice("");
 }
 
 

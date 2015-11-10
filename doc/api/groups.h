@@ -26,6 +26,7 @@ Your application can retrieve the std::ostream object by using Base::getLogger()
          necessary
 
 
+
 @defgroup datareadwrite Data input/output
 
 The control system can access the data via PVs (process variables). The base PV class is PVBase,
@@ -38,6 +39,43 @@ Both PVDelegate and PVVariable provide the read and write methods (inherited fro
 
 PVBase also provides a PVBase::push() method that allow to push data directly to the control system
  without waiting for it to poll it.
+
+
+
+@defgroup naming Naming policies
+
+Each node or PV of a device has a "component name" that identifies the node within its siblings with the same
+parent, and a "full name" that uniquely identifies the node in the device.
+
+The full name is calculated by prepending all the parents' names to the component name.
+
+Let's consider the following structure of nodes (each line represents a node, the indentation shows the
+ position in the tree structure):
+
+- "rootNode"
+  - "AcquisitionNode0"
+    - "Data"
+    - "Frequency"
+  - "AcquisitionNode1"
+    - "Data"
+    - "Frequency"
+
+The structure shows that there are two nodes with the name "Data", but their full name differs: the first
+node has the full name "rootNode-AcquisitionNode0-Data" while the second node has the full name
+"rootNode-AcquisitionNode1-Data".
+
+Internally NDS always separates the component names with a dash ("-").
+
+@warning It is not possible to have two nodes with the same full name.
+
+Each node can be exposed to the control system by using a name that is different from the internal name.
+
+For each node you can set the external name via nds::Base::setExternalName(). The default value of the
+external name is the same as the component name.
+
+The external name is also processed by the naming rules in order to calculate the full name with which the
+node is exposed to the control system.
+
 
 
 

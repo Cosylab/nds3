@@ -41,7 +41,6 @@ SOURCES +=\
     src/pvBaseIn.cpp \
     src/pvBaseOut.cpp \
     src/pvBaseOutImpl.cpp \
-    src/PVBaseInImpl.cpp \
     src/pvDelegateIn.cpp \
     src/pvDelegateOut.cpp \
     src/pvDelegateOutImpl.cpp \
@@ -55,7 +54,8 @@ SOURCES +=\
     src/threadStd.cpp \
     src/thread.cpp \
     src/iniFileParserImpl.cpp \
-    src/iniFileParser.cpp
+    src/iniFileParser.cpp \
+    src/pvBaseInImpl.cpp
 
 HEADERS += \
     include/nds3/definitions.h \

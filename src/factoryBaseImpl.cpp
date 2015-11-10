@@ -239,22 +239,22 @@ std::string FactoryBaseImpl::getGenericChannelName(const std::string& name) cons
 
 std::string FactoryBaseImpl::getInputChannelName(const std::string& name) const
 {
-    return buildNameFromRule(name, "inputNode", "genericNode");
+    return buildNameFromRule(name, "inputNode", "sourceNode","genericNode");
 }
 
 std::string FactoryBaseImpl::getOutputChannelName(const std::string& name) const
 {
-    return buildNameFromRule(name, "outputNode", "genericNode");
+    return buildNameFromRule(name, "outputNode", "sinkNode","genericNode");
 }
 
 std::string FactoryBaseImpl::getSourceChannelName(const std::string& name) const
 {
-    return buildNameFromRule(name, "sourceNode", "genericNode");
+    return buildNameFromRule(name, "sourceNode", "inputNode","genericNode");
 }
 
 std::string FactoryBaseImpl::getSinkChannelName(const std::string& name) const
 {
-    return buildNameFromRule(name, "sinkNode", "genericNode");
+    return buildNameFromRule(name, "sinkNode", "outputNode","genericNode");
 }
 
 std::string FactoryBaseImpl::getInputPVName(const std::string& name) const
@@ -305,11 +305,12 @@ std::string FactoryBaseImpl::buildNameFromRule(const std::string& name,
         return name;
     }
 
+    const std::string defaultRule("%s");
     const std::string& rule = m_namingRules->getString(m_namingRulesName, rule0,
                                m_namingRules->getString(m_namingRulesName, rule1,
                                 m_namingRules->getString(m_namingRulesName, rule2,
                                  m_namingRules->getString(m_namingRulesName, rule3,
-                                  m_namingRules->getString(m_namingRulesName, rule4, "%s")))));
+                                  m_namingRules->getString(m_namingRulesName, rule4, defaultRule)))));
 
     std::string adjustedName(name);
     bool toUpper = m_namingRules->getString(m_namingRulesName, "toUpper", "0") == "1";

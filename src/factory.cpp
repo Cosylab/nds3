@@ -68,5 +68,15 @@ Thread Factory::runInThread(const std::string &name, threadFunction_t function)
     return Thread(std::shared_ptr<ThreadBaseImpl>(m_pFactory->runInThread(name, function)));
 }
 
+void Factory::loadNamingRules(std::istream& rules)
+{
+    m_pFactory->loadNamingRules(rules);
+}
+
+void Factory::setNamingRules(const std::string& rulesName)
+{
+    m_pFactory->setNamingRules(rulesName);
+}
+
 
 }

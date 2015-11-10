@@ -23,7 +23,8 @@ SOURCES += \
     src/testLogging.cpp \
     src/testPVs.cpp \
     src/testThreads.cpp \
-    src/testIniParser.cpp
+    src/testIniParser.cpp \
+    src/testNamingRules.cpp
 
 
 HEADERS += \
