@@ -162,8 +162,8 @@ TEST(testPVs, testReplication)
     factory.createDevice("testDevice", "rootNode", nds::namedParameters_t());
 
     nds::parameters_t parameters;
-    parameters.push_back("rootNode-Channel1-delegateIn");
-    nds::tests::TestControlSystemFactoryImpl::getInstance()->executeCommand("replicate", "rootNode-Channel1-testVariableIn", parameters);
+    parameters.push_back("rootNode-Channel1-testVariableIn");
+    nds::tests::TestControlSystemFactoryImpl::getInstance()->executeCommand("replicate", "rootNode-Channel1-delegateIn", parameters);
 
     nds::tests::TestControlSystemInterfaceImpl* pInterface = nds::tests::TestControlSystemInterfaceImpl::getInstance("rootNode-Channel1");
 
@@ -179,7 +179,7 @@ TEST(testPVs, testReplication)
 
         const std::string* pReadValue;
         const timespec* pReadTimestamp;
-        pInterface->getPushedString("/rootNode-Channel1.testVariableIn", pReadTimestamp, pReadValue);
+        pInterface->getPushedString("/rootNode-Channel1.delegateIn", pReadTimestamp, pReadValue);
         EXPECT_EQ(value.str(), *pReadValue);
         EXPECT_EQ(count, pReadTimestamp->tv_sec);
         EXPECT_EQ(count + 10, pReadTimestamp->tv_nsec);
