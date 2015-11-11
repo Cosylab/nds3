@@ -74,34 +74,9 @@
 		<replace dir="${build_dir_tests}" includes="*.rc,*.h,*.cpp" token="1.0.0" value="${fullVersionReadable}" />
 		<replace dir="${build_dir_tests}" includes="*.rc,*.h,*.cpp" token="&quot;1.0.0&quot;" value="&quot;${fullVersionReadable}&quot;" />
 		<replace dir="${build_dir_tests}" includes="*.rc,*.h,*.cpp" token="L&quot;1.0.0&quot;" value="L&quot;${fullVersionReadable}&quot;" />
-		<replace dir="${build_dir_tests}" token="$fileHeader$">
-			<replacevalue><![CDATA[
-$ndsVersion$
 
-NDS3: Nominal device support
-
-License goes here
-
-]]></replacevalue>
-		</replace>
-		<replace dir="${build_dir_tests}" token="$ndsVersion$" value="${productName}" />
-
-		<!-- Replace version for final library build -->
-		<replace file="${build_dir}/CMake/CMakeLists.txt" token="1.0.0" value='"${fullVersionReadable}"'/>
-		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="1.0.0" value="${fullVersionReadable}" />
-		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="&quot;1.0.0&quot;" value="&quot;${fullVersionReadable}&quot;" />
-		<replace dir="${build_dir}" includes="*.rc,*.h,*.cpp" token="L&quot;1.0.0&quot;" value="L&quot;${fullVersionReadable}&quot;" />
-		<replace dir="${build_dir}" token="$fileHeader$">
-			<replacevalue><![CDATA[
-$ndsVersion$
-
-NDS3: Nominal device support
-
-License goes here
-
-]]></replacevalue>
-		</replace>
-		<replace dir="${build_dir}" token="$ndsVersion$" value="${productName}" />
+		<loadfile property="license" srcFile="license.txt" />
+		<replace dir="${build_dir_tests}" token="$license$" value="${license}" />
 
 	</target>
 
