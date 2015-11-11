@@ -30,7 +30,7 @@ InterfaceBaseImpl* TestControlSystemFactoryImpl::getNewInterface(const std::stri
     return new TestControlSystemInterfaceImpl(fullName);
 }
 
-void TestControlSystemFactoryImpl::run(int argc,char *argv[])
+void TestControlSystemFactoryImpl::run(int /* argc */,char * /* argv */[])
 {
     // run until terminated
     ///////////////////////
@@ -42,14 +42,15 @@ LogStreamGetterImpl* TestControlSystemFactoryImpl::getLogStreamGetter()
     return this;
 }
 
-void TestControlSystemFactoryImpl::registerCommand(const BaseImpl& node,
-                                 const std::string& command,
-                                 const std::string& usage,
-                                 const size_t numParameters, command_t commandFunction)
+void TestControlSystemFactoryImpl::registerCommand(const BaseImpl& /* node */,
+                                 const std::string& /* command */,
+                                 const std::string& /* usage */,
+                                 const size_t /* numParameters */,
+                                 command_t /* commandFunction */)
 {
 }
 
-void TestControlSystemFactoryImpl::deregisterCommand(const BaseImpl& node)
+void TestControlSystemFactoryImpl::deregisterCommand(const BaseImpl& /* node */)
 {
 }
 
@@ -70,7 +71,7 @@ const std::string& TestControlSystemFactoryImpl::getDefaultSeparator(const uint3
     return separator2;
 }
 
-void TestControlSystemFactoryImpl::log(const std::string& logString, const logLevel_t logLevel)
+void TestControlSystemFactoryImpl::log(const std::string& logString, const logLevel_t /* logLevel */)
 {
     std::lock_guard<std::mutex> lock(m_logMutex);
     m_logs.insert(logString);

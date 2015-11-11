@@ -9,8 +9,6 @@ TEST(testDataAcquisition, testPushData)
 
     factory.createDevice("testDevice", "rootNode", nds::namedParameters_t());
 
-    TestDevice* pDevice = TestDevice::getInstance("rootNode");
-
     nds::tests::TestControlSystemInterfaceImpl* pInterface = nds::tests::TestControlSystemInterfaceImpl::getInstance("rootNode-Channel1");
 
     const timespec* pStateMachineSwitchTime;
@@ -98,8 +96,6 @@ TEST(testDataAcquisition, testDecimation)
     nds::Factory factory("test");
 
     factory.createDevice("testDevice", "rootNode", nds::namedParameters_t());
-
-    TestDevice* pDevice = TestDevice::getInstance("rootNode");
 
     nds::tests::TestControlSystemInterfaceImpl* pInterface = nds::tests::TestControlSystemInterfaceImpl::getInstance("rootNode-Channel1");
 

@@ -41,6 +41,12 @@ TestDevice::TestDevice(nds::Factory &factory, const std::string &parameter): m_n
     channel1.addChild(nds::PVDelegateIn<std::string>("delegateIn", std::bind(&TestDevice::readDelegate, this, std::placeholders::_1, std::placeholders::_2)));
     channel1.addChild(nds::PVDelegateOut<std::string>("delegateOut", std::bind(&TestDevice::writeDelegate, this, std::placeholders::_1, std::placeholders::_2)));
 
+    m_testVariableIn = channel1.addChild(nds::PVVariableIn<std::string>("testVariableIn"));
+    m_testVariableOut = channel1.addChild(nds::PVVariableOut<std::string>("testVariableOut"));
+
+    channel1.addChild(nds::PVDelegateOut<std::string>("writeTestVariableIn", std::bind(&TestDevice::writeTestVariableIn, this, std::placeholders::_1, std::placeholders::_2)));
+    channel1.addChild(nds::PVDelegateIn<std::string>("readTestVariableOut", std::bind(&TestDevice::readTestVariableOut, this, std::placeholders::_1, std::placeholders::_2)));
+
     rootNode.initialize(this, factory);
 }
 
@@ -66,7 +72,7 @@ TestDevice* TestDevice::getInstance(const std::string& deviceName)
 /*
  * Allocation function
  *********************/
-void* TestDevice::allocateDevice(nds::Factory& factory, const std::string& device, const nds::namedParameters_t& parameters)
+void* TestDevice::allocateDevice(nds::Factory& factory, const std::string& device, const nds::namedParameters_t& /* parameters */)
 {
     return new TestDevice(factory, device);
 }
@@ -143,5 +149,15 @@ void TestDevice::writeDelegate(const timespec& timestamp, const std::string& val
 {
     m_timestamp = timestamp;
     m_writtenByDelegate = value;
+}
+
+void TestDevice::writeTestVariableIn(const timespec& timestamp, const std::string& value)
+{
+    m_testVariableIn.setValue(timestamp, value);
+}
+
+void TestDevice::readTestVariableOut(timespec* pTimestamp, std::string* pValue)
+{
+    m_testVariableOut.getValue(pTimestamp, pValue);
 }
 

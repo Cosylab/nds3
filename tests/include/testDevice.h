@@ -29,6 +29,9 @@ public:
 
     nds::DataAcquisition<std::vector<std::int32_t> > m_dataAcquisition;
 
+    nds::PVVariableIn<std::string> m_testVariableIn;
+    nds::PVVariableOut<std::string> m_testVariableOut;
+
 
 private:
     void switchOn();
@@ -42,6 +45,9 @@ private:
 
     void readDelegate(timespec* pTimestamp, std::string* pValue);
     void writeDelegate(const timespec& timestamp, const std::string& value);
+
+    void writeTestVariableIn(const timespec& timestamp, const std::string& value);
+    void readTestVariableOut(timespec* pTimestamp, std::string* pValue);
 
     std::thread m_acquisitionThread;
 
