@@ -1,0 +1,79 @@
+/**
+
+@page epics_layer NDS3 and EPICS
+
+The command epicsNdsControlSystem is an IOC application that is linked again the NDS framwork and provides the
+NDS functionalities.
+
+After epicsNdsControlSystem has been launched then the classic EPICS IOC shell will appear: the shell will be able to
+parse and execute the additional NDS3 commands which will allow to load and run generic NDS3 devices into EPICS.
+
+
+@section epics_getting_started Getting started
+
+When the EPICS shell appears then you can load one or more NDS3 devices into the shell by using the command @ref epics_commands_ndsloaddriver.
+
+When the desidered drivers have been loaded then you can instantiate one or more devices by using the command @ref epics_commands_ndscreatedevice.
+
+The following example loads the so module acquisitionDevice which provide the driver "AcquisitionDevice", then creates 2 acquisition devices named
+device0 and device1:
+@verbatim
+$>epicsNdsControlSystem
+epics> ndsLoadDriver /usr/bin/acquistionDevice.so
+epics> ndsCreateDevice AcquisitionDevice device0
+epics> ndsCreateDevice AcquisitionDevice device1
+epics> iocInit
+@endverbatim
+
+You can list the PVs supplied by the 2 devices by issuing the dbl command.
+
+Each device node or PV may provide additional commands that can be executed by using the NDS command @ref epics_commands_nds.
+
+For instance, to switch on a node connected to a state machine:
+@verbatim
+epics> nds switchOn device0
+epics> nds switchOn device0-channel0
+epics> nds start device0-channel0
+@endverbatim
+
+
+
+
+@section epics_commands Commands
+
+@subsection epics_commands_ndsloaddriver ndsLoadDriver
+
+@subsection epics_commands_ndsloadnamingrules ndsLoadNamingRules
+
+@subsection epics_commands_ndsenablenamingrules ndsEnableNamingRules
+
+@subsection epics_commands_ndscreatedevice ndsCreateDevice
+
+@subsection epics_commands_nds nds
+
+
+
+@subsubsection epics_commands_nds_switchon nds switchOn
+
+@subsubsection epics_commands_nds_switchoff nds switchOff
+
+@subsubsection epics_commands_nds_switchstart nds start
+
+@subsubsection epics_commands_nds_switchstop nds stop
+
+@subsubsection epics_commands_nds_setlogleveldebug nds setLogLevelDebug
+
+@subsubsection epics_commands_nds_setloglevelinfo nds setLogLevelInfo
+
+@subsubsection epics_commands_nds_setloglevelwarning nds setLogLevelWarning
+
+@subsubsection epics_commands_nds_setloglevelerror nds setLogLevelError
+
+@subsubsection epics_commands_nds_subscribe nds subscribe
+
+@subsubsection epics_commands_nds_replicate nds replicate
+
+
+
+
+*/
