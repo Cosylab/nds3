@@ -120,7 +120,7 @@ template<typename T>
 void DataAcquisitionImpl<T>::onStart()
 {
     m_startTime = m_startTimestampFunction();
-    m_dataPV->setDecimation(m_decimationPV->getValue());
+    m_dataPV->setDecimation((std::uint32_t)(m_decimationPV->getValue()));
     m_onStartDelegate();
 }
 

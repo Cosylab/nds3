@@ -34,7 +34,7 @@ void PVBaseIn::push(const timespec& timestamp, const T& value)
     std::static_pointer_cast<PVBaseInImpl>(m_pImplementation)->push(timestamp, value);
 }
 
-void PVBaseIn::setDecimation(const std::int32_t decimation)
+void PVBaseIn::setDecimation(const std::uint32_t decimation)
 {
     std::static_pointer_cast<PVBaseInImpl>(m_pImplementation)->setDecimation(decimation);
 }

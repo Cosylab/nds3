@@ -106,7 +106,7 @@ public:
      *
      * @param decimation   the decimation factor (ratio pusehd_data/data_passd_to_cs)
      */
-    void setDecimation(const std::int32_t decimation);
+    void setDecimation(const std::uint32_t decimation);
 
     /**
      * @brief Replicate the data from another input PV which may be located on any other

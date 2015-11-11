@@ -56,6 +56,13 @@ public:
     void setDescription(const std::string& description);
 
     /**
+     * @brief Set the engineering units of the PV.
+     *
+     * @param units the PV's engineering units
+     */
+    void setUnits(const std::string& units);
+
+    /**
      * @brief Set the name of the PV as seen by the control system.
      *
      * By default correspond to the name given in the constructor.

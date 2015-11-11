@@ -97,7 +97,7 @@ public:
      *
      * @param decimation  the decimation factor
      */
-    void setDecimation(const std::int32_t decimation);
+    void setDecimation(const std::uint32_t decimation);
 
     /**
      * @brief Specifies an input PV from which the data must be copied.
@@ -142,11 +142,12 @@ protected:
 
     std::mutex m_lockSubscribersList; ///< Lock the access to m_subscriberOutputPVs.
 
-    std::int32_t m_decimationFactor;  ///< Decimation factor.
-    std::int32_t m_decimationCount;   ///< Keeps track of the received data/vs data pushed to the control system.
+    std::uint32_t m_decimationFactor;  ///< Decimation factor.
+    std::uint32_t m_decimationCount;   ///< Keeps track of the received data/vs data pushed to the control system.
 
 private:
     parameters_t commandReplicate(const parameters_t& parameters);
+    parameters_t commandDecimation(const parameters_t& parameters);
 
 };
 

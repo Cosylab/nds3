@@ -128,6 +128,16 @@ void PVBaseImpl::setDescription(const std::string& description)
 
 
 /*
+ * Set the engineering units
+ *
+ ***************************/
+void PVBaseImpl::setUnits(const std::string &units)
+{
+    m_units = units;
+}
+
+
+/*
  * Set the scan type
  *
  *******************/
@@ -175,6 +185,16 @@ void PVBaseImpl::processAtInit(const bool bProcessAtInit)
 const std::string& PVBaseImpl::getDescription() const
 {
     return m_description;
+}
+
+
+/*
+ * Retrieve the engineering units
+ *
+ ********************************/
+const std::string& PVBaseImpl::getUnits() const
+{
+    return m_units;
 }
 
 

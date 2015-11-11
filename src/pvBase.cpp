@@ -54,6 +54,16 @@ void PVBase::setDescription(const std::string& description)
 
 
 /*
+ * Set the units
+ *
+ ***************/
+void PVBase::setUnits(const std::string &units)
+{
+    std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->setUnits(units);
+}
+
+
+/*
  * Set the scan type
  *
  *******************/
