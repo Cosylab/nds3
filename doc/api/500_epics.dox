@@ -1,3 +1,6 @@
+namespace nds
+{
+
 /**
 
 @page epics_layer NDS3 and EPICS
@@ -38,42 +41,219 @@ epics> nds start device0-channel0
 
 
 
-
 @section epics_commands Commands
+
+This section describes the additional IOCSH commands provided by the NDS framework.
+
 
 @subsection epics_commands_ndsloaddriver ndsLoadDriver
 
-@subsection epics_commands_ndsloadnamingrules ndsLoadNamingRules
+Usage: ndsLoadDriver pathToSoModule
 
-@subsection epics_commands_ndsenablenamingrules ndsEnableNamingRules
+Parameters:
+- <b>pathToSoModule</b> is a path to a shared library that implements an NDS device.
+
+The command loads the shared library in memory and checks that it provides the NDS functionalities.
+If the loaded module does not export the NDS functions then an error message is displayed.
+
+The device provided by the loaded module can be instantiated with the command @ref epics_commands_ndscreatedevice.
+
 
 @subsection epics_commands_ndscreatedevice ndsCreateDevice
 
+usage: ndsLoadDriver driverName rootNodeName [parameter0 [parameter1 [parameter2[ parameter3...]]]]
+
+Parameters:
+- <b>driverName</b> the name of the driver. This is not the shared module name, but the name provided by the shared module's
+  exported function getDeviceName(), which is set by the macro @ref NDS_DEFINE_DRIVER.
+- <b>rootNodeName</b> the parameter to pass as root node name to the device constructor
+- <b>parameterX</b> one or more parameters in the form name=value and passed as named parameters to the device's constructor.
+  Their meaning is device-dependent.
+
+
+@subsection epics_commands_ndsloadnamingrules ndsLoadNamingRules
+
+usage: ndsLoadNamingRules pathToNamingRules
+
+Parameters:
+- <b>pathToNamingRules</b> the path to the INI file containing the naming rules. See @ref naming_rules_file.
+
+If the loaded file contains only one set of rules (just one section) then the rules are enabled immediately, otherwise
+the command @ref epics_commands_ndsenablenamingrules must be used to enable one of the rules section.
+
+The file must be loaded before creating the device with @ref epics_commands_ndscreatedevice.
+
+
+@subsection epics_commands_ndsenablenamingrules ndsEnableNamingRules
+
+usage: ndsEnableNamingRulessss rulesSection
+
+Parameters:
+- <b>rulesSection</b> The section in the INI file that contains the naming rules to enable
+
+The command activates the naming rules described in a particular section of a @ref naming_rules_file.
+
+The rules must be activated before creating the device with @ref epics_commands_ndscreatedevice.
+
+
 @subsection epics_commands_nds nds
 
+usage: nds nodeCommand nodeName [parameters]
+
+Parameters:
+- <b>nodeCommand</b> the custom command registered by the node or PV
+- <b>nodeName</b> the name of the node for which the command is being called. Can be the internal or external full node name
+
+The command nds enable the execution of custom commands registered by individual nodes that form the device.
+Each node can register its own set of commands, but once a command has been registered by a node then the same
+command registered by other node must accept the same number of parameters as the first registered one.
+
+See nds::Base::defineCommand() for more information about the registration of custom commands.
 
 
 @subsubsection epics_commands_nds_switchon nds switchOn
 
+usage: nds switchOn nodeName
+
+Parameters:
+- <b>nodeName</b> the node that has to be switched on. Can be the internal or external full node name
+
+This command is automatically provided for all the StateMachine nodes and all the Node objects that have a child
+StateMachine.
+
+It causes the StateMachine to execute the transition to the state_t::on state.
+
+
 @subsubsection epics_commands_nds_switchoff nds switchOff
+
+usage: nds switchOff nodeName
+
+Parameters:
+- <b>nodeName</b> the node that has to be switched off. Can be the internal or external full node name
+
+This command is automatically provided for all the StateMachine nodes and all the Node objects that have a child
+StateMachine.
+
+It causes the StateMachine to execute the transition to the state_t::off state.
+
 
 @subsubsection epics_commands_nds_switchstart nds start
 
+usage: nds start nodeName
+
+Parameters:
+- <b>nodeName</b> the node that has to be started. Can be the internal or external full node name
+
+This command is automatically provided for all the StateMachine nodes and all the Node objects that have a child
+StateMachine.
+
+It causes the StateMachine to execute the transition to the state_t::running state.
+
+
 @subsubsection epics_commands_nds_switchstop nds stop
+
+usage: nds stop nodeName
+
+Parameters:
+- <b>nodeName</b> the node that has to be stopped. Can be the internal or external full node name
+
+This command is automatically provided for all the StateMachine nodes and all the Node objects that have a child
+StateMachine.
+
+It causes the StateMachine to execute the transition to the state_t::on state.
+
 
 @subsubsection epics_commands_nds_setlogleveldebug nds setLogLevelDebug
 
+usage: nds setLogLevelDebug nodeName
+
+Parameters:
+- <b>nodeName</b> the node for which the log level has to be set to debug
+
+This command is automatically provided for all the nodes and PVs (all the Base derived objects).
+
+It enables the debug log level for the node and its children or for the PV.
+
+
 @subsubsection epics_commands_nds_setloglevelinfo nds setLogLevelInfo
+
+usage: nds setLogLevelInfo nodeName
+
+Parameters:
+- <b>nodeName</b> the node for which the log level has to be set to info
+
+This command is automatically provided for all the nodes and PVs (all the Base derived objects).
+
+It enables the info debug level for the node and its children or for the PV.
+
 
 @subsubsection epics_commands_nds_setloglevelwarning nds setLogLevelWarning
 
+usage: nds setLogLevelWarning nodeName
+
+Parameters:
+- <b>nodeName</b> the node for which the log level has to be set to warning
+
+This command is automatically provided for all the nodes and PVs (all the Base derived objects).
+
+It enables the warning log level for the node and its children or for the PV.
+
+
 @subsubsection epics_commands_nds_setloglevelerror nds setLogLevelError
+
+usage: nds setLogLevelError nodeName
+
+Parameters:
+- <b>nodeName</b> the node for which the log level has to be set to error
+
+This command is automatically provided for all the nodes and PVs (all the Base derived objects).
+
+It enables the error log level for the node and its children or for the PV.
+
 
 @subsubsection epics_commands_nds_subscribe nds subscribe
 
+usage: nds subscribe destinationPVName sourcePVName
+
+Parameters:
+- <b>destinationPVName</b> the output PV to which all the data generated by the input PV sourceNodeName must be sent
+- <b>sourcePVName</b> the input PV from which all the generated data must be passed to destinationPVName
+
+This command connects the inputPV sourcePVName to the output PV destinationPVName: all the data pushed to the inputPV
+via PVBaseIn::push() or PVVariableIn::setValue() will be written into the output PV via PVBaseOut::write().
+
+The input and output PVs may be part of different NDS devices but must be running into the same process (must be created
+via @ref epics_commands_ndscreatedevice in the same IOCSH).
+
+
 @subsubsection epics_commands_nds_replicate nds replicate
 
+usage: nds replicate destinationPVName sourcePVName
+
+Parameters:
+- <b>destinationPVName</b> the input PV that will push the same data pushed to the input PV sourceNodeName
+- <b>sourcePVName</b> the input PV from which all pushed data will be also pushed to the input PV destinationPVName
+
+This command causes the input PV destinationPVName to replicate all the push operations performed by the input PV sourcePVName.
+
+This command is useful to replicate the results of calculations performed by a NDS device into another NDS device that wants to
+expose the calculations as its own.
 
 
+@subsubsection epics_commands_nds_decimation nds decimation
+
+usage: nds decimation inputPVName decimationFactor
+
+Parameters:
+- <b>inputPVName</b> the input PV on which the decimation factor must be changed
+- <b>sourcePVName</b> the new decimation factor
+
+The decimation factor is the ratio of the data pushed to the PV via PVBaseIn::push() versus the data actually pushed to
+the control system.
+
+@warning it is not safe to issue this command while the PV is being used for pushing data. The command should be used BEFORE
+         or AFTER the pushing operations on the PV ave been performer.
 
 */
+
+}

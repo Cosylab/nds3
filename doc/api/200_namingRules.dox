@@ -52,12 +52,12 @@ NDS_DEFINE_DRIVER("Thermometer", Thermometer);
 @endcode
 
 For instance, if we create the device on an EPICS IOC we will see the following:
-@code
+@verbatim
 epics> createNdsDevice Thermometer myThermometer
 epics> iocInit
 epics> dbl
 myThermometer-temp
-@endcode
+@endverbatim
 
 The external names can be modified even further by loading and applying a @ref naming_rules_file.
 
@@ -70,13 +70,13 @@ and also defines the separator to insert between the component names.
 The naming rules definition file is an INI file that can contain one or more sections, which in turn can have
 several lines defining the naming rules (one rule per line).
 
-Each section name is enclosed by square brackets while each rule is a variable assignment: this section also
-lists which variables can be used in the definition file.
+Each section name is enclosed by square brackets while each rule is a variable assignment where the variable name is
+the rule name and the value is a printf format string that defines how the name must be built.
 
 Comments begin with the char #.
 
 Example:
-@code
+@verbatim
 [COSYLAB]   # Naming rules for COSYLAB
 
 toUpper = 1 # All the names will be converted to upper-case
@@ -95,7 +95,10 @@ rootNode = "DEVICE_%s_COSYLAB"
 
 # Input PV
 inputPV = "GET_%s"
-@endcode
+
+# Output PV
+outputPV = "SET %s"
+@endverbatim
 
 If we apply those rules to the sample code from @ref naming_rules then the temperature PV will be available
 with the following name:
