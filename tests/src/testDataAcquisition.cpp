@@ -2,6 +2,7 @@
 #include <nds3/nds.h>
 #include "../include/testDevice.h"
 #include "../include/ndsTestInterface.h"
+#include "../include/ndsTestFactory.h"
 
 TEST(testDataAcquisition, testPushData)
 {
@@ -119,7 +120,11 @@ TEST(testDataAcquisition, testDecimation)
     /////////////////////////////
     pInterface->writeCSValue("/rootNode-Channel1.data.decimation", timestamp, (std::int32_t)2);
     pInterface->writeCSValue("/rootNode-Channel1.numAcquisitions", timestamp, (std::int32_t)100);
-    pInterface->writeCSValue("/rootNode-Channel1.data.StateMachine.setState", timestamp, (std::int32_t)nds::state_t::running);
+
+    // Start the acquisition via node command
+    /////////////////////////////////////////
+    nds::parameters_t emptyParameters;
+    nds::tests::TestControlSystemFactoryImpl::getInstance()->executeCommand("start", "rootNode-Channel1-data", emptyParameters);
     ::sleep(1);
     pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState); // Retrieve the starting state
     pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);

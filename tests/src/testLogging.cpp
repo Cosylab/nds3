@@ -107,4 +107,6 @@ TEST(testLogging, testLotOfPVs)
 
     factory.destroyDevice("");
 
+    EXPECT_EQ(0, pFactory->getRegisteredCommandsNumber());
+
 }

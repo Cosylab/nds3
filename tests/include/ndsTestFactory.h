@@ -2,6 +2,7 @@
 #include <nds3impl/logStreamGetterImpl.h>
 #include <set>
 #include <sstream>
+#include <map>
 
 namespace nds
 {
@@ -29,6 +30,10 @@ public:
 
     virtual void deregisterCommand(const BaseImpl& node);
 
+    size_t getRegisteredCommandsNumber();
+
+    void executeCommand(const std::string& command, const std::string& node, nds::parameters_t& parameters);
+
     virtual const std::string& getDefaultSeparator(const uint32_t nodeLevel) const;
 
     void log(const std::string& logString, const logLevel_t logLevel);
@@ -37,11 +42,17 @@ public:
 
     static TestControlSystemFactoryImpl* getInstance();
 
+
+
 protected:
     virtual std::ostream* createLogStream(const logLevel_t logLevel);
 
     std::multiset<std::string> m_logs;
     std::mutex m_logMutex;
+
+    typedef std::map<std::string, command_t> function_t;
+    typedef std::map<std::string, function_t> commandNodes_t;
+    commandNodes_t m_commandNodes;
 };
 
 class TestLogStreamBufferImpl: public std::stringbuf

@@ -42,16 +42,28 @@ LogStreamGetterImpl* TestControlSystemFactoryImpl::getLogStreamGetter()
     return this;
 }
 
-void TestControlSystemFactoryImpl::registerCommand(const BaseImpl& /* node */,
-                                 const std::string& /* command */,
+void TestControlSystemFactoryImpl::registerCommand(const BaseImpl& node,
+                                 const std::string& command,
                                  const std::string& /* usage */,
                                  const size_t /* numParameters */,
-                                 command_t /* commandFunction */)
+                                 command_t commandFunction)
 {
+    m_commandNodes[node.getFullName()][command] = commandFunction;
 }
 
-void TestControlSystemFactoryImpl::deregisterCommand(const BaseImpl& /* node */)
+void TestControlSystemFactoryImpl::deregisterCommand(const BaseImpl& node)
 {
+    m_commandNodes.erase(node.getFullName());
+}
+
+size_t TestControlSystemFactoryImpl::getRegisteredCommandsNumber()
+{
+    return m_commandNodes.size();
+}
+
+void TestControlSystemFactoryImpl::executeCommand(const std::string& command, const std::string& node, nds::parameters_t& parameters)
+{
+    m_commandNodes[node][command](parameters);
 }
 
 const std::string& TestControlSystemFactoryImpl::getDefaultSeparator(const uint32_t nodeLevel) const
@@ -106,6 +118,7 @@ TestLogStream::TestLogStream(const logLevel_t logLevel, TestControlSystemFactory
 {
 
 }
+
 
 
 
