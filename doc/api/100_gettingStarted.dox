@@ -71,6 +71,9 @@ temperature in Kelvin degrees.
 The structure of the termomether device is really simple: it provides a root node (a Port, so it can communicate with the
 Control System) that represents the device and an input PV that the control system will read to get the current temperature.
 
+
+@subsection getting_started_thermometer_source_code The source code
+
 Let's put this in C++ form:
 @code
 #include <nds3/nds.h>
@@ -141,6 +144,63 @@ rootNodeName-Temperature
 @endcode
 
 Issuing a dbpf rootNodeName-Temperature.PROC 1 will cause the framework to call getTemperature() and fill the PV with the value 10.
+
+
+@subsection getting_started_thermometer_compilation Compiling the source code
+
+The Makefile for a NDS3 device is quite straightforward: it does not depend on EPICS or any other Control System you may be using and
+you just have to make sure that it includes the shared library nds3 and specify the flag NDS3_DLL (tells the compiler that the NDS3
+is being linked dynamically).
+
+An example:
+@verbatim
+CXX = g++
+
+# We enable the c++0x flag, plus we define the NDS3_DLL preprocessor macro.
+CXXFLAGS = -std=c++0x -Wall -Wextra -pedantic -fPIC -pthread -DNDS3_DLL
+
+# Flags passed to gcc during linking
+LINK = -shared -fPIC -Wl,-as-needed
+
+# Name of our device library
+TARGET = libthermometer.so
+ 
+# We specify that we depend on NDS3
+LIBS = -lnds3
+ 
+# We assume that all the .cpp files are in the src folder
+SRCS = $(wildcard src/*.cpp)
+
+OBJS = $(SRCS:.cpp=.o)
+# Rules for building
+$(TARGET): $(OBJS)
+	$(CXX) $(LINK) -o $@ $^ $(LIBS)
+
+.PHONY: clean
+clean:
+	$(RM) $(TARGET) $(OBJS)
+@endverbatim
+
+This makefile will generate the shared module libthermometer.so. Now you can load the device into your NDS3 control system of choice and
+run it.
+
+
+@subsection getting_started_thermometer_using_device_epics Using the Thermometer device on EPICS
+
+On EPICS you will use the command @epics_commands_ndsloaddriver to load the shared module and the command @epics_commands_ndscreatedevice
+to allocate and construct the device.
+
+For instance:
+@verbatim
+epics> ndsLoadDriver path/to/libthermometer.so
+epics> ndsCreateDevice Thermometer testDevice
+epics> iocInit
+epics> dbl
+testDevice-Temperature
+epics> dbpf testDevice-Temperature.PROC 1
+epics> dbgf testDevice-Temperature
+10
+@endverbatim
 
 
 */

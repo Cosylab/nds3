@@ -1,0 +1,67 @@
+namespace nds
+{
+
+/**
+
+@example oscilloscope.cpp
+
+This example shows a fictional multi-channel oscilloscope.
+When the acquisition is triggered on a channel then the channel pushes a sinusoidal wave
+to the control system.
+
+The example shows how to create the channels programmatically (useful when you have a large
+number of channel that offer the same functionality).
+
+The Makefile for the sample is the following:
+@verbatim
+CXX = g++
+ 
+CXXFLAGS = -std=c++0x -Wall -Wextra -pedantic -fPIC -pthread -DNDS3_DLL
+ 
+# Flags passed to gcc during linking
+LINK = -shared -fPIC -Wl,-as-needed
+ 
+# Name of the nds library
+TARGET = liboscilloscopemultichannel.so
+ 
+# Additional linker libraries
+LIBS = -lnds3
+ 
+# Source code files used in this project
+SRCS = oscilloscope.cpp
+ 
+ 
+OBJS = $(SRCS:.cpp=.o)
+# Rules for building
+$(TARGET): $(OBJS)
+	$(CXX) $(LINK) -o $@ $^ $(LIBS)
+ 
+.PHONY: clean
+clean:
+	$(RM) $(TARGET) $(OBJS)
+@endverbatim
+
+
+The macro NDS_DEFINE_DRIVER tells that the Oscilloscope class is the one that must be allocated and
+initialized when the control system wants to use our "Oscilloscope" device.
+
+The constructor of our oscilloscope creates a root node for the device and names it using the parameter
+<b>device</b> passed by the control system. It is not mandatory to call the root node using the <b>device</b>
+parameter.
+
+The root node is declared as a Port: this means that it holds an interface with the control system.\n
+We could have declared the root node as a simple Node and each channel as a Port: in this case each
+channel would keep an interface with the control system and all its callback would be executed
+on separate threads (one per channel).
+
+The Channel class is just a helper that add the acquisition nodes to the root one and keep few
+references to the channel's PVs and to the channel's acquisition node. For fewer number of channels
+we could have implemented this functionality directly in the Oscillocope class.
+
+
+
+
+
+*/
+
+}
