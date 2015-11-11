@@ -28,6 +28,11 @@ TEST(testDataAcquisition, testPushData)
     pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);
     EXPECT_EQ((std::int32_t)nds::state_t::on, *pStateMachineState);
 
+    // Set the start time
+    /////////////////////
+    std::int32_t startTimestamp = 200;
+    pInterface->writeCSValue("/rootNode-Channel1.setCurrentTime", timestamp, startTimestamp);
+
     // Start the data acquisition
     /////////////////////////////
     pInterface->writeCSValue("/rootNode-Channel1.numAcquisitions", timestamp, (std::int32_t)100);
@@ -49,18 +54,14 @@ TEST(testDataAcquisition, testPushData)
     }
 
     const std::vector<std::int32_t>* pRetrievedPushedValues;
-    timespec firstTime;
-    timespec lastTime;
     const timespec* pTime;
     for(size_t numAcquisitions(0); numAcquisitions != 100; ++numAcquisitions)
     {
         pInterface->getPushedVectorInt32("/rootNode-Channel1.data.Data", pTime, pRetrievedPushedValues);
-        lastTime = *pTime;
+        EXPECT_EQ(startTimestamp, pTime->tv_sec);
+        EXPECT_EQ(startTimestamp + 10, pTime->tv_nsec);
+        ++startTimestamp;
 
-        if(numAcquisitions == 0)
-        {
-            firstTime = *pTime;
-        }
         if((numAcquisitions & 1) == 0)
         {
             ASSERT_EQ(pushData0.size(), pRetrievedPushedValues->size());
@@ -78,10 +79,6 @@ TEST(testDataAcquisition, testPushData)
             }
         }
     }
-
-    std::int64_t nanosecondsStart = firstTime.tv_sec * 1000000000 + firstTime.tv_nsec;
-    std::int64_t nanosecondsEnd = lastTime.tv_sec * 1000000000 + lastTime.tv_nsec;
-    std::cout << "Nanoseconds spent pushing 100 values (10000 samples each) " << (nanosecondsEnd - nanosecondsStart) << std::endl;
 
     pInterface->writeCSValue("/rootNode-Channel1.data.StateMachine.setState", timestamp, (std::int32_t)nds::state_t::on);
     pInterface->getPushedInt32("/rootNode-Channel1.data.StateMachine.getState", pStateMachineSwitchTime, pStateMachineState);

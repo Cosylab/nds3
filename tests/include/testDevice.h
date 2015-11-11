@@ -32,8 +32,11 @@ public:
     nds::PVVariableIn<std::string> m_testVariableIn;
     nds::PVVariableOut<std::string> m_testVariableOut;
 
+    nds::PVVariableOut<std::int32_t> m_setCurrentTime;
 
 private:
+    timespec getCurrentTime();
+
     void switchOn();
     void switchOff();
     void start();

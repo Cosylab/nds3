@@ -49,6 +49,10 @@ TestDevice::TestDevice(nds::Factory &factory, const std::string &parameter): m_n
     channel1.addChild(nds::PVDelegateOut<std::string>("pushTestVariableIn", std::bind(&TestDevice::pushTestVariableIn, this, std::placeholders::_1, std::placeholders::_2)));
     channel1.addChild(nds::PVDelegateIn<std::string>("readTestVariableOut", std::bind(&TestDevice::readTestVariableOut, this, std::placeholders::_1, std::placeholders::_2)));
 
+    m_setCurrentTime = channel1.addChild(nds::PVVariableOut<std::int32_t>("setCurrentTime"));
+
+    channel1.setTimestampDelegate(std::bind(&TestDevice::getCurrentTime, this));
+
     rootNode.initialize(this, factory);
 }
 
@@ -122,6 +126,8 @@ void TestDevice::acquire(size_t numAcquisition, size_t numSamples)
     std::vector<std::int32_t> pushData0(numSamples);
     std::vector<std::int32_t> pushData1(numSamples);
 
+    timespec timestamp = m_dataAcquisition.getStartTimestamp();
+
     // Initialize vectors
     for(size_t initializeVectors(0); initializeVectors != numSamples; ++initializeVectors)
     {
@@ -132,12 +138,14 @@ void TestDevice::acquire(size_t numAcquisition, size_t numSamples)
     {
         if((acquisitionNumber & 0x1) == 0)
         {
-            m_dataAcquisition.push(m_dataAcquisition.getTimestamp(), pushData0);
+            m_dataAcquisition.push(timestamp, pushData0);
         }
         else
         {
-            m_dataAcquisition.push(m_dataAcquisition.getTimestamp(), pushData1);
+            m_dataAcquisition.push(timestamp, pushData1);
         }
+        timestamp.tv_sec++;
+        timestamp.tv_nsec++;
     }
 }
 
@@ -166,5 +174,13 @@ void TestDevice::pushTestVariableIn(const timespec& timestamp, const std::string
 void TestDevice::readTestVariableOut(timespec* pTimestamp, std::string* pValue)
 {
     m_testVariableOut.getValue(pTimestamp, pValue);
+}
+
+timespec TestDevice::getCurrentTime()
+{
+    timespec time;
+    time.tv_sec = m_setCurrentTime.getValue();
+    time.tv_nsec = time.tv_sec + 10;
+    return time;
 }
 
