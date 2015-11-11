@@ -47,6 +47,7 @@ private:
     void writeDelegate(const timespec& timestamp, const std::string& value);
 
     void writeTestVariableIn(const timespec& timestamp, const std::string& value);
+    void pushTestVariableIn(const timespec& timestamp, const std::string& value);
     void readTestVariableOut(timespec* pTimestamp, std::string* pValue);
 
     std::thread m_acquisitionThread;

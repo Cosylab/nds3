@@ -24,7 +24,8 @@ SOURCES += \
     src/testPVs.cpp \
     src/testThreads.cpp \
     src/testIniParser.cpp \
-    src/testNamingRules.cpp
+    src/testNamingRules.cpp \
+    src/testTime.cpp
 
 
 HEADERS += \

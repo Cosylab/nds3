@@ -42,9 +42,11 @@ TestDevice::TestDevice(nds::Factory &factory, const std::string &parameter): m_n
     channel1.addChild(nds::PVDelegateOut<std::string>("delegateOut", std::bind(&TestDevice::writeDelegate, this, std::placeholders::_1, std::placeholders::_2)));
 
     m_testVariableIn = channel1.addChild(nds::PVVariableIn<std::string>("testVariableIn"));
+    m_testVariableIn.setValue("Initial value");
     m_testVariableOut = channel1.addChild(nds::PVVariableOut<std::string>("testVariableOut"));
 
     channel1.addChild(nds::PVDelegateOut<std::string>("writeTestVariableIn", std::bind(&TestDevice::writeTestVariableIn, this, std::placeholders::_1, std::placeholders::_2)));
+    channel1.addChild(nds::PVDelegateOut<std::string>("pushTestVariableIn", std::bind(&TestDevice::pushTestVariableIn, this, std::placeholders::_1, std::placeholders::_2)));
     channel1.addChild(nds::PVDelegateIn<std::string>("readTestVariableOut", std::bind(&TestDevice::readTestVariableOut, this, std::placeholders::_1, std::placeholders::_2)));
 
     rootNode.initialize(this, factory);
@@ -154,6 +156,11 @@ void TestDevice::writeDelegate(const timespec& timestamp, const std::string& val
 void TestDevice::writeTestVariableIn(const timespec& timestamp, const std::string& value)
 {
     m_testVariableIn.setValue(timestamp, value);
+}
+
+void TestDevice::pushTestVariableIn(const timespec& timestamp, const std::string& value)
+{
+    m_testVariableIn.push(timestamp, value);
 }
 
 void TestDevice::readTestVariableOut(timespec* pTimestamp, std::string* pValue)
