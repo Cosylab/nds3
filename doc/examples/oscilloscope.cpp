@@ -1,13 +1,97 @@
-#include "../include/oscilloscope.h"
 #include <functional>
+#include <sstream>
 #include <math.h>
 #include <unistd.h>
-#include <iostream>
+#include <nds3/nds.h>
 
-void Oscilloscope::callback(const timespec& time, const std::vector<double>& data)
+class Channel; // Forward declaration
+
+/**
+ * @brief Class that declares and implement a fictional Oscilloscope device.
+ *
+ * @warning For the purpose of the example the declaration of the class is in the same
+ *          file as its implementation. In a real life situation the declaration should be
+ *          in a separate header file.
+ *
+ * The class does not need to be derived from any special class, but its constructor must
+ *  accept few manadatory parameters and should register the root node via Node::initialize().
+ */
+class Oscilloscope
 {
-    std::cout << data.size();
-}
+public:
+    /**
+     * @brief Constructor.
+     *
+     * @param factory    the control system factory that requested the creation of the device
+     * @param device     the name given to the device
+     * @param parameters optional parameters passed to the device
+     */
+    Oscilloscope(nds::Factory& factory, const std::string& device, const nds::namedParameters_t& parameters);
+
+private:
+    std::vector<std::shared_ptr<Channel> > m_channels;
+};
+
+
+/**
+ * @brief We use this class to represent a single channel in the Oscilloscope.
+ *
+ * The class just take the nds::Node to which the acquisition node has to be
+ * added and then defines the acquisition node's PVs.
+ *
+ */
+class Channel
+{
+public:
+    /**
+     * @brief Construct the channel.
+     *
+     * @param name       the name to be given to the channel
+     * @param parentNode the node to which we add the channel's node
+     */
+    Channel(const std::string& name, nds::Node& parentNode);
+
+    /**
+     * @brief We keep a reference to the acquisition node.
+     */
+    nds::DataAcquisition<std::vector<std::int32_t> > m_acquisition;
+
+    /*
+     * @brief A variable PV that stores the amplitude of the wave.
+     */
+    nds::PVVariableOut<std::int32_t> m_amplitude;
+
+    void switchOn();  ///< Called to switch on the sinusoidal wave acquisition node.
+    void switchOff(); ///< Called to switch off the sinusoidal wave acquisition node.
+    void start();     ///< Called to start the data acquisition on the sinusoidal wave node.
+    void stop();      ///< Called to stop the data acquisition on the sinusoidal wave node.
+    void recover();   ///< Called to recover the sinusoidal wave node from a failure.
+
+    /**
+     * @brief Called by NDS when it wants to know if we allos a state change.
+     * @return
+     */
+    bool allowChange(const nds::state_t, const nds::state_t, const nds::state_t);
+
+    /**
+     * @brief Loop that performs the data acquisition.
+     */
+    void acquisitionLoop();
+
+    /**
+     * @brief A boolean flag that stop the acquisition loop in acquisitionLoop()
+     *        when true.
+     */
+    volatile bool m_bStopAcquisition;
+
+    /**
+     * @brief A thread that runs acquisitionLoop().
+     */
+    nds::Thread m_acquisitionThread;
+};
+
+// THE IMPLEMENTATION FOR THE OSCILLOSCOPE CLASS FOLLOWS: IN A REALD LIFE
+// SITUATION THIS WOULD BE IN A DIFFERENT FILE
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -16,7 +100,7 @@ void Oscilloscope::callback(const timespec& time, const std::vector<double>& dat
 //  (which in turn register all its children).
 //
 ////////////////////////////////////////////////////////////////////////////////
-Oscilloscope::Oscilloscope(nds::Factory &factory, const std::string &deviceName, const nds::namedParameters_t &parameters)
+Oscilloscope::Oscilloscope(nds::Factory &factory, const std::string &deviceName, const nds::namedParameters_t & /* parameters */)
 {
     // Here we declare the root node.
     // It is a good practice to name it with the device name.
@@ -31,57 +115,14 @@ Oscilloscope::Oscilloscope(nds::Factory &factory, const std::string &deviceName,
     ///////////////////////////////////////////////////////////////////////////////
     nds::Port rootNode(deviceName);
 
-    nds::PVBaseOut nodeOut = rootNode.addChild(nds::PVDelegateOut<std::vector<double> >("Output", std::bind(&Oscilloscope::callback, this, std::placeholders::_1, std::placeholders::_2)));
-    nodeOut.setMaxElements(100);
-
-    // We add a child to the root node: a variable that the user can set with the
-    //  max. amplitude of the sinusoidal wave before the data acquisition starts.
-    //
-    // We save the variable in a class' member so later we can access
-    //  it to retrieve its value
-    ///////////////////////////////////////////////////////////////////////////////
-    m_sinWaveAmplitude = rootNode.addChild(nds::PVVariableOut<std::int32_t>("maxSinAmplitude"));
-
-    // Another child is used to declare the maximum square wave amplitude
-    ////////////////////////////////////////////////////////////////////////////////
-    m_squareWaveAmplitude = rootNode.addChild(nds::PVVariableOut<std::int32_t>("maxSquareAmplitude"));
-
-    // Add an acquisition node: it supplies an input PV on which we can push the
-    //  acquired data and a state machine that allows to start and stop the
-    //  acquisition.
-    // This node is for the sinusoidal wave....
-    ////////////////////////////////////////////////////////////////////////////////
-    m_acquisitionSinWave = rootNode.addChild(nds::DataAcquisition<std::vector<std::int32_t> >(
-                                                 "SinWave",
-                                                 100,
-                                                 std::bind(&Oscilloscope::switchOnSinWave, this),
-                                                 std::bind(&Oscilloscope::switchOffSinWave, this),
-                                                 std::bind(&Oscilloscope::startSinWave, this),
-                                                 std::bind(&Oscilloscope::stopSinWave, this),
-                                                 std::bind(&Oscilloscope::recoverSinWave, this),
-                                                 std::bind(&Oscilloscope::allowChange,
-                                                           this,
-                                                           std::placeholders::_1,
-                                                           std::placeholders::_2,
-                                                           std::placeholders::_3)
-                                                 ));
-
-    // ...and this node is for the square wave
-    ////////////////////////////////////////////////////////////////////////////////
-    m_acquisitionSquareWave = rootNode.addChild(nds::DataAcquisition<std::vector<std::int32_t> >(
-                                                    "SquareWave",
-                                                    100,
-                                                    std::bind(&Oscilloscope::switchOnSquareWave, this),
-                                                    std::bind(&Oscilloscope::switchOffSquareWave, this),
-                                                    std::bind(&Oscilloscope::startSquareWave, this),
-                                                    std::bind(&Oscilloscope::stopSquareWave, this),
-                                                    std::bind(&Oscilloscope::recoverSquareWave, this),
-                                                    std::bind(&Oscilloscope::allowChange,
-                                                              this,
-                                                              std::placeholders::_1,
-                                                              std::placeholders::_2,
-                                                              std::placeholders::_3)
-                                                    ));
+    // Let's add 32 acquisition channels to the root node
+    /////////////////////////////////////////////////////
+    for(size_t numChannel(0); numChannel != 16; ++numChannel)
+    {
+        std::ostringstream channelName;
+        channelName << "Ch" << numChannel;
+        m_channels.push_back(std::make_shared<Channel>(channelName.str(), rootNode));
+    }
 
     // We have declared all the nodes and PVs in our device: now we register them
     //  with the control system that called this constructor.
@@ -92,56 +133,90 @@ Oscilloscope::Oscilloscope(nds::Factory &factory, const std::string &deviceName,
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Called when the "SinWave" PV has to be switched on.
+// Constructor for an acquisition channel
+//
+////////////////////////////////////////////////////////////////////////////////
+Channel::Channel(const std::string &name, nds::Node &parentNode)
+{
+    nds::Node channel = parentNode.addChild(nds::Node(name));
+
+    // We create an acquisition node with the requested name...
+    ////////////////////////////////////////////////////////////////////////////////
+    m_acquisition = nds::DataAcquisition<std::vector<std::int32_t> >("Acquisition",
+                                                                     100,
+                                                                     std::bind(&Channel::switchOn, this),
+                                                                     std::bind(&Channel::switchOff, this),
+                                                                     std::bind(&Channel::start, this),
+                                                                     std::bind(&Channel::stop, this),
+                                                                     std::bind(&Channel::recover, this),
+                                                                     std::bind(&Channel::allowChange, this,
+                                                                               std::placeholders::_1,
+                                                                               std::placeholders::_2,
+                                                                               std::placeholders::_3));
+
+    // ...and we add it to the root
+    ////////////////////////////////////////////////////////////////////////////////
+    channel.addChild(m_acquisition);
+
+    // We also add to the acquisition node a PV that specifies the amplitude of the
+    //  generated wave
+    ////////////////////////////////////////////////////////////////////////////////
+    m_amplitude = nds::PVVariableOut<std::int32_t>("Amplitude");
+    channel.addChild(m_amplitude);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Called when the acquisition node has to be switched on.
 // Here we do nothing (in our case no special operations are needed to switch
 //  on the node).
 //
 ////////////////////////////////////////////////////////////////////////////////
-void Oscilloscope::switchOnSinWave()
+void Channel::switchOn()
 {
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Called when the "SinWave" PV has to be switched off.
+// Called when the acquisition node has to be switched off.
 // Here we do nothing (in our case no special operations are needed to switch
 //  off the node).
 //
 ////////////////////////////////////////////////////////////////////////////////
-void Oscilloscope::switchOffSinWave()
+void Channel::switchOff()
 {
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Called when the "SinWave" PV has to start acquiring.
+// Called when the acquisition node has to start acquiring.
 // We start the data acquisition thread for the sinusoidal wave
 //
 ////////////////////////////////////////////////////////////////////////////////
-void Oscilloscope::startSinWave()
+void Channel::start()
 {
-    m_bStopAcquisitionSinWave = false; //< We will set to true to stop the acquisition thread
+    m_bStopAcquisition = false; //< We will set to true to stop the acquisition thread
 
     // Start the acquisition thread.
     // We don't need to check if the thread was already started because the state
     //  machine guarantees that the start handler is called only while the state
     //  is ON.
     ////////////////////////////////////////////////////////////////////////////////
-    m_acquisitionThreadSinWave = std::thread(std::bind(&Oscilloscope::acquireSinusoidalWave, this));
+    m_acquisitionThread = m_acquisition.runInThread("Acquisition", std::bind(&Channel::acquisitionLoop, this));
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Stop the sinusoidan wave acquisition thread
+// Stop the acquisition thread
 //
 ////////////////////////////////////////////////////////////////////////////////
-void Oscilloscope::stopSinWave()
+void Channel::stop()
 {
-    m_bStopAcquisitionSinWave = true;
-    m_acquisitionThreadSinWave.join();
+    m_bStopAcquisition = true;
+    m_acquisitionThread.join();
 }
 
 
@@ -153,77 +228,7 @@ void Oscilloscope::stopSinWave()
 //  the state machine to stay on the failure state.
 //
 ////////////////////////////////////////////////////////////////////////////////
-void Oscilloscope::recoverSinWave()
-{
-    throw nds::StateMachineRollBack("Cannot recover");
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Called when the "SquareWave" PV has to be switched on.
-// Here we do nothing (in our case no special operations are needed to switch
-//  on the node).
-//
-////////////////////////////////////////////////////////////////////////////////
-void Oscilloscope::switchOnSquareWave()
-{
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Called when the "SquareWave" PV has to be switched off.
-// Here we do nothing (in our case no special operations are needed to switch
-//  off the node).
-//
-////////////////////////////////////////////////////////////////////////////////
-void Oscilloscope::switchOffSquareWave()
-{
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Called when the "SquareWave" PV has to start acquiring.
-// We start the data acquisition thread for the square wave
-//
-////////////////////////////////////////////////////////////////////////////////
-void Oscilloscope::startSquareWave()
-{
-    m_bStopAcquisitionSquareWave = false; //< We will set to true to stop the acquisition thread
-
-    // Start the acquisition thread.
-    // We don't need to check if the thread was already started because the state
-    //  machine guarantees that the start handler is called only while the state
-    //  is ON.
-    ////////////////////////////////////////////////////////////////////////////////
-    m_acquisitionThreadSquareWave = std::thread(std::bind(&Oscilloscope::acquireSquareWave, this));
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Stop the square wave acquisition thread
-//
-////////////////////////////////////////////////////////////////////////////////
-void Oscilloscope::stopSquareWave()
-{
-    m_bStopAcquisitionSquareWave = true;
-    m_acquisitionThreadSquareWave.join();
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// A failure during a state transition will cause the state machine to switch
-//  to the failure state. For now we don't plan for this and every time the
-//  state machine wants to recover we throw StateMachineRollBack to force
-//  the state machine to stay on the failure state.
-//
-////////////////////////////////////////////////////////////////////////////////
-void Oscilloscope::recoverSquareWave()
+void Channel::recover()
 {
     throw nds::StateMachineRollBack("Cannot recover");
 }
@@ -236,7 +241,7 @@ void Oscilloscope::recoverSquareWave()
 //  requested state transition is legal.
 //
 ////////////////////////////////////////////////////////////////////////////////
-bool Oscilloscope::allowChange(const nds::state_t, const nds::state_t, const nds::state_t)
+bool Channel::allowChange(const nds::state_t, const nds::state_t, const nds::state_t)
 {
     return true;
 }
@@ -244,16 +249,15 @@ bool Oscilloscope::allowChange(const nds::state_t, const nds::state_t, const nds
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Acquisition function for the sinusoidal wave. It is launched in a separate
-//  thread by startSinWave().
+// Acquisition function. It is launched in a separate thread by start().
 //
 ////////////////////////////////////////////////////////////////////////////////
-void Oscilloscope::acquireSinusoidalWave()
+void Channel::acquisitionLoop()
 {
     // Let's allocate a vector that will contain the data that we will push to the
     //  control system
     ////////////////////////////////////////////////////////////////////////////////
-    std::vector<std::int32_t> outputData(m_acquisitionSinWave.getMaxElements());
+    std::vector<std::int32_t> outputData(m_acquisition.getMaxElements());
 
     // A counter for the angle in the sin() operation
     ////////////////////////////////////////////////////////////////////////////////
@@ -261,11 +265,11 @@ void Oscilloscope::acquireSinusoidalWave()
 
     // Run until the state machine stops us
     ////////////////////////////////////////////////////////////////////////////////
-    while(!m_bStopAcquisitionSinWave)
+    while(!m_bStopAcquisition)
     {
         // Fill the vector with a sin wave
         ////////////////////////////////////////////////////////////////////////////////
-        size_t maxAmplitude = m_sinWaveAmplitude.getValue(); // PVVariables are thread safe
+        size_t maxAmplitude = m_amplitude.getValue(); // PVVariables are thread safe
         for(size_t scanVector(0); scanVector != outputData.size(); ++scanVector)
         {
             outputData[scanVector] = (double)maxAmplitude * sin((double)(angle++) / 10.0f);
@@ -273,7 +277,7 @@ void Oscilloscope::acquireSinusoidalWave()
 
         // Push the vector to the control system
         ////////////////////////////////////////////////////////////////////////////////
-        m_acquisitionSinWave.push(m_acquisitionSinWave.getTimestamp(), outputData);
+        m_acquisition.push(m_acquisition.getTimestamp(), outputData);
 
         // Rest for a while
         ////////////////////////////////////////////////////////////////////////////////
@@ -281,44 +285,7 @@ void Oscilloscope::acquireSinusoidalWave()
     }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Acquisition function for the square wave. It is launched in a separate
-//  thread by startSquareWave().
-//
-////////////////////////////////////////////////////////////////////////////////
-void Oscilloscope::acquireSquareWave()
-{
-    // Let's allocate a vector that will contain the data that we will push to the
-    //  control system
-    ////////////////////////////////////////////////////////////////////////////////
-    std::vector<std::int32_t> outputData(m_acquisitionSquareWave.getMaxElements());
-
-    // A counter for the angle of the square wave
-    ////////////////////////////////////////////////////////////////////////////////
-    std::int64_t angle(0);
-
-    // Run until the state machine stops us
-    ////////////////////////////////////////////////////////////////////////////////
-    while(!m_bStopAcquisitionSquareWave)
-    {
-        // Fill the vector with a square wave
-        ////////////////////////////////////////////////////////////////////////////////
-        size_t maxAmplitude = m_squareWaveAmplitude.getValue();
-        for(size_t scanVector(0); scanVector != outputData.size(); ++scanVector)
-        {
-            outputData[scanVector] = (angle & 0xff < 128) ? maxAmplitude : - maxAmplitude;
-        }
-
-        // Push the vector to the control system
-        ////////////////////////////////////////////////////////////////////////////////
-        m_acquisitionSquareWave.push(m_acquisitionSquareWave.getTimestamp(), outputData);
-
-        // Rest for a while
-        ////////////////////////////////////////////////////////////////////////////////
-        ::usleep(100000);
-    }
-}
-
-NDS_DEFINE_DRIVER("Oscilloscope", Oscilloscope);
+// The following MACRO defines the function to be exported in order
+//  to allow the dynamic loading of the shared module
+///////////////////////////////////////////////////////////////////
+NDS_DEFINE_DRIVER("OscilloscopeMultiChannel", Oscilloscope);

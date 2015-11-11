@@ -36,7 +36,8 @@
 			 </fileset>
 			 <fileset dir=".">
 			 	<include name="doc/**/*.h" />
-                                <include name="doc/**/*.md" />
+			 	<include name="doc/**/*.cpp" />
+                <include name="doc/**/*.md" />
 			 	<include name="doc/**/*.dox" />
 			 	<include name="doc/**/DoxyfileHTML" />
 			 	<include name="doc/**/DoxyfilePDF" />
@@ -168,7 +169,7 @@
     </target>
 
     <!-- Copy the coverage report to the artifacts -->
-    <target name="artifacts_coverage" depends="collect_coverage">
+    <target name="artifacts_coverage" if="coverage.set" depends="collect_coverage">
         <mkdir dir="${artifacts}/coverage_report" />
         <copy todir="${artifacts}/coverage_report">
             <fileset dir="${build_dir_tests}/CMake/coverage" />
