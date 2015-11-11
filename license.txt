@@ -1,0 +1,83 @@
+ 		     COSYLAB RESTRICTED LICENSE
+		       Version 2.0, September 2015
+
+ Copyright (C) 2015 Cosylab d.d.
+                    Teslova 30, 1000 Ljubljana, Slovenia
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+			    Preamble
+
+  The "Cosylab Restricted License" is designed to restrict the licensee's
+rights to the software that it applies to. The restriction is quite severe:
+the licensees are not allowed to do ANYTHING with the software, except for
+the purpose for which they were given the software. Furthermore, any
+modifications to the software made by the licensee must be made available
+to the copyright holder.
+
+  This is the license under which all Cosylab's copyrighted material is
+stored. 
+
+  The license explicitly allows the copyright holder to make a release of
+the software under a different license. 
+
+  The precise terms and conditions for use, copying, distribution and
+modification follow.
+
+
+
+		    COSYLAB RESTRICTED LICENSE
+   TERMS AND CONDITIONS FOR USE, COPYING, DISTRIBUTION AND MODIFICATION
+  
+  1. This License applies to any program or other work which contains
+a notice placed by the copyright holder saying it may be distributed
+under the terms of this Cosylab Restricted License.  The "Program", below,
+refers to any such program or work, and a "work based on the Program"
+means either the Program or any derivative work under copyright law:
+that is to say, a work containing the Program or a portion of it,
+either verbatim or with modifications and/or translated into another
+language.  (Hereinafter, translation is included without limitation in
+the term "modification".)  Each licensee is addressed as "you".
+
+  2. You may not use the Program, neither for its intended purpose, nor
+for any other, unless you have been given an explicit permission in writing
+from the copyright holder granting you such a right.
+
+  3. You may not deploy the software for use, copy, distribute copies of
+the Program (neither in source nor binary form), unless you have been
+given an explicit permission in writing from the copyright holder
+granting you such a right.
+
+  4. You may not modify your copy or copies of the Program or any
+portion of it, unless you have been given explicit permission in writing
+from the copyright holder granting you such a right. Once modification is
+performed, you must make a best effort at verifying that no defect has been
+introduced, and then submit the modifications back to the copyright
+holder.
+
+  5. The copyright holder may make the software available under any other
+license, including the "General Public License". In such a case, all the
+restrictions of the "Cosylab Restricted License" are lifted.
+
+			    NO WARRANTY
+
+  6. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
+APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
+HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
+OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
+IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
+ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+  7. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES,
+INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING
+OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED
+TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY
+YOU OR THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER
+PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGES.
+
+		     END OF TERMS AND CONDITIONS
