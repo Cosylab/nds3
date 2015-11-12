@@ -7,10 +7,10 @@ namespace nds
 
 This example shows a fictional thermometer.
 
-A delegate function is called each time the control system wants to read the temperature.
-
 The Makefile for this sample is the following:
 @include thermometer/Makefile
+
+The code shows a simple delegate function that is called each time the control system wants to read the temperature.
 
 
 @example oscilloscope/oscilloscope.cpp
