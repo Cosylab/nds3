@@ -106,7 +106,7 @@ If we are running our Device Support using EPICS as control system then the foll
 
 @verbatim
 rootNodeName-Temperature
-@verbatim
+@endverbatim
 
 Issuing a dbpf rootNodeName-Temperature.PROC 1 will cause the framework to call getTemperature() and fill the PV with the value 10.
 
