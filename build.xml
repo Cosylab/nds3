@@ -37,6 +37,7 @@
 			 <fileset dir=".">
 			 	<include name="doc/**/*.h" />
 			 	<include name="doc/**/*.cpp" />
+			 	<include name="doc/**/Makefile" />
                 <include name="doc/**/*.md" />
 			 	<include name="doc/**/*.dox" />
 			 	<include name="doc/**/DoxyfileHTML" />
