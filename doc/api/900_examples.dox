@@ -3,7 +3,30 @@ namespace nds
 
 /**
 
-@example oscilloscope.cpp
+@example thermometer/thermometer.cpp
+
+This example shows a fictional thermometer.
+
+A delegate function is called each time the control system wants to read the temperature.
+
+The Makefile for this sample is the following:
+@include thermometer/Makefile
+
+
+@example oscilloscope/oscilloscope.cpp
+
+This example shows a fictional oscilloscope with 2 channels: one channel acquires a sinusoidal
+wave while the other channel acquires a square wave.
+
+The Makefile for this sample is the following:
+@include oscilloscope/Makefile
+
+The code shows how to add two channels to a root node by using Node::addChild() and how
+to use the DataAcquisition node.
+
+
+
+@example oscilloscopeMultiChannel/oscilloscopeMultiChannel.cpp
 
 This example shows a fictional multi-channel oscilloscope.
 When the acquisition is triggered on a channel then the channel pushes a sinusoidal wave
@@ -13,33 +36,7 @@ The example shows how to create the channels programmatically (useful when you h
 number of channel that offer the same functionality).
 
 The Makefile for the sample is the following:
-@verbatim
-CXX = g++
- 
-CXXFLAGS = -std=c++0x -Wall -Wextra -pedantic -fPIC -pthread -DNDS3_DLL
- 
-# Flags passed to gcc during linking
-LINK = -shared -fPIC -Wl,-as-needed
- 
-# Name of the nds library
-TARGET = liboscilloscopemultichannel.so
- 
-# Additional linker libraries
-LIBS = -lnds3
- 
-# Source code files used in this project
-SRCS = oscilloscope.cpp
- 
- 
-OBJS = $(SRCS:.cpp=.o)
-# Rules for building
-$(TARGET): $(OBJS)
-	$(CXX) $(LINK) -o $@ $^ $(LIBS)
- 
-.PHONY: clean
-clean:
-	$(RM) $(TARGET) $(OBJS)
-@endverbatim
+@include oscilloscopeMultiChannel/Makefile
 
 
 The macro NDS_DEFINE_DRIVER tells that the Oscilloscope class is the one that must be allocated and

@@ -75,42 +75,7 @@ Control System) that represents the device and an input PV that the control syst
 @subsection getting_started_thermometer_source_code The source code
 
 Let's put this in C++ form:
-@code
-#include <nds3/nds.h>
-
-// This class declares our device in the contructor and supplies the functionalities to support it
-//////////////////////////////////////////////////////////////////////////////////////////////////
-class Thermometer
-{
-public:
-
-    // Constructor. Here we setup the device structure
-    //////////////////////////////////////////////////
-    Thermometer(nds::Factory &factory,
-                const std::string &deviceName,
-                const nds::namedParameters_t &parameters)
-    {
-        nds::Port rootNode(deviceName);
-        rootNode.addChild(nds::PVDelegateIn<double>("Temperature", std::bind(&Thermometer::getTemperature, 
-                                                                             this, 
-                                                                             std::placeholders::_1, 
-                                                                             std::placeholders::_2));
-
-        rootNode.initialize(this, factory);
-    }
-
-    void getTemperature(timespec* pTimestamp, double* pValue)
-    {
-        *pValue = 10; // It is always cold in here
-    }
-};
-
-// If we want to load our device support dynamically then we have to compile it
-//  as a dynamic module and we have to provide the functions to allocate it,
-//  deallocate it and retrieve its name
-////////////////////////////////////////////////////////////////////////////////
-NDS_DEFINE_DRIVER("Thermometer", Thermometer);
-@endcode
+@include thermometer/thermometer.cpp
 
 What did we do with this code?
 
@@ -139,9 +104,9 @@ Finally we call initialize() which registers the root node and its children with
 
 If we are running our Device Support using EPICS as control system then the following PV will be available:
 
-@code
+@verbatim
 rootNodeName-Temperature
-@endcode
+@verbatim
 
 Issuing a dbpf rootNodeName-Temperature.PROC 1 will cause the framework to call getTemperature() and fill the PV with the value 10.
 
@@ -152,34 +117,9 @@ The Makefile for a NDS3 device is quite straightforward: it does not depend on E
 you just have to make sure that it includes the shared library nds3 and specify the flag NDS3_DLL (tells the compiler that the NDS3
 is being linked dynamically).
 
-An example:
-@verbatim
-CXX = g++
+An example for our thermometer:
+@include thermometer/Makefile
 
-# We enable the c++0x flag, plus we define the NDS3_DLL preprocessor macro.
-CXXFLAGS = -std=c++0x -Wall -Wextra -pedantic -fPIC -pthread -DNDS3_DLL
-
-# Flags passed to gcc during linking
-LINK = -shared -fPIC -Wl,-as-needed
-
-# Name of our device library
-TARGET = libthermometer.so
- 
-# We specify that we depend on NDS3
-LIBS = -lnds3
- 
-# We assume that all the .cpp files are in the src folder
-SRCS = $(wildcard src/*.cpp)
-
-OBJS = $(SRCS:.cpp=.o)
-# Rules for building
-$(TARGET): $(OBJS)
-	$(CXX) $(LINK) -o $@ $^ $(LIBS)
-
-.PHONY: clean
-clean:
-	$(RM) $(TARGET) $(OBJS)
-@endverbatim
 
 This makefile will generate the shared module libthermometer.so. Now you can load the device into your NDS3 control system of choice and
 run it.
