@@ -17,7 +17,7 @@
 #include <set>
 #include <mutex>
 #include <ostream>
-#include "../nds3/definitions.h"
+#include "nds3/definitions.h"
 
 
 namespace nds

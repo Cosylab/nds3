@@ -7,13 +7,14 @@
  * file included in the distribution.
  */
 
-#include "../include/nds3impl/pvBaseInImpl.h"
-#include "../include/nds3impl/pvBaseOutImpl.h"
-#include "../include/nds3impl/portImpl.h"
-#include "../include/nds3impl/ndsFactoryImpl.h"
-#include "../include/nds3impl/factoryBaseImpl.h"
 #include <sstream>
 #include <cstring>
+
+#include "nds3/impl/pvBaseInImpl.h"
+#include "nds3/impl/pvBaseOutImpl.h"
+#include "nds3/impl/portImpl.h"
+#include "nds3/impl/ndsFactoryImpl.h"
+#include "nds3/impl/factoryBaseImpl.h"
 
 namespace nds
 {

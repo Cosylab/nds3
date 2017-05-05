@@ -11,8 +11,8 @@
 #define NDSSTATEMACHINEIMPL_H
 
 #include <thread>
-#include "nodeImpl.h"
-#include "../nds3/definitions.h"
+#include "nds3/definitions.h"
+#include "nds3/impl/nodeImpl.h"
 
 namespace nds
 {

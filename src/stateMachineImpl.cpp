@@ -7,14 +7,15 @@
  * file included in the distribution.
  */
 
-#include "../include/nds3impl/stateMachineImpl.h"
-#include "../include/nds3impl/pvDelegateOutImpl.h"
-#include "../include/nds3impl/pvDelegateInImpl.h"
-#include "../include/nds3impl/pvBaseImpl.h"
-#include "../include/nds3/exceptions.h"
 #include <cstdint>
 #include <mutex>
 #include <sstream>
+
+#include "nds3/exceptions.h"
+#include "nds3/impl/stateMachineImpl.h"
+#include "nds3/impl/pvDelegateOutImpl.h"
+#include "nds3/impl/pvDelegateInImpl.h"
+#include "nds3/impl/pvBaseImpl.h"
 
 namespace nds
 {

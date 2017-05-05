@@ -19,11 +19,11 @@
  * necessary header files (including this one).
  */
 
-#include "definitions.h"
-#include "thread.h"
 #include <memory>
 #include <string>
 #include <ostream>
+#include "nds3/definitions.h"
+#include "nds3/thread.h"
 
 /**
  * @namespace nds

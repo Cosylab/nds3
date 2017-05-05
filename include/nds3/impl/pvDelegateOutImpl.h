@@ -10,8 +10,8 @@
 #ifndef NDSDELEGATEPVOUTIMPL_H
 #define NDSDELEGATEPVOUTIMPL_H
 
-#include "pvBaseOutImpl.h"
-#include "../nds3/definitions.h"
+#include "nds3/definitions.h"
+#include "nds3/impl/pvBaseOutImpl.h"
 
 namespace nds
 {

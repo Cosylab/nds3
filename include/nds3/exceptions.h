@@ -20,8 +20,8 @@
  * necessary header files (including this one).
  */
 
-#include "definitions.h"
 #include <stdexcept>
+#include "nds3/definitions.h"
 
 namespace nds
 {

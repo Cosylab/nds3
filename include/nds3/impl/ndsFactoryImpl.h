@@ -16,7 +16,7 @@
 #include <memory>
 #include <mutex>
 #include <dirent.h>
-#include "../nds3/definitions.h"
+#include "nds3/definitions.h"
 
 namespace nds
 {
