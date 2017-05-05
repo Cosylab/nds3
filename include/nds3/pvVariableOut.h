@@ -20,8 +20,8 @@
  * necessary header files (including this one).
  */
 
-#include "definitions.h"
-#include "pvBaseOut.h"
+#include "nds3/definitions.h"
+#include "nds3/pvBaseOut.h"
 
 namespace nds
 {

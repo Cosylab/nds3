@@ -19,7 +19,7 @@
  * necessary header files (including this one).
  */
 
-#include "pvBase.h"
+#include "nds3/pvBase.h"
 
 namespace nds
 {

@@ -19,11 +19,11 @@
  * necessary header files (including this one).
  */
 
-#include "definitions.h"
-#include "base.h"
 #include <cstdint>
 #include <time.h>
 #include <string>
+#include "nds3/definitions.h"
+#include "nds3/base.h"
 
 namespace nds
 {

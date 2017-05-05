@@ -10,11 +10,11 @@
 #ifndef NDSFACTORYBASEIMPL_H
 #define NDSFACTORYBASEIMPL_H
 
-#include "../nds3/definitions.h"
 #include <map>
 #include <mutex>
 #include <memory>
 #include <thread>
+#include "nds3/definitions.h"
 
 namespace nds
 {

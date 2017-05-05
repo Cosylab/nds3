@@ -21,8 +21,8 @@
  */
 
 
-#include "definitions.h"
-#include "base.h"
+#include "nds3/definitions.h"
+#include "nds3/base.h"
 
 namespace nds
 {

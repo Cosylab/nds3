@@ -7,7 +7,7 @@
  * file included in the distribution.
  */
 
-#include "../include/nds3impl/pvVariableOutImpl.h"
+#include "nds3/impl/pvVariableOutImpl.h"
 
 namespace nds
 {

@@ -7,8 +7,8 @@
  * file included in the distribution.
  */
 
-#include "../include/nds3/dataAcquisition.h"
-#include "../include/nds3impl/dataAcquisitionImpl.h"
+#include "nds3/dataAcquisition.h"
+#include "nds3/impl/dataAcquisitionImpl.h"
 
 namespace nds
 {

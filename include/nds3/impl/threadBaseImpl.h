@@ -10,9 +10,9 @@
 #ifndef NDSTHREADBASEIMPL_H
 #define NDSTHREADBASEIMPL_H
 
-#include "../nds3/definitions.h"
 #include <string>
 #include <memory>
+#include "nds3/definitions.h"
 
 namespace nds
 {

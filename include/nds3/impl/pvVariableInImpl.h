@@ -11,7 +11,7 @@
 #define NDSPVVARIABLEINIMPL_H
 
 #include <mutex>
-#include "pvBaseInImpl.h"
+#include "nds3/impl/pvBaseInImpl.h"
 
 namespace nds
 {

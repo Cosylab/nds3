@@ -19,8 +19,8 @@
  * necessary header files (including this one).
  */
 
-#include "definitions.h"
-#include "node.h"
+#include "nds3/definitions.h"
+#include "nds3/node.h"
 
 namespace nds
 {

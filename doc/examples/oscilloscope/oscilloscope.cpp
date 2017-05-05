@@ -2,10 +2,9 @@
 #include <math.h>
 #include <unistd.h>
 #include <iostream>
-
-#include <nds3/nds.h>
 #include <thread>
 
+#include <nds3/nds.h>
 
 /**
  * @brief Class that declares and implement a fictional Oscilloscope device.

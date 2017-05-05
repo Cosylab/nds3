@@ -7,8 +7,8 @@
  * file included in the distribution.
  */
 
-#include "../include/nds3/stateMachine.h"
-#include "../include/nds3impl/stateMachineImpl.h"
+#include "nds3/stateMachine.h"
+#include "nds3/impl/stateMachineImpl.h"
 
 namespace nds
 {

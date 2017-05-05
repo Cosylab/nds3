@@ -12,7 +12,7 @@
 
 #include <list>
 #include <memory>
-#include "pvBaseImpl.h"
+#include "nds3/impl/pvBaseImpl.h"
 
 namespace nds
 {
