@@ -81,5 +81,15 @@ void PVBase::setMaxElements(const size_t maxElements)
 {
     std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->setMaxElements(maxElements);
 }
+    
+ /*
+ * Specifies if the read() function of the PV should be called during
+ * the device initialization
+ *
+ ****************************************************************************/
+void PVBase::processAtInit(const bool bProcessAtInit)
+{
+    std::static_pointer_cast<PVBaseImpl>(m_pImplementation)->processAtInit(bProcessAtInit);
+}
 
 }
