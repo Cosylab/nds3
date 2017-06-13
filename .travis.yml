@@ -1,7 +1,5 @@
-langauge: cpp
-
-before_install:
-    - sudo apt-get install libgtest-dev
+language: cpp
+dist: trusty
 
 script:
-    - mkdir build && (cd build && cmake ../CMake && make) && mkdir tests/build && mkdir build_gtest && (cd build_gtest && cmake /usr/src/gtest && make) && (cd tests/build && cp ../../build_gtest/libgtest.a . && cmake ../CMake -DLIBRARY_LOCATION=../../build && make && ./nds3tests)
+    - mkdir build && (cd build && cmake ../CMake && make) && mkdir tests/build && (cd tests/build && cmake ../CMake -DLIBRARY_LOCATION=../../build && make && ./nds3tests)
