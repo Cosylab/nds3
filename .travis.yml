@@ -13,6 +13,12 @@ addons:
 env:
     - DOXYFILE=doc/api/DoxyfileHTML
 
+before_install:
+    - echo $GPG_KEY | gpg --passphrase-fd 0 scripts/vault/id_rsa.gpg
+    - eval `ssh-agent -s`
+    - chmod 600 scripts/vault/id_rsa
+    - ssh-add scripts/vault/id_rsa
+
 script:
     - mkdir build && (cd build && cmake ../CMake && make) && mkdir tests/build && (cd tests/build && cmake ../CMake -DLIBRARY_LOCATION=../../build && make && ./nds3tests)
 
