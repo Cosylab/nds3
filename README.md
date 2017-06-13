@@ -23,7 +23,7 @@ NDS provides the following features:
 
 ## Developer Dependencies
 
-At least cmake 2.8.12 required. Included in RHEL 6.6, Debian Jessie, Ubuntu Trusty.
+At least cmake 2.8.2 required. Included in RHEL 6.6, Debian Wheezy, Ubuntu Trusty.
 
 ## Build instructions
 
