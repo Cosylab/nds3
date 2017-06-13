@@ -15,6 +15,7 @@ add_definitions(-DNDS3_DLL)
 include_directories(
 	${ADDITIONAL_INCLUDE}
 	${CMAKE_CURRENT_SOURCE_DIR}/../include
+	${CMAKE_CURRENT_SOURCE_DIR}/../../include
 	)
 
 file(GLOB nds_sources "${CMAKE_CURRENT_SOURCE_DIR}/../src/*.cpp")
@@ -26,6 +27,6 @@ add_executable(nds3tests ${nds_sources})
 # Add dependencies to the nds3 library
 #-------------------------------------
 find_library(nds3_library NAMES nds3 PATHS ${LIBRARY_LOCATION})
-target_link_libraries(nds3tests ${nds3_library} gtest pthread gcov)
+target_link_libraries(nds3tests ${nds3_library} ${CMAKE_CURRENT_BINARY_DIR}/libgtest.a pthread gcov)
 
 
