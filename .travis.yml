@@ -1,5 +1,20 @@
 language: cpp
 dist: trusty
 
+addons:
+  apt:
+    packages:
+      - doxygen
+      - doxygen-doc
+      - doxygen-latex
+      - doxygen-gui
+      - graphviz
+
+env:
+    - DOXYFILE=doc/api/DoxyfileHTML
+
 script:
     - mkdir build && (cd build && cmake ../CMake && make) && mkdir tests/build && (cd tests/build && cmake ../CMake -DLIBRARY_LOCATION=../../build && make && ./nds3tests)
+
+after_success:
+    - scripts/deploy_doxygen

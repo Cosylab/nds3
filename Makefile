@@ -45,3 +45,9 @@ install: $(TARGET)
 .PHONY: revision
 revision:
 	bumprev $(VERSION) $(TARGET)
+
+.PHONY: doc
+doc: doc/api/html
+
+doc/api/html:
+	cd doc/api && doxygen DoxyfileHTML
