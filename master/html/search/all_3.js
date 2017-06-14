@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['dataacquisition',['DataAcquisition',['../classnds_1_1_data_acquisition.html',1,'nds']]],
+  ['dataacquisition',['DataAcquisition',['../classnds_1_1_data_acquisition.html#ab78228d14e1701b60e2e34c0078e12b5',1,'nds::DataAcquisition::DataAcquisition()'],['../classnds_1_1_data_acquisition.html#a9c70f1417d16654db9818b2584e6a8ec',1,'nds::DataAcquisition::DataAcquisition(const DataAcquisition&lt; T &gt; &amp;right)'],['../classnds_1_1_data_acquisition.html#a67e62ee595384ab466fabf5abd89ed8c',1,'nds::DataAcquisition::DataAcquisition(const std::string &amp;name, size_t maxElements, stateChange_t switchOnFunction, stateChange_t switchOffFunction, stateChange_t startFunction, stateChange_t stopFunction, stateChange_t recoverFunction, allowChange_t allowStateChangeFunction)']]],
+  ['dataacquisition_2eh',['dataAcquisition.h',['../data_acquisition_8h.html',1,'']]],
+  ['datadirection_5ft',['dataDirection_t',['../namespacends.html#a4b35292f3814b1d9a453b0bfbd46d65a',1,'nds']]],
+  ['datafloat64',['dataFloat64',['../namespacends.html#a0f69df4105c4b4c2c4a66deb26cd01fea089a0fc662d59ca44d81518d18c08a5e',1,'nds']]],
+  ['datafloat64array',['dataFloat64Array',['../namespacends.html#a0f69df4105c4b4c2c4a66deb26cd01fea6ab66a294e649b185c3e2e45476ea1a7',1,'nds']]],
+  ['dataint32',['dataInt32',['../namespacends.html#a0f69df4105c4b4c2c4a66deb26cd01feaed5fb6ab952df6cfa518e9d515b60074',1,'nds']]],
+  ['dataint32array',['dataInt32Array',['../namespacends.html#a0f69df4105c4b4c2c4a66deb26cd01feacdcd3f745c2e0c08b6ed675b7d87f911',1,'nds']]],
+  ['dataint8array',['dataInt8Array',['../namespacends.html#a0f69df4105c4b4c2c4a66deb26cd01fea30bd37930c7b01d9587db84a95b7c8c7',1,'nds']]],
+  ['data_20input_2foutput',['Data input/output',['../group__datareadwrite.html',1,'']]],
+  ['datasinkchannel',['dataSinkChannel',['../group__naming.html#ggab9584dead7780b83481cb1dfa9da37d3aed021b1f35215f4b58c8fdb04cf1c3dd',1,'nds']]],
+  ['datasourcechannel',['dataSourceChannel',['../group__naming.html#ggab9584dead7780b83481cb1dfa9da37d3a665c5ca093e52039d09dd4dcdafc3662',1,'nds']]],
+  ['datastring',['dataString',['../namespacends.html#a0f69df4105c4b4c2c4a66deb26cd01fea9a32e00229231a54a0a4cb317e30b007',1,'nds']]],
+  ['datatype_5ft',['dataType_t',['../namespacends.html#a0f69df4105c4b4c2c4a66deb26cd01fe',1,'nds']]],
+  ['datauint8array',['dataUint8Array',['../namespacends.html#a0f69df4105c4b4c2c4a66deb26cd01fea508d10936bc1f42af67651d63d6b3496',1,'nds']]],
+  ['deallocatedriver_5ft',['deallocateDriver_t',['../namespacends.html#adbb022f4798ade09ebace7a59015f89c',1,'nds']]],
+  ['debug',['debug',['../group__logging.html#gga853c5971a73b8f787b120e3694ca863caad42f6697b035b7580e4fef93be20b4d',1,'nds']]],
+  ['definecommand',['defineCommand',['../classnds_1_1_base.html#abde6158c710255cee600d935229e9f00',1,'nds::Base']]],
+  ['definitions_2eh',['definitions.h',['../definitions_8h.html',1,'']]],
+  ['destroydevice',['destroyDevice',['../classnds_1_1_factory.html#a871f83316c15411fe287f1ba74ff3a36',1,'nds::Factory']]],
+  ['directorynotfounderror',['DirectoryNotFoundError',['../classnds_1_1_directory_not_found_error.html',1,'nds']]],
+  ['driveralreadyregistered',['DriverAlreadyRegistered',['../classnds_1_1_driver_already_registered.html',1,'nds']]],
+  ['driverdoesnotexportregistrationfunctions',['DriverDoesNotExportRegistrationFunctions',['../classnds_1_1_driver_does_not_export_registration_functions.html',1,'nds']]],
+  ['drivernotfound',['DriverNotFound',['../classnds_1_1_driver_not_found.html',1,'nds']]]
+];
