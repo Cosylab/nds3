@@ -21,6 +21,10 @@ NDS provides the following features:
 - guaranteed binary compatibility between minor versions allow to easily
   upgrade existing installations without recompiling the device support
 
+## Documentation
+
+- [Online Reference](https://cosylab.github.io/nds3/)
+
 ## Developer Dependencies
 
 At least cmake 2.8.2 required. Included in RHEL 6.6, Debian Wheezy, Ubuntu Trusty.
