@@ -138,7 +138,8 @@ void NdsFactoryImpl::registerDriver(const std::string &driverName, allocateDrive
     {
         std::ostringstream error;
         error << "The driver " << driverName << " has already been registered";
-        throw DriverAlreadyRegistered(error.str());
+        std::cerr << error;
+        //throw DriverAlreadyRegistered(error.str());
     }
     m_driversAllocDealloc[driverName] = std::pair<allocateDriver_t, deallocateDriver_t>(allocateFunction, deallocateFunction);
 }

@@ -294,7 +294,7 @@ typedef std::list<std::string> enumerationStrings_t;
  * @brief Defines the global functions that are called by NDS when the device class needs
  *        to be allocated.
  *
- * @param driverName   a string that specifies the driver name
+ * @param driverName   a token that specifies the driver name (input has to be valid c symbol name)
  * @param className    the name of the class that implements the driver
  */
 #define NDS_DEFINE_DRIVER(driverName, className)\
@@ -310,8 +310,9 @@ void deallocateDevice(void* device) \
 } \
 const char* getDeviceName() \
 { \
-    return driverName; \
+    return #driverName; \
 } \
+nds::RegisterDevice<className> registerDevice##driverName(#driverName); \
 } // extern "C"
 
 // Generic helper definitions for shared library support
