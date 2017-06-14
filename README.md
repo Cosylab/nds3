@@ -21,6 +21,8 @@ NDS provides the following features:
 - guaranteed binary compatibility between minor versions allow to easily
   upgrade existing installations without recompiling the device support
 
+[![Build Status](https://travis-ci.org/Cosylab/nds3.svg?branch=master)](https://travis-ci.org/Cosylab/nds3)
+
 ## Documentation
 
 - [Online Reference](https://cosylab.github.io/nds3/)
