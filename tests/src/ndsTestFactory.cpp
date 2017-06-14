@@ -1,5 +1,5 @@
-#include "../include/ndsTestFactory.h"
-#include "../include/ndsTestInterface.h"
+#include "ndsTestFactory.h"
+#include "ndsTestInterface.h"
 #include <sstream>
 
 namespace nds

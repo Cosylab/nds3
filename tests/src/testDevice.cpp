@@ -1,5 +1,5 @@
 
-#include "../include/testDevice.h"
+#include "testDevice.h"
 #include <nds3/nds.h>
 #include <mutex>
 #include <unistd.h>
