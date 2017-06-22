@@ -1,5 +1,5 @@
-#include <nds3impl/factoryBaseImpl.h>
-#include <nds3impl/logStreamGetterImpl.h>
+#include <nds3/impl/factoryBaseImpl.h>
+#include <nds3/impl/logStreamGetterImpl.h>
 #include <set>
 #include <sstream>
 #include <map>

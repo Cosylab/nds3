@@ -1,4 +1,4 @@
-#include "../include/ndsTestInterface.h"
+#include "ndsTestInterface.h"
 
 namespace nds
 {

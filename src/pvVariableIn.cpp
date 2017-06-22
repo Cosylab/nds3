@@ -7,11 +7,11 @@
  * file included in the distribution.
  */
 
-#include "../include/nds3/pvVariableIn.h"
-#include "../include/nds3impl/pvVariableInImpl.h"
-
 #include <cstdint>
 #include <vector>
+
+#include "nds3/pvVariableIn.h"
+#include "nds3/impl/pvVariableInImpl.h"
 
 namespace nds
 {

@@ -7,8 +7,8 @@
  * file included in the distribution.
  */
 
-#include "../include/nds3/iniFileParser.h"
-#include "../include/nds3impl/iniFileParserImpl.h"
+#include "nds3/iniFileParser.h"
+#include "nds3/impl/iniFileParserImpl.h"
 
 namespace nds
 {

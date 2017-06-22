@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <nds3/nds.h>
 #include <functional>
-#include "../include/ndsTestInterface.h"
-#include "../include/ndsTestFactory.h"
+#include "ndsTestInterface.h"
+#include "ndsTestFactory.h"
 #include <unistd.h>
 
 void wait1sec()

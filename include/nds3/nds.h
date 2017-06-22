@@ -18,22 +18,22 @@
  *
  */
 
-#include "definitions.h"
-#include "exceptions.h"
-#include "base.h"
-#include "iniFileParser.h"
-#include "node.h"
-#include "port.h"
-#include "pvBaseIn.h"
-#include "pvBaseOut.h"
-#include "pvDelegateIn.h"
-#include "pvDelegateOut.h"
-#include "pvVariableIn.h"
-#include "pvVariableOut.h"
-#include "dataAcquisition.h"
-#include "factory.h"
-#include "stateMachine.h"
-#include "thread.h"
+#include "nds3/definitions.h"
+#include "nds3/exceptions.h"
+#include "nds3/base.h"
+#include "nds3/iniFileParser.h"
+#include "nds3/node.h"
+#include "nds3/port.h"
+#include "nds3/pvBaseIn.h"
+#include "nds3/pvBaseOut.h"
+#include "nds3/pvDelegateIn.h"
+#include "nds3/pvDelegateOut.h"
+#include "nds3/pvVariableIn.h"
+#include "nds3/pvVariableOut.h"
+#include "nds3/dataAcquisition.h"
+#include "nds3/factory.h"
+#include "nds3/stateMachine.h"
+#include "nds3/thread.h"
 
 
 #endif // NDS3_H

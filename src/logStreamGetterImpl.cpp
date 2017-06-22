@@ -7,7 +7,7 @@
  * file included in the distribution.
  */
 
-#include "../include/nds3impl/logStreamGetterImpl.h"
+#include "nds3/impl/logStreamGetterImpl.h"
 
 namespace nds
 {

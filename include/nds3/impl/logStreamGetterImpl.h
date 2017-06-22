@@ -12,7 +12,7 @@
 
 #include <ostream>
 #include <array>
-#include "../nds3/definitions.h"
+#include "nds3/definitions.h"
 
 namespace nds
 {

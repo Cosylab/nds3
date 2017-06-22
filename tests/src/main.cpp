@@ -2,8 +2,8 @@
 //
 #include <gtest/gtest.h>
 #include <nds3/nds.h>
-#include "../include/testDevice.h"
-#include "../include/ndsTestFactory.h"
+#include "testDevice.h"
+#include "ndsTestFactory.h"
 
 int main(int argc, char **argv)
 {

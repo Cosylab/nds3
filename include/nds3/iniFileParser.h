@@ -22,7 +22,7 @@
 #include <istream>
 #include <string>
 #include <memory>
-#include "definitions.h"
+#include "nds3/definitions.h"
 
 namespace nds
 {

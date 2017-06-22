@@ -10,9 +10,10 @@
 #ifndef NDSDATAACQUISITIONIMPL_H
 #define NDSDATAACQUISITIONIMPL_H
 
-#include "nodeImpl.h"
-#include "../nds3/definitions.h"
 #include <memory>
+#include "nds3/definitions.h"
+#include "nds3/impl/nodeImpl.h"
+
 namespace nds
 {
 

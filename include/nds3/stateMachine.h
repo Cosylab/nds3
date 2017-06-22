@@ -21,8 +21,8 @@
 
 #include <cstdint>
 
-#include "node.h"
-#include "definitions.h"
+#include "nds3/node.h"
+#include "nds3/definitions.h"
 
 namespace nds
 {

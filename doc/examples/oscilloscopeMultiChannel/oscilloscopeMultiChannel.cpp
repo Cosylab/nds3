@@ -2,6 +2,7 @@
 #include <sstream>
 #include <math.h>
 #include <unistd.h>
+
 #include <nds3/nds.h>
 
 class Channel; // Forward declaration

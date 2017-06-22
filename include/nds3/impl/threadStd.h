@@ -10,9 +10,9 @@
 #ifndef NDSTHREADSTD_H
 #define NDSTHREADSTD_H
 
-#include "threadBaseImpl.h"
-#include "../nds3/definitions.h"
 #include <thread>
+#include "nds3/definitions.h"
+#include "nds3/impl/threadBaseImpl.h"
 
 namespace nds
 {
