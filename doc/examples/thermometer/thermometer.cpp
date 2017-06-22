@@ -31,5 +31,5 @@ public:
 //  as a dynamic module and we have to provide the functions to allocate it,
 //  deallocate it and retrieve its name
 ////////////////////////////////////////////////////////////////////////////////
-NDS_DEFINE_DRIVER(Thermometer, Thermometer);
+NDS_DEFINE_DRIVER(Thermometer, Thermometer)
 
