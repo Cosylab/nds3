@@ -23,7 +23,7 @@ add_definitions(-DNDS3_DLL_EXPORTS)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 file(GLOB nds_include_interface "${CMAKE_CURRENT_SOURCE_DIR}/../include/nds3/*.h")
-file(GLOB nds_include_implementation "${CMAKE_CURRENT_SOURCE_DIR}/../include/nds3impl/*.h")
+file(GLOB nds_include_implementation "${CMAKE_CURRENT_SOURCE_DIR}/../include/nds3/impl/*.h")
 file(GLOB nds_sources "${CMAKE_CURRENT_SOURCE_DIR}/../src/*.cpp")
 
 # Add the source files to the nds3 library
@@ -57,7 +57,7 @@ set( CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${C
 
 install(TARGETS nds3 LIBRARY DESTINATION lib64 COMPONENT "Shared library")
 install(FILES ${nds_include_interface} DESTINATION include/nds3 COMPONENT "Included files")
-install(FILES ${nds_include_implementation} DESTINATION include/nds3impl COMPONENT "Included files for control system developers")
+install(FILES ${nds_include_implementation} DESTINATION include/nds3/impl COMPONENT "Included files for control system developers")
 
 include(CPack)
 
