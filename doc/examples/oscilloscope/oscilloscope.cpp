@@ -405,7 +405,7 @@ void Oscilloscope::acquireSquareWave()
         size_t maxAmplitude = m_squareWaveAmplitude.getValue();
         for(size_t scanVector(0); scanVector != outputData.size(); ++scanVector)
         {
-            outputData[scanVector] = (angle & 0xff < 128) ? maxAmplitude : - maxAmplitude;
+            outputData[scanVector] = ((angle & 0xff) < 128) ? maxAmplitude : - maxAmplitude;
         }
 
         // Push the vector to the control system
