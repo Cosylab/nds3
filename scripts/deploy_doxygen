@@ -20,7 +20,7 @@ __AUTHOR__="Jeroen de Bruijn; Niklas Claesson"
 # - TRAVIS_COMMIT       : The commit that the current build is testing.
 # - TRAVIS_REPO_SLUG    : owner_name/repo_name
 # - DOXYFILE            : The Doxygen configuration file.
-# - GH_REPO_TOKEN       : Secure token to the github repository.
+# - GPG_KEY             : GPG Key to unlock deploy key.
 #
 # For information on how to encrypt variables for Travis CI please go to
 # https://docs.travis-ci.com/user/environment-variables/#Encrypted-Variables
@@ -50,6 +50,12 @@ if [[ ! ("$TRAVIS_BRANCH" =~ 3-[0-9]*$ || "$TRAVIS_BRANCH" = "master") ]]; then
 	echo "Ignore branch $TRAVIS_BRANCH"
 	exit 0
 fi
+
+# Setup deploy key
+echo "$GPG_KEY" | gpg --passphrase-fd 0 scripts/vault/id_rsa.gpg
+eval "$(ssh-agent -s)"
+chmod 600 scripts/vault/id_rsa
+ssh-add scripts/vault/id_rsa
 
 # Create a clean working directory for this script.
 mkdir code_docs
