@@ -68,7 +68,7 @@ make
 
 ## Run unit tests
 
-- Build with cmake
+- Build NDS3 with CMake
 - Build and run tests
     ```
     mkdir tests/build
@@ -76,4 +76,14 @@ make
     cmake ../CMake -DLIBRARY_LOCATION=../../build
     make
     ./nds3tests
+    ```
+## Build example drivers
+
+- Build NDS3 with CMake
+- Build examples
+    ```
+    mkdir doc/examples/build
+    cd doc/examples/build
+    cmake ../CMake -DLIBRARY_LOCATION=../../../build
+    make
     ```
