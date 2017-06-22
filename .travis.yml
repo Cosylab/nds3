@@ -14,7 +14,7 @@ env:
     - DOXYFILE=doc/api/DoxyfileHTML
 
 script:
-    - mkdir build && (cd build && cmake ../CMake && make) && mkdir tests/build && (cd tests/build && cmake ../CMake -DLIBRARY_LOCATION=../../build && make && ./nds3tests)
+    - mkdir build && (cd build && cmake ../CMake && make) && mkdir tests/build && (cd tests/build && cmake ../CMake -DLIBRARY_LOCATION=../../build && make && ./nds3tests) && mkdir doc/examples/build && (cd doc/examples/build && cmake ../CMake -DLIBRARY_LOCATION=../../../build && make)
 
 after_success:
     - scripts/deploy_doxygen
