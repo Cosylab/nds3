@@ -90,7 +90,7 @@ $(document).ready(function(){initNavTree('group__logging.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -153,6 +153,15 @@ Functions</h2></td></tr>
 <tr class="memitem:ga3b51fdd1f10b58639ac3c81241889437"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__logging.html#ga3b51fdd1f10b58639ac3c81241889437">nds::Base::setLogLevel</a> (const logLevel_t logLevel)</td></tr>
 <tr class="memdesc:ga3b51fdd1f10b58639ac3c81241889437"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable the logging for a particular severity level.  <a href="#ga3b51fdd1f10b58639ac3c81241889437">More...</a><br/></td></tr>
 <tr class="separator:ga3b51fdd1f10b58639ac3c81241889437"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac1ce13f8edbc03a38e22d62a268a6cb1"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__logging.html#gac1ce13f8edbc03a38e22d62a268a6cb1">nds::BaseImpl::getLogger</a> (const logLevel_t logLevel)</td></tr>
+<tr class="memdesc:gac1ce13f8edbc03a38e22d62a268a6cb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a stream that can be used for logging.  <a href="#gac1ce13f8edbc03a38e22d62a268a6cb1">More...</a><br/></td></tr>
+<tr class="separator:gac1ce13f8edbc03a38e22d62a268a6cb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5afd547ac23b59439d7d370f2a545fde"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__logging.html#ga5afd547ac23b59439d7d370f2a545fde">nds::BaseImpl::isLogLevelEnabled</a> (const logLevel_t logLevel) const </td></tr>
+<tr class="memdesc:ga5afd547ac23b59439d7d370f2a545fde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the logging for a particular severity level has been enabled.  <a href="#ga5afd547ac23b59439d7d370f2a545fde">More...</a><br/></td></tr>
+<tr class="separator:ga5afd547ac23b59439d7d370f2a545fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1034413a1c3f0966cbcd33c039d7a294"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__logging.html#ga1034413a1c3f0966cbcd33c039d7a294">nds::BaseImpl::setLogLevel</a> (const logLevel_t logLevel)</td></tr>
+<tr class="memdesc:ga1034413a1c3f0966cbcd33c039d7a294"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable the logging for a particular severity level.  <a href="#ga1034413a1c3f0966cbcd33c039d7a294">More...</a><br/></td></tr>
+<tr class="separator:ga1034413a1c3f0966cbcd33c039d7a294"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>The Logging methods can be used to send debug, information, warning or errors to the control system.</p>
@@ -289,6 +298,32 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="gac1ce13f8edbc03a38e22d62a268a6cb1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ostream&amp; nds::BaseImpl::getLogger </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="group__logging.html#ga853c5971a73b8f787b120e3694ca863c">logLevel_t</a>&#160;</td>
+          <td class="paramname"><em>logLevel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve a stream that can be used for logging. </p>
+<p>Logging streams are specific for the requested log level and the current thread.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">logLevel</td><td>the severity level of the messages that will be logged througn the stream </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a logging stream for the requested log level in the current thread </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="gaa76265dfccd333398e2d37ee49486e4d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -321,6 +356,31 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ga5afd547ac23b59439d7d370f2a545fde"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool nds::BaseImpl::isLogLevelEnabled </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="group__logging.html#ga853c5971a73b8f787b120e3694ca863c">logLevel_t</a>&#160;</td>
+          <td class="paramname"><em>logLevel</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns true if the logging for a particular severity level has been enabled. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">logLevel</td><td>the severity level for which the status is required </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the logging for the specified severity level is enabled </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ga4c21e155add448f78c8451896aabe1b2"></a>
 <div class="memitem">
 <div class="memproto">
@@ -343,6 +403,38 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if the logging for the specified severity level is enabled </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga1034413a1c3f0966cbcd33c039d7a294"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void nds::BaseImpl::setLogLevel </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="group__logging.html#ga853c5971a73b8f787b120e3694ca863c">logLevel_t</a>&#160;</td>
+          <td class="paramname"><em>logLevel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enable the logging for a particular severity level. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">logLevel</td><td>the severity level for which the logging is enabled. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -376,7 +468,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Jun 21 2017 19:25:13 for NDS3 by
+    <li class="footer">Generated on Thu Jun 22 2017 09:08:13 for NDS3 by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

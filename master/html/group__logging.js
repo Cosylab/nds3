@@ -12,7 +12,10 @@ var group__logging =
       [ "error", "group__logging.html#gga853c5971a73b8f787b120e3694ca863cacb5e100e5a9a3e7f6d1fd97512215282", null ],
       [ "none", "group__logging.html#gga853c5971a73b8f787b120e3694ca863ca334c4a4c42fdb79d7ebc3e73b517e6f8", null ]
     ] ],
+    [ "getLogger", "group__logging.html#gac1ce13f8edbc03a38e22d62a268a6cb1", null ],
     [ "getLogger", "group__logging.html#gaa76265dfccd333398e2d37ee49486e4d", null ],
+    [ "isLogLevelEnabled", "group__logging.html#ga5afd547ac23b59439d7d370f2a545fde", null ],
     [ "isLogLevelEnabled", "group__logging.html#ga4c21e155add448f78c8451896aabe1b2", null ],
+    [ "setLogLevel", "group__logging.html#ga1034413a1c3f0966cbcd33c039d7a294", null ],
     [ "setLogLevel", "group__logging.html#ga3b51fdd1f10b58639ac3c81241889437", null ]
 ];

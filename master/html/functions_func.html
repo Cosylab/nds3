@@ -82,6 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="functions.html"><span>All</span></a></li>
       <li class="current"><a href="functions_func.html"><span>Functions</span></a></li>
+      <li><a href="functions_vars.html"><span>Variables</span></a></li>
       <li><a href="functions_type.html"><span>Typedefs</span></a></li>
     </ul>
   </div>
@@ -91,6 +92,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_b"><span>b</span></a></li>
       <li><a href="#index_c"><span>c</span></a></li>
       <li><a href="#index_d"><span>d</span></a></li>
+      <li><a href="#index_e"><span>e</span></a></li>
       <li><a href="#index_f"><span>f</span></a></li>
       <li><a href="#index_g"><span>g</span></a></li>
       <li><a href="#index_i"><span>i</span></a></li>
@@ -125,7 +127,7 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -154,9 +156,14 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <h3><a class="anchor" id="index_c"></a>- c -</h3><ul>
 <li>canChange()
 : <a class="el" href="classnds_1_1_state_machine.html#a0453962826dfac98e054751ddbd8c6c6">nds::StateMachine</a>
+, <a class="el" href="classnds_1_1_state_machine_impl.html#a52d8474884a3f918126461ad9614a407">nds::StateMachineImpl</a>
+</li>
+<li>commandSetState()
+: <a class="el" href="classnds_1_1_state_machine_impl.html#ac9a92c387ce15af372f78fcbc0985de9">nds::StateMachineImpl</a>
 </li>
 <li>createDevice()
 : <a class="el" href="classnds_1_1_factory.html#a46ed32d553a0e7fdf8f7c90ecfa00900">nds::Factory</a>
+, <a class="el" href="classnds_1_1_factory_base_impl.html#a84a1ca40a9b21181df393e6394536ab3">nds::FactoryBaseImpl</a>
 </li>
 </ul>
 
@@ -168,8 +175,31 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>defineCommand()
 : <a class="el" href="classnds_1_1_base.html#abde6158c710255cee600d935229e9f00">nds::Base</a>
 </li>
+<li>deinitialize()
+: <a class="el" href="classnds_1_1_p_v_base_impl.html#a18a62ba724dd41f631562f87e5b4bb68">nds::PVBaseImpl</a>
+, <a class="el" href="classnds_1_1_p_v_base_in_impl.html#ae008acd8911e170a29007023928dbdfe">nds::PVBaseInImpl</a>
+, <a class="el" href="classnds_1_1_p_v_base_out_impl.html#a5b6f5e54cf5b5f4820bc6b966cb8a399">nds::PVBaseOutImpl</a>
+, <a class="el" href="classnds_1_1_state_machine_impl.html#a7c6f147d639e7f79843bc6d955f85cce">nds::StateMachineImpl</a>
+</li>
+<li>deregisterCommand()
+: <a class="el" href="classnds_1_1_factory_base_impl.html#a526cbbfc728e0573191fee59e63e6f50">nds::FactoryBaseImpl</a>
+</li>
+<li>deregisterPV()
+: <a class="el" href="classnds_1_1_interface_base_impl.html#a7a4f56ff596741a5b02da98a528d7221">nds::InterfaceBaseImpl</a>
+</li>
 <li>destroyDevice()
 : <a class="el" href="classnds_1_1_factory.html#a871f83316c15411fe287f1ba74ff3a36">nds::Factory</a>
+, <a class="el" href="classnds_1_1_factory_base_impl.html#a068881dd12f3fadf7cfcec73bda1365a">nds::FactoryBaseImpl</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_e"></a>- e -</h3><ul>
+<li>executeTransition()
+: <a class="el" href="classnds_1_1_state_machine_impl.html#a97134f2e854aae556d1a94dd5d684d47">nds::StateMachineImpl</a>
+</li>
+<li>executeTransitionThread()
+: <a class="el" href="classnds_1_1_state_machine_impl.html#a3284ed1a6df56960b39cc07032741a7c">nds::StateMachineImpl</a>
 </li>
 </ul>
 
@@ -185,11 +215,32 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>getComponentName()
 : <a class="el" href="group__naming.html#ga824bd66eeae4d9f3547e245b6f61e6bd">nds::Base</a>
 </li>
+<li>getDataDirection()
+: <a class="el" href="classnds_1_1_p_v_base_impl.html#a28461ee020a0d776a943913d368275bc">nds::PVBaseImpl</a>
+, <a class="el" href="classnds_1_1_p_v_base_in_impl.html#af7a9c63db13c6f6d0c4e03996a2f7b4b">nds::PVBaseInImpl</a>
+, <a class="el" href="classnds_1_1_p_v_base_out_impl.html#aff1e55b844795f775b8a0fb9012347a4">nds::PVBaseOutImpl</a>
+</li>
+<li>getDataType()
+: <a class="el" href="classnds_1_1_p_v_base_impl.html#a98d09652ad6a21fd1fc8225a9c49309b">nds::PVBaseImpl</a>
+, <a class="el" href="classnds_1_1_p_v_delegate_in_impl.html#a42e3e78dd96f5c5a9082f9fe468b1586">nds::PVDelegateInImpl&lt; T &gt;</a>
+, <a class="el" href="classnds_1_1_p_v_delegate_out_impl.html#aa6af13b804a5901931c8b66eafa6e131">nds::PVDelegateOutImpl&lt; T &gt;</a>
+, <a class="el" href="classnds_1_1_p_v_variable_in_impl.html#ad5df095e49060a42e52b2691dcb5e70e">nds::PVVariableInImpl&lt; T &gt;</a>
+, <a class="el" href="classnds_1_1_p_v_variable_out_impl.html#a7c2588af6508ce1bbc90d432b66bfe32">nds::PVVariableOutImpl&lt; T &gt;</a>
+</li>
+<li>getDataTypeForCPPType()
+: <a class="el" href="classnds_1_1_p_v_base_impl.html#acc0ccbead805749dcd43995669c18105">nds::PVBaseImpl</a>
+</li>
 <li>getDecimation()
 : <a class="el" href="classnds_1_1_data_acquisition.html#a9eb5653a27aaeed720be51371dbfee1f">nds::DataAcquisition&lt; T &gt;</a>
 </li>
+<li>getDescription()
+: <a class="el" href="classnds_1_1_p_v_base_impl.html#afe93f804a1f2055f904a94a390ea8270">nds::PVBaseImpl</a>
+</li>
 <li>getDurationSeconds()
 : <a class="el" href="classnds_1_1_data_acquisition.html#a58536056cbe57bb75730685d3d8895e3">nds::DataAcquisition&lt; T &gt;</a>
+</li>
+<li>getEnumerations()
+: <a class="el" href="classnds_1_1_p_v_base_impl.html#ace590600cc85f224638654978b81be52">nds::PVBaseImpl</a>
 </li>
 <li>getFrequencyHz()
 : <a class="el" href="classnds_1_1_data_acquisition.html#a36abdf2ce0ba0d573661cf259ef4eb6d">nds::DataAcquisition&lt; T &gt;</a>
@@ -205,21 +256,43 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 </li>
 <li>getGlobalState()
 : <a class="el" href="classnds_1_1_state_machine.html#ac3ebe7ba4340d1749e8f0392eaf176a3">nds::StateMachine</a>
+, <a class="el" href="classnds_1_1_state_machine_impl.html#ab80c7e0cbf9050d9b535f918116aa3e8">nds::StateMachineImpl</a>
 </li>
 <li>getLocalState()
 : <a class="el" href="classnds_1_1_state_machine.html#adea73b5481f9ffa84b24d05db018199c">nds::StateMachine</a>
+, <a class="el" href="classnds_1_1_state_machine_impl.html#a8566897c58ae31d7a16e35f06b7f4f3c">nds::StateMachineImpl</a>
 </li>
 <li>getLogger()
 : <a class="el" href="group__logging.html#gaa76265dfccd333398e2d37ee49486e4d">nds::Base</a>
 </li>
 <li>getMaxElements()
 : <a class="el" href="classnds_1_1_data_acquisition.html#a1fe4bb4ad6fa9328dd2a4fd44dc2fde8">nds::DataAcquisition&lt; T &gt;</a>
+, <a class="el" href="classnds_1_1_p_v_base_impl.html#a3e4f316bfe834079e9d3f2049d40d180">nds::PVBaseImpl</a>
+</li>
+<li>getNewInterface()
+: <a class="el" href="classnds_1_1_factory_base_impl.html#a319a2a04e6229c3e27e37f23806701c6">nds::FactoryBaseImpl</a>
 </li>
 <li>getPort()
 : <a class="el" href="classnds_1_1_base.html#a2a6a99d605dd336df75f25b641ddbd17">nds::Base</a>
+, <a class="el" href="classnds_1_1_port_impl.html#ab0fda138584a59191bdf743ddf9e62c7">nds::PortImpl</a>
+</li>
+<li>getProcessAtInit()
+: <a class="el" href="classnds_1_1_p_v_base_impl.html#a197d074f961c5df76dc4b1f0e780dd97">nds::PVBaseImpl</a>
+</li>
+<li>getScanPeriodSeconds()
+: <a class="el" href="classnds_1_1_p_v_base_impl.html#a7bc565dfbca74ff00cd33bbb0a77d9d3">nds::PVBaseImpl</a>
+</li>
+<li>getScanType()
+: <a class="el" href="classnds_1_1_p_v_base_impl.html#a103575b0b45f09733127af2d3060daa8">nds::PVBaseImpl</a>
+</li>
+<li>getSeparator()
+: <a class="el" href="classnds_1_1_factory_base_impl.html#a5c758d644966156f96e42985c6040c1f">nds::FactoryBaseImpl</a>
 </li>
 <li>getStartTimestamp()
 : <a class="el" href="classnds_1_1_data_acquisition.html#ad16d8ac983074d3cc377f7bd8a4d409f">nds::DataAcquisition&lt; T &gt;</a>
+</li>
+<li>getStateName()
+: <a class="el" href="classnds_1_1_state_machine_impl.html#a08432734d562713629099ae070083f16">nds::StateMachineImpl</a>
 </li>
 <li>getString()
 : <a class="el" href="classnds_1_1_ini_file_parser.html#acde4c71bd3ab7de028261300b361957b">nds::IniFileParser</a>
@@ -227,8 +300,12 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>getTimestamp()
 : <a class="el" href="classnds_1_1_base.html#af77b717cee8199c69d0f2762cb4ccc92">nds::Base</a>
 </li>
+<li>getUnits()
+: <a class="el" href="classnds_1_1_p_v_base_impl.html#aa9bb4539813e2a76031205739f03be65">nds::PVBaseImpl</a>
+</li>
 <li>getValue()
-: <a class="el" href="group__datareadwrite.html#ga05aa3e5b6894e27032a8242495324b32">nds::PVVariableOut&lt; T &gt;</a>
+: <a class="el" href="group__datareadwrite.html#ga4b882cd71a512a06389f1d099021f686">nds::PVVariableOut&lt; T &gt;</a>
+, <a class="el" href="classnds_1_1_p_v_variable_out_impl.html#aca8466eca751eb9309fb2d9d4e896f77">nds::PVVariableOutImpl&lt; T &gt;</a>
 </li>
 </ul>
 
@@ -239,6 +316,16 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 </li>
 <li>initialize()
 : <a class="el" href="classnds_1_1_node.html#aa0f76a85dcc4fcea84187453fffdbe94">nds::Node</a>
+, <a class="el" href="classnds_1_1_p_v_base_impl.html#aa3642f15bf4ba3b36d0bc2af70e3fd4d">nds::PVBaseImpl</a>
+, <a class="el" href="classnds_1_1_p_v_base_in_impl.html#ad3e0f55a333e258a33e4d7af2aef71dc">nds::PVBaseInImpl</a>
+, <a class="el" href="classnds_1_1_p_v_base_out_impl.html#aa9089531ff801d839beb09c1832dfa63">nds::PVBaseOutImpl</a>
+, <a class="el" href="classnds_1_1_state_machine_impl.html#a5156a8bf84586224783ec7ebf11bbc31">nds::StateMachineImpl</a>
+</li>
+<li>isAllowedTransition()
+: <a class="el" href="classnds_1_1_state_machine_impl.html#a532fa14ec19e773cff500181a8406bcd">nds::StateMachineImpl</a>
+</li>
+<li>isIntermediateState()
+: <a class="el" href="classnds_1_1_state_machine_impl.html#a5e09969eb8b233b8dc33fa2d7ba6133f">nds::StateMachineImpl</a>
 </li>
 <li>isLogLevelEnabled()
 : <a class="el" href="group__logging.html#ga4c21e155add448f78c8451896aabe1b2">nds::Base</a>
@@ -260,6 +347,9 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>Node()
 : <a class="el" href="classnds_1_1_node.html#a2a125e7000e348b8fea889f4bc9d1ea9">nds::Node</a>
 </li>
+<li>NodeImpl()
+: <a class="el" href="classnds_1_1_node_impl.html#ad5eea44e3f3439bc7cc0a52cb55ad52d">nds::NodeImpl</a>
+</li>
 </ul>
 
 
@@ -274,38 +364,80 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>Port()
 : <a class="el" href="classnds_1_1_port.html#a86c8034b936d1fb1e127400effdc2873">nds::Port</a>
 </li>
+<li>PortImpl()
+: <a class="el" href="classnds_1_1_port_impl.html#a510bf2b08e45d22fdcc5745ca0756ffe">nds::PortImpl</a>
+</li>
+<li>preDelete()
+: <a class="el" href="classnds_1_1_factory_base_impl.html#afeffe1f93881189c64566fd149f7eca6">nds::FactoryBaseImpl</a>
+</li>
 <li>processAtInit()
 : <a class="el" href="classnds_1_1_p_v_base.html#a6f56a4a4eefa3f0f096d365f11f393bf">nds::PVBase</a>
+, <a class="el" href="classnds_1_1_p_v_base_impl.html#a978691ae271e7bd10d40922a4e360d4d">nds::PVBaseImpl</a>
 </li>
 <li>push()
 : <a class="el" href="group__datareadwrite.html#ga27afa66a989ec20aad6e728435b319bf">nds::DataAcquisition&lt; T &gt;</a>
 , <a class="el" href="group__datareadwrite.html#ga2115bb8973e7b227ffd93a99c7c148fe">nds::PVBaseIn</a>
+, <a class="el" href="classnds_1_1_p_v_base_in_impl.html#a1115de270119c0d4aea9d021f6f70449">nds::PVBaseInImpl</a>
 </li>
 <li>PVBaseIn()
 : <a class="el" href="classnds_1_1_p_v_base_in.html#a1a2672f2934c980fb46786b89890741a">nds::PVBaseIn</a>
 </li>
+<li>PVBaseInImpl()
+: <a class="el" href="classnds_1_1_p_v_base_in_impl.html#a2bd95062c82295c7f319ce758a57063a">nds::PVBaseInImpl</a>
+</li>
 <li>PVBaseOut()
 : <a class="el" href="classnds_1_1_p_v_base_out.html#ad16920a5bbd2c464dc3def015e71cf6c">nds::PVBaseOut</a>
+</li>
+<li>PVBaseOutImpl()
+: <a class="el" href="classnds_1_1_p_v_base_out_impl.html#a17834140e7759931e0a053af91402222">nds::PVBaseOutImpl</a>
 </li>
 <li>PVDelegateIn()
 : <a class="el" href="classnds_1_1_p_v_delegate_in.html#a16ec742e2369fc7171d696f5042a116b">nds::PVDelegateIn&lt; T &gt;</a>
 </li>
+<li>PVDelegateInImpl()
+: <a class="el" href="classnds_1_1_p_v_delegate_in_impl.html#a5f69b795ed27cb455ced88c198a9930b">nds::PVDelegateInImpl&lt; T &gt;</a>
+</li>
 <li>PVDelegateOut()
 : <a class="el" href="classnds_1_1_p_v_delegate_out.html#a9b4e4bfdfc8cf64bb1ef63eca98b00c7">nds::PVDelegateOut&lt; T &gt;</a>
+</li>
+<li>PVDelegateOutImpl()
+: <a class="el" href="classnds_1_1_p_v_delegate_out_impl.html#a20148b5b174d86d88bef694953ba5da0">nds::PVDelegateOutImpl&lt; T &gt;</a>
 </li>
 <li>PVVariableIn()
 : <a class="el" href="classnds_1_1_p_v_variable_in.html#a08272970f3e87fab9f1cdcd79cffe22f">nds::PVVariableIn&lt; T &gt;</a>
 </li>
+<li>PVVariableInImpl()
+: <a class="el" href="classnds_1_1_p_v_variable_in_impl.html#aa14cb74ffadfcbd4d7b9a818b9394274">nds::PVVariableInImpl&lt; T &gt;</a>
+</li>
 <li>PVVariableOut()
 : <a class="el" href="classnds_1_1_p_v_variable_out.html#ac6610ca5d0bb921e3706828c04bee692">nds::PVVariableOut&lt; T &gt;</a>
+</li>
+<li>PVVariableOutImpl()
+: <a class="el" href="classnds_1_1_p_v_variable_out_impl.html#abcee5763fb19100d7e5a171b2cbf0361">nds::PVVariableOutImpl&lt; T &gt;</a>
 </li>
 </ul>
 
 
 <h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
 <li>read()
-: <a class="el" href="group__datareadwrite.html#gaefab0da9f9fe31dcb9c3834623682138">nds::PVBaseIn</a>
+: <a class="el" href="classnds_1_1_p_v_base_impl.html#a4cf02158a65b9342f3c48479402c1ffa">nds::PVBaseImpl</a>
+, <a class="el" href="group__datareadwrite.html#gaefab0da9f9fe31dcb9c3834623682138">nds::PVBaseIn</a>
+, <a class="el" href="classnds_1_1_p_v_base_in_impl.html#a595a4b2d6970ed6d3ba97ef3d40a3680">nds::PVBaseInImpl</a>
 , <a class="el" href="group__datareadwrite.html#ga8223ac5880d433b1f8faf1dc9bec0861">nds::PVBaseOut</a>
+, <a class="el" href="classnds_1_1_p_v_base_out_impl.html#a6d9aa91bf0c4e20807ba5fc17e610850">nds::PVBaseOutImpl</a>
+, <a class="el" href="classnds_1_1_p_v_delegate_in_impl.html#a7b91e8a26234178ae7effa71b94f6453">nds::PVDelegateInImpl&lt; T &gt;</a>
+, <a class="el" href="classnds_1_1_p_v_delegate_out_impl.html#ad0180004ef6d3ece8345742e7ba6c0a9">nds::PVDelegateOutImpl&lt; T &gt;</a>
+, <a class="el" href="classnds_1_1_p_v_variable_in_impl.html#a04e2293aec38707ba503225e653215fe">nds::PVVariableInImpl&lt; T &gt;</a>
+, <a class="el" href="classnds_1_1_p_v_variable_out_impl.html#a0e7bb2f21666f636bcd8478fdfa62729">nds::PVVariableOutImpl&lt; T &gt;</a>
+</li>
+<li>readGlobalState()
+: <a class="el" href="classnds_1_1_state_machine_impl.html#a73239836376b0250f4463dcf52327ea4">nds::StateMachineImpl</a>
+</li>
+<li>readLocalState()
+: <a class="el" href="classnds_1_1_state_machine_impl.html#ab952f8de7e8e94cc6a32099623f697bc">nds::StateMachineImpl</a>
+</li>
+<li>registerCommand()
+: <a class="el" href="classnds_1_1_factory_base_impl.html#a54143e4e84fecdf83e6d7ab5428d4657">nds::FactoryBaseImpl</a>
 </li>
 <li>registerControlSystem()
 : <a class="el" href="classnds_1_1_factory.html#ae084909c7d59c12fd34dd035b2970c1a">nds::Factory</a>
@@ -313,17 +445,27 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>registerDriver()
 : <a class="el" href="classnds_1_1_factory.html#abf27f015d23f5baf4250727ae505a9d2">nds::Factory</a>
 </li>
+<li>registerPV()
+: <a class="el" href="classnds_1_1_interface_base_impl.html#a8870e5a687e6701675cdff97272af7a5">nds::InterfaceBaseImpl</a>
+</li>
+<li>registrationTerminated()
+: <a class="el" href="classnds_1_1_interface_base_impl.html#a2c9ccbbeefd3e07c212409d7a30d208b">nds::InterfaceBaseImpl</a>
+</li>
 <li>replicate()
 : <a class="el" href="classnds_1_1_factory.html#af19369a22b7ccb8ca138ad0359af5dcb">nds::Factory</a>
 </li>
 <li>replicateFrom()
 : <a class="el" href="classnds_1_1_p_v_base_in.html#a4481086c8f44b5d535201de46064c26b">nds::PVBaseIn</a>
+, <a class="el" href="classnds_1_1_p_v_base_in_impl.html#acc36c354f57ed2bc0fd780ae1530b690">nds::PVBaseInImpl</a>
+</li>
+<li>replicateTo()
+: <a class="el" href="classnds_1_1_p_v_base_in_impl.html#a77f86e21856f2937a6e95307504a9dc0">nds::PVBaseInImpl</a>
 </li>
 <li>run()
 : <a class="el" href="classnds_1_1_factory.html#aa96fcbc182a4171be46c79de3a0cab4e">nds::Factory</a>
 </li>
 <li>runInThread()
-: <a class="el" href="classnds_1_1_base.html#a660b47b4b998276ec8a02e2bbcc0a6a9">nds::Base</a>
+: <a class="el" href="classnds_1_1_base.html#a3e2025809129837c5a1b4d78288b1a70">nds::Base</a>
 , <a class="el" href="classnds_1_1_factory.html#a46e13cff3c1e419cc66c230319ddb618">nds::Factory</a>
 </li>
 </ul>
@@ -332,12 +474,15 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
 <li>setDecimation()
 : <a class="el" href="group__datareadwrite.html#ga86e6efbd91af573a18818a37b4c155f0">nds::PVBaseIn</a>
+, <a class="el" href="classnds_1_1_p_v_base_in_impl.html#a5140479f8131d10172693dd9500e9ba1">nds::PVBaseInImpl</a>
 </li>
 <li>setDescription()
 : <a class="el" href="classnds_1_1_p_v_base.html#afa7e5181950c659a8aea4e7aa5ad0d18">nds::PVBase</a>
+, <a class="el" href="classnds_1_1_p_v_base_impl.html#a01cd2aad36e5eec13d66a63766b4b949">nds::PVBaseImpl</a>
 </li>
 <li>setEnumeration()
 : <a class="el" href="classnds_1_1_p_v_base.html#af07b3822ac984b56bb44e8ba9094a2dc">nds::PVBase</a>
+, <a class="el" href="classnds_1_1_p_v_base_impl.html#a4875afbcd435bbeb4e9bbd2c069a8dab">nds::PVBaseImpl</a>
 </li>
 <li>setExternalName()
 : <a class="el" href="group__naming.html#ga51043a20ed217e1cc5c7d767dd01fb3d">nds::Base</a>
@@ -350,42 +495,55 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 </li>
 <li>setMaxElements()
 : <a class="el" href="classnds_1_1_p_v_base.html#ae1b252e7a092b477ea3f11f387b2314a">nds::PVBase</a>
+, <a class="el" href="classnds_1_1_p_v_base_impl.html#a119333bef6e4a591efa4ede700f319a7">nds::PVBaseImpl</a>
 </li>
 <li>setScanType()
 : <a class="el" href="classnds_1_1_p_v_base.html#ae96733ed82d9dcf5c5c0f113dc6ecc21">nds::PVBase</a>
+, <a class="el" href="classnds_1_1_p_v_base_impl.html#aa4ea255d735b4a1ac5883d9bc2f90e03">nds::PVBaseImpl</a>
 </li>
 <li>setStartTimestampDelegate()
 : <a class="el" href="classnds_1_1_data_acquisition.html#a125420834808247bc933a51748a2da30">nds::DataAcquisition&lt; T &gt;</a>
 </li>
 <li>setState()
 : <a class="el" href="classnds_1_1_state_machine.html#a10a8985f99ef7d6ce40d87a6cf5cbaec">nds::StateMachine</a>
+, <a class="el" href="classnds_1_1_state_machine_impl.html#a15059bbf809af9e92894458c1229e225">nds::StateMachineImpl</a>
 </li>
 <li>setTimestampDelegate()
 : <a class="el" href="classnds_1_1_base.html#a80432c8ba75c1b1aeba354344d45f0bb">nds::Base</a>
 </li>
 <li>setUnits()
 : <a class="el" href="classnds_1_1_p_v_base.html#a87463eafbc824ee85e122ab4f5d7f049">nds::PVBase</a>
+, <a class="el" href="classnds_1_1_p_v_base_impl.html#ac5e3afb8e97f2edbef055f128a173232">nds::PVBaseImpl</a>
 </li>
 <li>setValue()
 : <a class="el" href="group__datareadwrite.html#ga15abfe47827969620c19fb03e30e3469">nds::PVVariableIn&lt; T &gt;</a>
+, <a class="el" href="classnds_1_1_p_v_variable_in_impl.html#acf3793290d62f4e0b5bb8caa6c6e1a13">nds::PVVariableInImpl&lt; T &gt;</a>
 </li>
 <li>StateMachine()
-: <a class="el" href="classnds_1_1_state_machine.html#a9d9cbeddcb2f88d3f6e2fe09fcd77fa2">nds::StateMachine</a>
+: <a class="el" href="classnds_1_1_state_machine.html#a95b4220e2dd5b6b391e2027d5d6d0959">nds::StateMachine</a>
 </li>
 <li>StateMachineError()
 : <a class="el" href="classnds_1_1_state_machine_error.html#a26ad0f690b5a29f611d9ea484b4e9baf">nds::StateMachineError</a>
+</li>
+<li>StateMachineImpl()
+: <a class="el" href="classnds_1_1_state_machine_impl.html#a4dcfbf39eb74c191c19c85772472edd4">nds::StateMachineImpl</a>
 </li>
 <li>StateMachineRollBack()
 : <a class="el" href="classnds_1_1_state_machine_roll_back.html#a37c03725d468ffbad9dcff6ae2a14a42">nds::StateMachineRollBack</a>
 </li>
 <li>stopReplicationTo()
 : <a class="el" href="classnds_1_1_factory.html#a65026266496ebfd3a580d3cbef898e92">nds::Factory</a>
+, <a class="el" href="classnds_1_1_p_v_base_in_impl.html#ad7606cd258b9aaa7ff82c698700fb3ba">nds::PVBaseInImpl</a>
 </li>
 <li>subscribe()
 : <a class="el" href="classnds_1_1_factory.html#a46184c9691640dc25ecf72a15231ab07">nds::Factory</a>
 </li>
+<li>subscribeReceiver()
+: <a class="el" href="classnds_1_1_p_v_base_in_impl.html#a2e403f4073386567053c6e462832309a">nds::PVBaseInImpl</a>
+</li>
 <li>subscribeTo()
 : <a class="el" href="classnds_1_1_p_v_base_out.html#ac3b0e2876cdfdfa10a276b176187ae5f">nds::PVBaseOut</a>
+, <a class="el" href="classnds_1_1_p_v_base_out_impl.html#a535346dda242e141988ce70d51dd5d1f">nds::PVBaseOutImpl</a>
 </li>
 </ul>
 
@@ -401,12 +559,22 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <li>unsubscribe()
 : <a class="el" href="classnds_1_1_factory.html#ad95d8751d853a8bbb216d1078cd550f6">nds::Factory</a>
 </li>
+<li>unsubscribeReceiver()
+: <a class="el" href="classnds_1_1_p_v_base_in_impl.html#a22e8635f30d1bd4c7ab8ede8fde456df">nds::PVBaseInImpl</a>
+</li>
 </ul>
 
 
 <h3><a class="anchor" id="index_w"></a>- w -</h3><ul>
 <li>write()
-: <a class="el" href="group__datareadwrite.html#gadbc88dc19f57f56f1504fb6f1588a121">nds::PVBaseOut</a>
+: <a class="el" href="classnds_1_1_p_v_base_impl.html#abb76264802c2dd3a6304764e0b381807">nds::PVBaseImpl</a>
+, <a class="el" href="group__datareadwrite.html#gadbc88dc19f57f56f1504fb6f1588a121">nds::PVBaseOut</a>
+, <a class="el" href="classnds_1_1_p_v_base_out_impl.html#a224cbdea18b1d0865ac6189931af93d1">nds::PVBaseOutImpl</a>
+, <a class="el" href="classnds_1_1_p_v_delegate_out_impl.html#a65ef09454e1df92f544be2d1a5401cd8">nds::PVDelegateOutImpl&lt; T &gt;</a>
+, <a class="el" href="classnds_1_1_p_v_variable_out_impl.html#a11c4b5b2b5b84a383f8786407bbadd29">nds::PVVariableOutImpl&lt; T &gt;</a>
+</li>
+<li>writeLocalState()
+: <a class="el" href="classnds_1_1_state_machine_impl.html#add5b089f5275b8eb15addff2aa7938f8">nds::StateMachineImpl</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -414,7 +582,7 @@ $(document).ready(function(){initNavTree('functions_func.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Jun 21 2017 19:25:13 for NDS3 by
+    <li class="footer">Generated on Thu Jun 22 2017 09:08:29 for NDS3 by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

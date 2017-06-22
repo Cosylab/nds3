@@ -11,13 +11,14 @@ var indexSectionsWithContent =
   1: "bdfinpst",
   2: "n",
   3: "bdefinpst",
-  4: "abcdfgiknoprstuw",
-  5: "acdeginprsw",
-  6: "dilnos",
-  7: "defgimnoprsuw",
-  8: "n",
-  9: "dln",
-  10: "gln"
+  4: "abcdefgiknoprstuw",
+  5: "m",
+  6: "acdeginprsw",
+  7: "dilnos",
+  8: "defgimnoprsuw",
+  9: "n",
+  10: "dln",
+  11: "gln"
 };
 
 var indexSectionNames =
@@ -27,12 +28,13 @@ var indexSectionNames =
   2: "namespaces",
   3: "files",
   4: "functions",
-  5: "typedefs",
-  6: "enums",
-  7: "enumvalues",
-  8: "defines",
-  9: "groups",
-  10: "pages"
+  5: "variables",
+  6: "typedefs",
+  7: "enums",
+  8: "enumvalues",
+  9: "defines",
+  10: "groups",
+  11: "pages"
 };
 
 function convertToId(search)
