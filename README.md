@@ -31,7 +31,11 @@ NDS provides the following features:
 
 At least cmake 2.8.2 required. Included in RHEL 6.6, Debian Wheezy, Ubuntu Trusty.
 
-## Build instructions
+## Package Installation
+
+Packages are not available yet.
+
+## Manual Installation
 
 ### Using cmake
 
@@ -39,13 +43,13 @@ At least cmake 2.8.2 required. Included in RHEL 6.6, Debian Wheezy, Ubuntu Trust
 mkdir build
 cd build
 cmake ../CMake
-make
+make install
 ```
 
 ### Using make
 
 ```
-make
+make install
 ```
 
 ### Using qmake
