@@ -48,7 +48,7 @@ void getTemperature(timespec* pTimestamp, double* pValue)
 //  as a dynamic module and we have to provide the functions to allocate it,
 //  deallocate it and retrieve its name
 ////////////////////////////////////////////////////////////////////////////////
-NDS_DEFINE_DRIVER("Thermometer", Thermometer);
+NDS_DEFINE_DRIVER(Thermometer, Thermometer);
 @endcode
 
 For instance, if we create the device on an EPICS IOC we will see the following:
