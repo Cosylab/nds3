@@ -57,24 +57,6 @@ make install
 make install
 ```
 
-### Using qmake
-
-```
-mkdir build_folder
-cd build_folder
-qmake-qt4 ../nds3_library.pro
-make
-```
-
-or
-
-```
-mkdir build_folder
-cd build_folder
-qmake ../nds3_library.pro
-make
-```
-
 ## Run unit tests
 
 - Build NDS3 with CMake
