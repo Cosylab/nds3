@@ -29,7 +29,9 @@ NDS provides the following features:
 
 ## Developer Dependencies
 
-At least cmake 2.8.2 required. Included in RHEL 6.6, Debian Wheezy, Ubuntu Trusty.
+cmake 2.8.2+ required to run unit tests. Included in RHEL 6.6, Debian Wheezy, Ubuntu Trusty.
+
+GCC 4.9+ is recommended because of [GCC 57869](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=57869).
 
 ## Package Installation
 

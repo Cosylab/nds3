@@ -136,9 +136,12 @@ void NdsFactoryImpl::registerDriver(const std::string &driverName, allocateDrive
 
     if(m_driversAllocDealloc.find(driverName) != m_driversAllocDealloc.end())
     {
-        std::ostringstream error;
-        error << "The driver " << driverName << " has already been registered";
-        throw DriverAlreadyRegistered(error.str());
+        // TODO(nc): Implement NDS debug. Below is not an error, but would it be
+        //           nice to print if debugging NDS.
+        //std::ostringstream error;
+        //error << "The driver " << driverName << " has already been registered";
+        //std::cerr << error.str();
+        //throw DriverAlreadyRegistered(error.str());
     }
     m_driversAllocDealloc[driverName] = std::pair<allocateDriver_t, deallocateDriver_t>(allocateFunction, deallocateFunction);
 }
