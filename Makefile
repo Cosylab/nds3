@@ -56,7 +56,11 @@ revision:
 	bumprev $(VERSION) $(TARGET)
 
 .PHONY: doc
-doc: doc/api/html
+doc: doc/api/html doc/api/hlatex/refman.pdf
 
-doc/api/html:
+doc/api/html: doc/api/DoxyfileHTML
 	cd doc/api && doxygen DoxyfileHTML
+
+doc/api/hlatex/refman.pdf: doc/api/DoxyfilePDFH
+	cd doc/api && doxygen DoxyfilePDFH
+	cd doc/api/hlatex && pdflatex refman.tex && pdflatex refman.tex

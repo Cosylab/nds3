@@ -26,6 +26,9 @@ NDS provides the following features:
 ## Documentation
 
 - [Online Reference](https://cosylab.github.io/nds3/)
+- Build doxygen reference with `make doc`. Requires doxygen and latex. The
+  generated documentation is then found at `doc/api/html/index.html` and
+  `doc/api/hlatex/refman.pdf`.
 
 ## Developer Dependencies
 
