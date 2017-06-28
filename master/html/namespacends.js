@@ -37,6 +37,7 @@ var namespacends =
     [ "PVDelegateOut", "classnds_1_1_p_v_delegate_out.html", "classnds_1_1_p_v_delegate_out" ],
     [ "PVVariableIn", "classnds_1_1_p_v_variable_in.html", "classnds_1_1_p_v_variable_in" ],
     [ "PVVariableOut", "classnds_1_1_p_v_variable_out.html", "classnds_1_1_p_v_variable_out" ],
+    [ "RegisterDevice", "classnds_1_1_register_device.html", null ],
     [ "StateMachine", "classnds_1_1_state_machine.html", "classnds_1_1_state_machine" ],
     [ "Thread", "classnds_1_1_thread.html", "classnds_1_1_thread" ]
 ];

@@ -434,7 +434,7 @@ $(document).ready(function(){initNavTree('oscilloscope_2oscilloscope_8cpp-exampl
 <div class="line"><span class="comment"></span>        <span class="keywordtype">size_t</span> maxAmplitude = m_squareWaveAmplitude.getValue();</div>
 <div class="line">        <span class="keywordflow">for</span>(<span class="keywordtype">size_t</span> scanVector(0); scanVector != outputData.size(); ++scanVector)</div>
 <div class="line">        {</div>
-<div class="line">            outputData[scanVector] = (angle &amp; 0xff &lt; 128) ? maxAmplitude : - maxAmplitude;</div>
+<div class="line">            outputData[scanVector] = ((angle &amp; 0xff) &lt; 128) ? maxAmplitude : - maxAmplitude;</div>
 <div class="line">        }</div>
 <div class="line"></div>
 <div class="line">        <span class="comment">// Push the vector to the control system</span></div>
@@ -445,13 +445,13 @@ $(document).ready(function(){initNavTree('oscilloscope_2oscilloscope_8cpp-exampl
 <div class="line">    }</div>
 <div class="line">}</div>
 <div class="line"></div>
-<div class="line"><a name="a5"></a><a class="code" href="definitions_8h.html#abae220b9d7ab927324ef6caa20107576">NDS_DEFINE_DRIVER</a>(<span class="stringliteral">&quot;Oscilloscope&quot;</span>, Oscilloscope);</div>
+<div class="line"><a name="a5"></a><a class="code" href="definitions_8h.html#abae220b9d7ab927324ef6caa20107576">NDS_DEFINE_DRIVER</a>(Oscilloscope, Oscilloscope)</div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Jun 27 2017 19:30:37 for NDS3 by
+    <li class="footer">Generated on Wed Jun 28 2017 15:44:47 for NDS3 by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

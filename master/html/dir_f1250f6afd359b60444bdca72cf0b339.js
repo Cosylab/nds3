@@ -56,6 +56,7 @@ var dir_f1250f6afd359b60444bdca72cf0b339 =
     [ "pvVariableOut.h", "pv_variable_out_8h.html", [
       [ "PVVariableOut", "classnds_1_1_p_v_variable_out.html", "classnds_1_1_p_v_variable_out" ]
     ] ],
+    [ "registerDevice.h", "register_device_8h_source.html", null ],
     [ "stateMachine.h", "state_machine_8h.html", [
       [ "StateMachine", "classnds_1_1_state_machine.html", "classnds_1_1_state_machine" ]
     ] ],

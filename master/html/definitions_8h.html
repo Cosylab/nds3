@@ -314,8 +314,9 @@ Enumerations</h2></td></tr>
 <div class="line">} \</div>
 <div class="line">const <span class="keywordtype">char</span>* getDeviceName() \</div>
 <div class="line">{ \</div>
-<div class="line">    return driverName; \</div>
+<div class="line">    return #driverName; \</div>
 <div class="line">} \</div>
+<div class="line">nds::RegisterDevice&lt;className&gt; registerDevice##driverName(#driverName); \</div>
 <div class="line">}</div>
 <div class="ttc" id="namespacends_html_a1623ccf32bf1883cc75d22e2471c535b"><div class="ttname"><a href="namespacends.html#a1623ccf32bf1883cc75d22e2471c535b">nds::namedParameters_t</a></div><div class="ttdeci">std::map&lt; std::string, std::string &gt; namedParameters_t</div><div class="ttdoc">Map containing named parameters passed to the device during the initialization. </div><div class="ttdef"><b>Definition:</b> definitions.h:222</div></div>
 <div class="ttc" id="classnds_1_1_factory_html"><div class="ttname"><a href="classnds_1_1_factory.html">nds::Factory</a></div><div class="ttdoc">Communicates with a static instance of the control system. </div><div class="ttdef"><b>Definition:</b> factory.h:43</div></div>
@@ -323,7 +324,7 @@ Enumerations</h2></td></tr>
 <p>Defines the global functions that are called by NDS when the device class needs to be allocated. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">driverName</td><td>a string that specifies the driver name </td></tr>
+    <tr><td class="paramname">driverName</td><td>a token that specifies the driver name (input has to be valid c symbol name) </td></tr>
     <tr><td class="paramname">className</td><td>the name of the class that implements the driver </td></tr>
   </table>
   </dd>
@@ -338,7 +339,7 @@ Enumerations</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_6c68ff761f824273ee32591272f8fcef.html">include</a></li><li class="navelem"><a class="el" href="dir_f1250f6afd359b60444bdca72cf0b339.html">nds3</a></li><li class="navelem"><a class="el" href="definitions_8h.html">definitions.h</a></li>
-    <li class="footer">Generated on Tue Jun 27 2017 19:30:37 for NDS3 by
+    <li class="footer">Generated on Wed Jun 28 2017 15:44:47 for NDS3 by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

@@ -6,6 +6,7 @@ var searchData=
   ['readlocalstate',['readLocalState',['../classnds_1_1_state_machine_impl.html#ab952f8de7e8e94cc6a32099623f697bc',1,'nds::StateMachineImpl']]],
   ['registercommand',['registerCommand',['../classnds_1_1_factory_base_impl.html#a54143e4e84fecdf83e6d7ab5428d4657',1,'nds::FactoryBaseImpl']]],
   ['registercontrolsystem',['registerControlSystem',['../classnds_1_1_factory.html#ae084909c7d59c12fd34dd035b2970c1a',1,'nds::Factory']]],
+  ['registerdevice',['RegisterDevice',['../classnds_1_1_register_device.html',1,'nds']]],
   ['registerdriver',['registerDriver',['../classnds_1_1_factory.html#abf27f015d23f5baf4250727ae505a9d2',1,'nds::Factory']]],
   ['registerpv',['registerPV',['../classnds_1_1_interface_base_impl.html#a8870e5a687e6701675cdff97272af7a5',1,'nds::InterfaceBaseImpl']]],
   ['registrationterminated',['registrationTerminated',['../classnds_1_1_interface_base_impl.html#a2c9ccbbeefd3e07c212409d7a30d208b',1,'nds::InterfaceBaseImpl']]],

@@ -56,5 +56,6 @@ var hierarchy =
         [ "nds::PVVariableOutImpl< T >", "classnds_1_1_p_v_variable_out_impl.html", null ]
       ] ]
     ] ],
+    [ "nds::RegisterDevice< T >", "classnds_1_1_register_device.html", null ],
     [ "nds::Thread", "classnds_1_1_thread.html", null ]
 ];
