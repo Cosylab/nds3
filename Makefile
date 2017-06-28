@@ -46,7 +46,8 @@ $(PREFIX)/%.h: %.h
 
 .PHONY: clean
 clean:
-	$(RM) $(TARGET) $(OBJS)
+	$(RM) -f $(TARGET) $(OBJS)
+	$(RM) -rf doc/api/hlatex doc/api/latex doc/api/html
  
 .PHONY: install
 install: $(INSTALL_SHLIB) $(INSTALL_INCLUDES)
@@ -63,4 +64,4 @@ doc/api/html: doc/api/DoxyfileHTML
 
 doc/api/hlatex/refman.pdf: doc/api/DoxyfilePDFH
 	cd doc/api && doxygen DoxyfilePDFH
-	cd doc/api/hlatex && pdflatex refman.tex && pdflatex refman.tex
+	make -C doc/api/hlatex refman.pdf

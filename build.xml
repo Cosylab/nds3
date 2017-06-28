@@ -33,6 +33,7 @@
 			 	<include name="tests/src/**/*.cpp" />
 			 	<include name="tests/include/**/*.h" />
 			 	<include name="tests/CMake/**/CMakeLists.txt" />
+			 	<include name="tests/CMake/**/CMakeLists.txt.in" />
 			 </fileset>
 			 <fileset dir=".">
 			 	<include name="doc/**/*.h" />
