@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['getamplitude',['getAmplitude',['../classnds_1_1_data_acquisition.html#ac58680491e6cfbeb3f4c1005b552f523',1,'nds::DataAcquisition']]],
   ['getcomponentname',['getComponentName',['../group__naming.html#ga824bd66eeae4d9f3547e245b6f61e6bd',1,'nds::Base']]],
   ['getdatadirection',['getDataDirection',['../classnds_1_1_p_v_base_impl.html#a28461ee020a0d776a943913d368275bc',1,'nds::PVBaseImpl::getDataDirection()'],['../classnds_1_1_p_v_base_in_impl.html#af7a9c63db13c6f6d0c4e03996a2f7b4b',1,'nds::PVBaseInImpl::getDataDirection()'],['../classnds_1_1_p_v_base_out_impl.html#aff1e55b844795f775b8a0fb9012347a4',1,'nds::PVBaseOutImpl::getDataDirection()']]],
   ['getdatatype',['getDataType',['../classnds_1_1_p_v_base_impl.html#a98d09652ad6a21fd1fc8225a9c49309b',1,'nds::PVBaseImpl::getDataType()'],['../classnds_1_1_p_v_delegate_in_impl.html#a42e3e78dd96f5c5a9082f9fe468b1586',1,'nds::PVDelegateInImpl::getDataType()'],['../classnds_1_1_p_v_delegate_out_impl.html#aa6af13b804a5901931c8b66eafa6e131',1,'nds::PVDelegateOutImpl::getDataType()'],['../classnds_1_1_p_v_variable_in_impl.html#ad5df095e49060a42e52b2691dcb5e70e',1,'nds::PVVariableInImpl::getDataType()'],['../classnds_1_1_p_v_variable_out_impl.html#a7c2588af6508ce1bbc90d432b66bfe32',1,'nds::PVVariableOutImpl::getDataType()']]],
@@ -13,12 +14,15 @@ var searchData=
   ['getfullname',['getFullName',['../group__naming.html#ga465f2807e6cacf4cb120ed35b1f83877',1,'nds::Base']]],
   ['getfullnamefromport',['getFullNameFromPort',['../group__naming.html#gaf691cd40d8784abf4d33c83974af6e7d',1,'nds::Base']]],
   ['getglobalstate',['getGlobalState',['../classnds_1_1_state_machine_impl.html#ab80c7e0cbf9050d9b535f918116aa3e8',1,'nds::StateMachineImpl::getGlobalState()'],['../classnds_1_1_state_machine.html#ac3ebe7ba4340d1749e8f0392eaf176a3',1,'nds::StateMachine::getGlobalState()']]],
+  ['getground',['getGround',['../classnds_1_1_data_acquisition.html#a9ce53c19936211ada44f78102ca49419',1,'nds::DataAcquisition']]],
   ['getlocalstate',['getLocalState',['../classnds_1_1_state_machine_impl.html#a8566897c58ae31d7a16e35f06b7f4f3c',1,'nds::StateMachineImpl::getLocalState()'],['../classnds_1_1_state_machine.html#adea73b5481f9ffa84b24d05db018199c',1,'nds::StateMachine::getLocalState()']]],
   ['getlogger',['getLogger',['../group__logging.html#gaa76265dfccd333398e2d37ee49486e4d',1,'nds::Base::getLogger()'],['../group__logging.html#gac1ce13f8edbc03a38e22d62a268a6cb1',1,'nds::BaseImpl::getLogger()']]],
   ['getmaxelements',['getMaxElements',['../classnds_1_1_data_acquisition.html#a1fe4bb4ad6fa9328dd2a4fd44dc2fde8',1,'nds::DataAcquisition::getMaxElements()'],['../classnds_1_1_p_v_base_impl.html#a3e4f316bfe834079e9d3f2049d40d180',1,'nds::PVBaseImpl::getMaxElements()']]],
   ['getnewinterface',['getNewInterface',['../classnds_1_1_factory_base_impl.html#a319a2a04e6229c3e27e37f23806701c6',1,'nds::FactoryBaseImpl']]],
+  ['getoffset',['getOffset',['../classnds_1_1_data_acquisition.html#ae5764c8a6c450d6990d83df0a4a9ebe7',1,'nds::DataAcquisition']]],
   ['getport',['getPort',['../classnds_1_1_base.html#a2a6a99d605dd336df75f25b641ddbd17',1,'nds::Base::getPort()'],['../classnds_1_1_port_impl.html#ab0fda138584a59191bdf743ddf9e62c7',1,'nds::PortImpl::getPort()']]],
   ['getprocessatinit',['getProcessAtInit',['../classnds_1_1_p_v_base_impl.html#a197d074f961c5df76dc4b1f0e780dd97',1,'nds::PVBaseImpl']]],
+  ['getsamplingmode',['getSamplingMode',['../classnds_1_1_data_acquisition.html#a9b11d54b918cdcb4327fc477e00d9cd7',1,'nds::DataAcquisition']]],
   ['getscanperiodseconds',['getScanPeriodSeconds',['../classnds_1_1_p_v_base_impl.html#a7bc565dfbca74ff00cd33bbb0a77d9d3',1,'nds::PVBaseImpl']]],
   ['getscantype',['getScanType',['../classnds_1_1_p_v_base_impl.html#a103575b0b45f09733127af2d3060daa8',1,'nds::PVBaseImpl']]],
   ['getseparator',['getSeparator',['../classnds_1_1_factory_base_impl.html#a5c758d644966156f96e42985c6040c1f',1,'nds::FactoryBaseImpl']]],
