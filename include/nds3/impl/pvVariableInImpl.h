@@ -31,7 +31,7 @@ namespace nds
  *            - std::string
  */
 template <typename T>
-class PVVariableInImpl: public PVBaseInImpl
+class NDS3_API PVVariableInImpl: public PVBaseInImpl
 {
 public:
     /**

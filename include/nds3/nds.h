@@ -26,6 +26,7 @@
 #include "nds3/port.h"
 #include "nds3/pvBaseIn.h"
 #include "nds3/pvBaseOut.h"
+#include "nds3/pvAction.h"
 #include "nds3/pvDelegateIn.h"
 #include "nds3/pvDelegateOut.h"
 #include "nds3/pvVariableIn.h"

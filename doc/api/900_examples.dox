@@ -56,8 +56,9 @@ references to the channel's PVs and to the channel's acquisition node. For fewer
 we could have implemented this functionality directly in the Oscillocope class.
 
 
+@example rpcSquare/rpcSquare.cpp
 
-
+This example shows an PVAction node used for RPC-like functionality.
 
 */
 
