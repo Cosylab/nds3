@@ -48,11 +48,45 @@ DataAcquisitionImpl<T>::DataAcquisitionImpl(
     m_durationPV->setScanType(scanType_t::passive, 0);
     addChild(m_durationPV);
 
-    m_decimationPV.reset(new PVVariableOutImpl<std::int32_t>("decimation"));
+    m_amplitudePV.reset(new PVVariableOutImpl<double>("Amplitude"));
+    m_amplitudePV->setDescription("Amplitude");
+    m_amplitudePV->setScanType(scanType_t::passive, 0);
+    m_amplitudePV->write(getTimestamp(), (double)1);
+    addChild(m_amplitudePV);
+
+    m_offsetPV.reset(new PVVariableOutImpl<double>("Offset"));
+    m_offsetPV->setDescription("Offset");
+    m_offsetPV->setScanType(scanType_t::passive, 0);
+    addChild(m_offsetPV);
+
+    m_decimationPV.reset(new PVVariableOutImpl<std::int32_t>("Decimation"));
     m_decimationPV->setDescription("Decimation");
     m_decimationPV->setScanType(scanType_t::passive, 0);
     m_decimationPV->write(getTimestamp(), (std::int32_t)1);
     addChild(m_decimationPV);
+
+    //add enumeration for sampling mode
+    enumerationStrings_t samplingModeEnumerationStrings;
+    samplingModeEnumerationStrings.push_back("Single");
+    samplingModeEnumerationStrings.push_back("Continuous");
+
+    m_samplingmodePV.reset(new PVVariableOutImpl<std::int32_t>("SamplingMode"));
+    m_samplingmodePV->setDescription("Sampling Mode");
+    m_samplingmodePV->setScanType(scanType_t::passive, 0);
+    m_samplingmodePV->setEnumeration(samplingModeEnumerationStrings);
+    m_samplingmodePV->write(getTimestamp(), (std::int32_t)1);
+    addChild(m_samplingmodePV);
+
+    //add enumeration for ground state
+    enumerationStrings_t groundEnumerationStrings;
+    groundEnumerationStrings.push_back("On");
+    groundEnumerationStrings.push_back("Off");
+
+    m_groundPV.reset(new PVVariableOutImpl<std::int32_t>("Ground"));
+    m_groundPV->setDescription("Ground State");
+    m_groundPV->setScanType(scanType_t::passive, 0);
+    m_groundPV->setEnumeration(groundEnumerationStrings);
+    addChild(m_groundPV);
 
     // Add state machine
     m_stateMachine.reset(new StateMachineImpl(true,
@@ -84,6 +118,24 @@ double DataAcquisitionImpl<T>::getDurationSeconds()
 }
 
 template<typename T>
+double DataAcquisitionImpl<T>::getAmplitude()
+{
+    double amplitude;
+    timespec timestamp;
+    m_amplitudePV->read(&timestamp, &amplitude);
+    return amplitude;
+}
+
+template<typename T>
+double DataAcquisitionImpl<T>::getOffset()
+{
+    double offset;
+    timespec timestamp;
+    m_offsetPV->read(&timestamp, &offset);
+    return offset;
+}
+
+template<typename T>
 size_t DataAcquisitionImpl<T>::getMaxElements()
 {
     return m_dataPV->getMaxElements();
@@ -96,6 +148,24 @@ size_t DataAcquisitionImpl<T>::getDecimation()
     timespec timestamp;
     m_decimationPV->read(&timestamp, &decimation);
     return (size_t)decimation;
+}
+
+template<typename T>
+size_t DataAcquisitionImpl<T>::getSamplingMode()
+{
+    std::int32_t samplingmode;
+    timespec timestamp;
+    m_samplingmodePV->read(&timestamp, &samplingmode);
+    return (size_t)samplingmode;
+}
+
+template<typename T>
+size_t DataAcquisitionImpl<T>::getGround()
+{
+    std::int32_t ground;
+    timespec timestamp;
+    m_groundPV->read(&timestamp, &ground);
+    return (size_t)ground;
 }
 
 template<typename T>
