@@ -65,6 +65,11 @@ std::shared_ptr<NodeImpl> BaseImpl::getParent() const
     return m_pParent.lock();
 }
 
+std::uint32_t BaseImpl::getNodeLevel() const
+{
+    return m_nodeLevel;
+}
+
 std::string BaseImpl::buildFullName(const FactoryBaseImpl& controlSystem) const
 {
     std::shared_ptr<NodeImpl> temporaryPointer = m_pParent.lock();
