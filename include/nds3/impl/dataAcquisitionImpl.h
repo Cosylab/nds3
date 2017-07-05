@@ -50,8 +50,12 @@ public:
 
     double getFrequencyHz();
     double getDurationSeconds();
+    double getAmplitude();
+    double getOffset();
     size_t getMaxElements();
     size_t getDecimation();
+    size_t getSamplingMode();
+    size_t getGround();
 
     /**
      * @brief Returns the timestamp at the moment of the start of the acquisition.
@@ -97,7 +101,11 @@ protected:
     std::shared_ptr<PVVariableInImpl<T> > m_dataPV;
     std::shared_ptr<PVVariableOutImpl<double> > m_frequencyPV;
     std::shared_ptr<PVVariableOutImpl<double> > m_durationPV;
+    std::shared_ptr<PVVariableOutImpl<double> > m_amplitudePV;
+    std::shared_ptr<PVVariableOutImpl<double> > m_offsetPV;
     std::shared_ptr<PVVariableOutImpl<std::int32_t> > m_decimationPV;
+    std::shared_ptr<PVVariableOutImpl<std::int32_t> > m_samplingmodePV;
+    std::shared_ptr<PVVariableOutImpl<std::int32_t> > m_groundPV;
     std::shared_ptr<StateMachineImpl> m_stateMachine;
 
 

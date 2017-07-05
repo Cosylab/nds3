@@ -120,6 +120,20 @@ public:
     double getDurationSeconds();
 
     /**
+     * @brief Retrieve the amplitude for the acquisition
+     *
+     * @return the amplitude for the acquisition
+     */
+    double getAmplitude();
+
+    /**
+     * @brief Retrieve the offset for the acquisition
+     *
+     * @return the offset for the acquisition
+     */
+    double getOffset();
+
+    /**
      * @brief Retrieve the maximum number of elements that can be stored in the
      *        pushed array. This number is set in the DataAcquisition constructor.
      *
@@ -133,6 +147,20 @@ public:
      * @return the decimation value
      */
     size_t getDecimation();
+
+    /**
+     * @brief Retrieve the desidered sampling mode value.
+     *
+     * @return the sampling mode value
+     */
+    size_t getSamplingMode();
+
+    /**
+     * @brief Retrieve the desidered ground state value.
+     *
+     * @return the ground state value
+     */
+    size_t getGround();
 
     /**
      * @ingroup timing
