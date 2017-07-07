@@ -37,6 +37,11 @@ add_library(
   SHARED
   "${CMAKE_CURRENT_SOURCE_DIR}/../thermometer/thermometer.cpp"
 )
+add_library(
+  rpcsquare
+  SHARED
+  "${CMAKE_CURRENT_SOURCE_DIR}/../rpcSquare/rpcSquare.cpp"
+)
 
 # Add dependencies to the nds3 library
 #-------------------------------------
@@ -44,6 +49,7 @@ find_library(nds3_library NAMES nds3 PATHS ${LIBRARY_LOCATION})
 target_link_libraries(oscilloscope ${nds3_library})
 target_link_libraries(oscilloscopemultichannel ${nds3_library})
 target_link_libraries(thermometer ${nds3_library})
+target_link_libraries(rpcsquare ${nds3_library})
 
 execute_process(
   COMMAND dpkg-architecture -qDEB_HOST_MULTIARCH
@@ -64,7 +70,7 @@ endif()
 
 
 install(
-  TARGETS oscilloscope oscilloscopemultichannel thermometer
+  TARGETS oscilloscope oscilloscopemultichannel thermometer rpcsquare
   PERMISSIONS
     OWNER_READ OWNER_WRITE OWNER_EXECUTE
     GROUP_READ GROUP_EXECUTE
