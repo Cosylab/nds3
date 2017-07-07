@@ -1,7 +1,9 @@
 var group__datareadwrite =
 [
+    [ "initValue_t", "group__datareadwrite.html#ga57aa9de749477cf91ecf6e93bc70233a", null ],
     [ "initValue_t", "group__datareadwrite.html#ga26be1e13d61a444b53c5b075a76e33f8", null ],
     [ "read_t", "group__datareadwrite.html#ga89c28683e37182c6e1f9ac53718a1df3", null ],
+    [ "write_t", "group__datareadwrite.html#gaa6fbaee7b734deefec6502222b5241ef", null ],
     [ "write_t", "group__datareadwrite.html#gac197c1bb6bfd8f0f6973a4f5bb7b0a64", null ],
     [ "getValue", "group__datareadwrite.html#ga05aa3e5b6894e27032a8242495324b32", null ],
     [ "getValue", "group__datareadwrite.html#ga4b882cd71a512a06389f1d099021f686", null ],

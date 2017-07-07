@@ -110,6 +110,15 @@ $(document).ready(function(){initNavTree('group__datareadwrite.html','');});
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:ga57aa9de749477cf91ecf6e93bc70233a"><td class="memItemLeft" align="right" valign="top">typedef std::function&lt; void(timespec <br class="typebreak"/>
+*, std::int32_t *)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__datareadwrite.html#ga57aa9de749477cf91ecf6e93bc70233a">nds::PVAction::initValue_t</a></td></tr>
+<tr class="memdesc:ga57aa9de749477cf91ecf6e93bc70233a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the method used to read the initial PV value.  <a href="#ga57aa9de749477cf91ecf6e93bc70233a">More...</a><br/></td></tr>
+<tr class="separator:ga57aa9de749477cf91ecf6e93bc70233a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa6fbaee7b734deefec6502222b5241ef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gaa6fbaee7b734deefec6502222b5241ef"></a>
+typedef std::function&lt; void(const <br class="typebreak"/>
+timespec &amp;, const std::int32_t &amp;)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__datareadwrite.html#gaa6fbaee7b734deefec6502222b5241ef">nds::PVAction::write_t</a></td></tr>
+<tr class="memdesc:gaa6fbaee7b734deefec6502222b5241ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the method used to write. <br/></td></tr>
+<tr class="separator:gaa6fbaee7b734deefec6502222b5241ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga89c28683e37182c6e1f9ac53718a1df3"><td class="memItemLeft" align="right" valign="top">typedef std::function&lt; void(timespec <br class="typebreak"/>
 *, T *)&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__datareadwrite.html#ga89c28683e37182c6e1f9ac53718a1df3">nds::PVDelegateIn&lt; T &gt;::read_t</a></td></tr>
 <tr class="memdesc:ga89c28683e37182c6e1f9ac53718a1df3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definition of the method used to read the PV value.  <a href="#ga89c28683e37182c6e1f9ac53718a1df3">More...</a><br/></td></tr>
@@ -166,6 +175,21 @@ Functions</h2></td></tr>
 <p>Both PVDelegate and PVVariable provide the read and write methods (inherited from <a class="el" href="classnds_1_1_p_v_base.html" title="Base class for objects that process a single PV (or attribute in Tango parlance). ...">PVBase</a>), but while PVDelegate calls two user-defined delegate functions to perform the read and write operation, PVVariable takes care of storing the value so it does not need to refer to delegate functions and can carry out the read and write operations by itself.</p>
 <p><a class="el" href="classnds_1_1_p_v_base.html" title="Base class for objects that process a single PV (or attribute in Tango parlance). ...">PVBase</a> also provides a PVBase::push() method that allow to push data directly to the control system without waiting for it to poll it. </p>
 <h2 class="groupheader">Typedef Documentation</h2>
+<a class="anchor" id="ga57aa9de749477cf91ecf6e93bc70233a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::function&lt;void (timespec*, std::int32_t*)&gt; <a class="el" href="group__datareadwrite.html#ga57aa9de749477cf91ecf6e93bc70233a">nds::PVAction::initValue_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition of the method used to read the initial PV value. </p>
+<p>The init function will receive two pointers to the timestamp and value that the function will have to fill with proper data. </p>
+
+</div>
+</div>
 <a class="anchor" id="ga26be1e13d61a444b53c5b075a76e33f8"></a>
 <div class="memitem">
 <div class="memproto">
@@ -571,7 +595,7 @@ template&lt;typename T &gt; </div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Jul 6 2017 19:35:53 for NDS3 by
+    <li class="footer">Generated on Fri Jul 7 2017 09:13:49 for NDS3 by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

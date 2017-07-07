@@ -35,6 +35,9 @@ var dir_f1250f6afd359b60444bdca72cf0b339 =
     [ "port.h", "port_8h.html", [
       [ "Port", "classnds_1_1_port.html", "classnds_1_1_port" ]
     ] ],
+    [ "pvAction.h", "pv_action_8h.html", [
+      [ "PVAction", "classnds_1_1_p_v_action.html", "classnds_1_1_p_v_action" ]
+    ] ],
     [ "pvBase.h", "pv_base_8h.html", [
       [ "PVBase", "classnds_1_1_p_v_base.html", "classnds_1_1_p_v_base" ]
     ] ],

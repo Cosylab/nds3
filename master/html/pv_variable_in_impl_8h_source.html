@@ -129,18 +129,18 @@ $(document).ready(function(){initNavTree('pv_variable_in_impl_8h_source.html',''
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">class </span>PVVariableInImpl: <span class="keyword">public</span> PVBaseInImpl</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">class </span>NDS3_API PVVariableInImpl: <span class="keyword">public</span> PVBaseInImpl</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;{</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="classnds_1_1_p_v_variable_in_impl.html#aa14cb74ffadfcbd4d7b9a818b9394274">PVVariableInImpl</a>(<span class="keyword">const</span> std::string&amp; name, <span class="keyword">const</span> <a class="code" href="group__naming.html#gae5fb431266410264e1e525de1e951184">inputPvType_t</a> pvType = <a class="code" href="group__naming.html#ggab9584dead7780b83481cb1dfa9da37d3a3d517f8924ac7fd03699a29d97dc52d9">inputPvType_t::generic</a>);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    PVVariableInImpl(<span class="keyword">const</span> std::string&amp; name, <span class="keyword">const</span> <a class="code" href="group__naming.html#gae5fb431266410264e1e525de1e951184">inputPvType_t</a> pvType = <a class="code" href="group__naming.html#ggab9584dead7780b83481cb1dfa9da37d3a3d517f8924ac7fd03699a29d97dc52d9">inputPvType_t::generic</a>);</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classnds_1_1_p_v_variable_in_impl.html#a04e2293aec38707ba503225e653215fe">read</a>(timespec* pTimestamp, T* pValue) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> read(timespec* pTimestamp, T* pValue) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="namespacends.html#a0f69df4105c4b4c2c4a66deb26cd01fe">dataType_t</a> <a class="code" href="classnds_1_1_p_v_variable_in_impl.html#ad5df095e49060a42e52b2691dcb5e70e">getDataType</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="namespacends.html#a0f69df4105c4b4c2c4a66deb26cd01fe">dataType_t</a> getDataType() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classnds_1_1_p_v_variable_in_impl.html#aed9527dd62a3ab1974dfc042d2646427">setValue</a>(<span class="keyword">const</span> T&amp; value);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> setValue(<span class="keyword">const</span> T&amp; value);</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classnds_1_1_p_v_variable_in_impl.html#aed9527dd62a3ab1974dfc042d2646427">setValue</a>(<span class="keyword">const</span> timespec&amp; timestamp, <span class="keyword">const</span> T&amp; value);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">void</span> setValue(<span class="keyword">const</span> timespec&amp; timestamp, <span class="keyword">const</span> T&amp; value);</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">private</span>:</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    T m_value;</div>
@@ -152,11 +152,7 @@ $(document).ready(function(){initNavTree('pv_variable_in_impl_8h_source.html',''
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#endif // NDSPVVARIABLEINIMPL_H</span></div>
-<div class="ttc" id="classnds_1_1_p_v_variable_in_impl_html_aa14cb74ffadfcbd4d7b9a818b9394274"><div class="ttname"><a href="classnds_1_1_p_v_variable_in_impl.html#aa14cb74ffadfcbd4d7b9a818b9394274">nds::PVVariableInImpl::PVVariableInImpl</a></div><div class="ttdeci">PVVariableInImpl(const std::string &amp;name, const inputPvType_t pvType=inputPvType_t::generic)</div><div class="ttdoc">Constructor. </div></div>
 <div class="ttc" id="group__naming_html_ggab9584dead7780b83481cb1dfa9da37d3a3d517f8924ac7fd03699a29d97dc52d9"><div class="ttname"><a href="group__naming.html#ggab9584dead7780b83481cb1dfa9da37d3a3d517f8924ac7fd03699a29d97dc52d9">nds::nodeType_t::generic</a></div><div class="ttdoc">The node&#39;s role is not specified. </div></div>
-<div class="ttc" id="classnds_1_1_p_v_variable_in_impl_html_ad5df095e49060a42e52b2691dcb5e70e"><div class="ttname"><a href="classnds_1_1_p_v_variable_in_impl.html#ad5df095e49060a42e52b2691dcb5e70e">nds::PVVariableInImpl::getDataType</a></div><div class="ttdeci">virtual dataType_t getDataType() const </div><div class="ttdoc">Return the PV data type. </div></div>
-<div class="ttc" id="classnds_1_1_p_v_variable_in_impl_html_aed9527dd62a3ab1974dfc042d2646427"><div class="ttname"><a href="classnds_1_1_p_v_variable_in_impl.html#aed9527dd62a3ab1974dfc042d2646427">nds::PVVariableInImpl::setValue</a></div><div class="ttdeci">void setValue(const T &amp;value)</div><div class="ttdoc">Store a value in the PV. The timestamp is set to the current time. </div></div>
-<div class="ttc" id="classnds_1_1_p_v_variable_in_impl_html_a04e2293aec38707ba503225e653215fe"><div class="ttname"><a href="classnds_1_1_p_v_variable_in_impl.html#a04e2293aec38707ba503225e653215fe">nds::PVVariableInImpl::read</a></div><div class="ttdeci">virtual void read(timespec *pTimestamp, T *pValue) const </div><div class="ttdoc">Called by the control system to read the value stored in the PV. </div></div>
 <div class="ttc" id="namespacends_html_a0f69df4105c4b4c2c4a66deb26cd01fe"><div class="ttname"><a href="namespacends.html#a0f69df4105c4b4c2c4a66deb26cd01fe">nds::dataType_t</a></div><div class="ttdeci">dataType_t</div><div class="ttdoc">PV data types. </div><div class="ttdef"><b>Definition:</b> definitions.h:53</div></div>
 <div class="ttc" id="group__naming_html_gae5fb431266410264e1e525de1e951184"><div class="ttname"><a href="group__naming.html#gae5fb431266410264e1e525de1e951184">nds::inputPvType_t</a></div><div class="ttdeci">inputPvType_t</div><div class="ttdoc">Defines an input PV&#39;s role: this information is used to build the PV&#39;s external name when using the N...</div><div class="ttdef"><b>Definition:</b> definitions.h:118</div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -165,7 +161,7 @@ $(document).ready(function(){initNavTree('pv_variable_in_impl_8h_source.html',''
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_6c68ff761f824273ee32591272f8fcef.html">include</a></li><li class="navelem"><a class="el" href="dir_f1250f6afd359b60444bdca72cf0b339.html">nds3</a></li><li class="navelem"><a class="el" href="dir_caeb143315ac54896d2db62c41b190a5.html">impl</a></li><li class="navelem"><b>pvVariableInImpl.h</b></li>
-    <li class="footer">Generated on Thu Jul 6 2017 19:35:53 for NDS3 by
+    <li class="footer">Generated on Fri Jul 7 2017 09:13:49 for NDS3 by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

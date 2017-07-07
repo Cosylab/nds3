@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['setacknowledgepv',['setAcknowledgePV',['../classnds_1_1_p_v_action_impl.html#acc05822af059fd501488cba0a83eb536',1,'nds::PVActionImpl']]],
   ['setdecimation',['setDecimation',['../classnds_1_1_p_v_base_in_impl.html#a5140479f8131d10172693dd9500e9ba1',1,'nds::PVBaseInImpl::setDecimation()'],['../group__datareadwrite.html#ga86e6efbd91af573a18818a37b4c155f0',1,'nds::PVBaseIn::setDecimation()']]],
   ['setdescription',['setDescription',['../classnds_1_1_p_v_base_impl.html#a01cd2aad36e5eec13d66a63766b4b949',1,'nds::PVBaseImpl::setDescription()'],['../classnds_1_1_p_v_base.html#afa7e5181950c659a8aea4e7aa5ad0d18',1,'nds::PVBase::setDescription()']]],
   ['setenumeration',['setEnumeration',['../classnds_1_1_p_v_base_impl.html#a4875afbcd435bbeb4e9bbd2c069a8dab',1,'nds::PVBaseImpl::setEnumeration()'],['../classnds_1_1_p_v_base.html#af07b3822ac984b56bb44e8ba9094a2dc',1,'nds::PVBase::setEnumeration()']]],
@@ -13,6 +14,7 @@ var searchData=
   ['settimestampdelegate',['setTimestampDelegate',['../classnds_1_1_base.html#a80432c8ba75c1b1aeba354344d45f0bb',1,'nds::Base']]],
   ['setunits',['setUnits',['../classnds_1_1_p_v_base_impl.html#ac5e3afb8e97f2edbef055f128a173232',1,'nds::PVBaseImpl::setUnits()'],['../classnds_1_1_p_v_base.html#a87463eafbc824ee85e122ab4f5d7f049',1,'nds::PVBase::setUnits()']]],
   ['setvalue',['setValue',['../classnds_1_1_p_v_variable_in_impl.html#aed9527dd62a3ab1974dfc042d2646427',1,'nds::PVVariableInImpl::setValue(const T &amp;value)'],['../classnds_1_1_p_v_variable_in_impl.html#acf3793290d62f4e0b5bb8caa6c6e1a13',1,'nds::PVVariableInImpl::setValue(const timespec &amp;timestamp, const T &amp;value)'],['../group__datareadwrite.html#ga15abfe47827969620c19fb03e30e3469',1,'nds::PVVariableIn::setValue(const T &amp;value)'],['../group__datareadwrite.html#gaafb89db3e707b9459caffb34bdfee421',1,'nds::PVVariableIn::setValue(const timespec &amp;timestamp, const T &amp;value)']]],
+  ['setvalueback',['setValueBack',['../classnds_1_1_p_v_action_impl.html#aa412a85f6b01283a80a45d663ba7f75c',1,'nds::PVActionImpl::setValueBack()'],['../classnds_1_1_p_v_action.html#af2c6d7a2fa25a4be2ccce8e7b727c96e',1,'nds::PVAction::setValueBack()']]],
   ['statemachine',['StateMachine',['../classnds_1_1_state_machine.html#a9d9cbeddcb2f88d3f6e2fe09fcd77fa2',1,'nds::StateMachine::StateMachine()'],['../classnds_1_1_state_machine.html#a95b4220e2dd5b6b391e2027d5d6d0959',1,'nds::StateMachine::StateMachine(bool bAsync, stateChange_t switchOnFunction, stateChange_t switchOffFunction, stateChange_t startFunction, stateChange_t stopFunction, stateChange_t recoverFunction, allowChange_t allowStateChangeFunction)']]],
   ['statemachineerror',['StateMachineError',['../classnds_1_1_state_machine_error.html#a26ad0f690b5a29f611d9ea484b4e9baf',1,'nds::StateMachineError']]],
   ['statemachineimpl',['StateMachineImpl',['../classnds_1_1_state_machine_impl.html#a4dcfbf39eb74c191c19c85772472edd4',1,'nds::StateMachineImpl']]],

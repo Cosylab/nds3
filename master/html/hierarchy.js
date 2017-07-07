@@ -12,6 +12,7 @@ var hierarchy =
           [ "nds::PVVariableIn< T >", "classnds_1_1_p_v_variable_in.html", null ]
         ] ],
         [ "nds::PVBaseOut", "classnds_1_1_p_v_base_out.html", [
+          [ "nds::PVAction", "classnds_1_1_p_v_action.html", null ],
           [ "nds::PVDelegateOut< T >", "classnds_1_1_p_v_delegate_out.html", null ],
           [ "nds::PVVariableOut< T >", "classnds_1_1_p_v_variable_out.html", null ]
         ] ]
@@ -52,6 +53,7 @@ var hierarchy =
         [ "nds::PVVariableInImpl< T >", "classnds_1_1_p_v_variable_in_impl.html", null ]
       ] ],
       [ "nds::PVBaseOutImpl", "classnds_1_1_p_v_base_out_impl.html", [
+        [ "nds::PVActionImpl", "classnds_1_1_p_v_action_impl.html", null ],
         [ "nds::PVDelegateOutImpl< T >", "classnds_1_1_p_v_delegate_out_impl.html", null ],
         [ "nds::PVVariableOutImpl< T >", "classnds_1_1_p_v_variable_out_impl.html", null ]
       ] ]
