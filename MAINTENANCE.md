@@ -1,4 +1,4 @@
-# NDS Maintannce policy
+# NDS Maintenance policy
 
 NDS follows [semantic versioning](http://www.semver.org) in a pragmatic way.
 
