@@ -11,10 +11,13 @@ addons:
       - graphviz
 
 env:
-    - DOXYFILE=doc/api/DoxyfileHTML
+    - DOXYFILE=doc/api/DoxyfileHTML PATH=$HOME/.local/usr/bin:$PATH
+
+install:
+    - ./scripts/travis-install.sh
 
 script:
-    - mkdir build && (cd build && cmake ../CMake && make) && mkdir tests/build && (cd tests/build && cmake ../CMake -DLIBRARY_LOCATION=../../build && make && ./nds3tests) && mkdir doc/examples/build && (cd doc/examples/build && cmake ../CMake -DLIBRARY_LOCATION=../../../build && make)
+    - ./scripts/travis-script.sh
 
 after_success:
     - scripts/deploy_doxygen
