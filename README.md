@@ -22,6 +22,7 @@ NDS provides the following features:
   upgrade existing installations without recompiling the device support
 
 [![Build Status](https://travis-ci.org/Cosylab/nds3.svg?branch=master)](https://travis-ci.org/Cosylab/nds3)
+[![Coverage Status](https://coveralls.io/repos/github/Cosylab/nds3/badge.svg)](https://coveralls.io/github/Cosylab/nds3)
 
 ## Documentation
 
