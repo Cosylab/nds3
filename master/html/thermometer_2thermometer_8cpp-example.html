@@ -133,22 +133,33 @@ $(document).ready(function(){initNavTree('thermometer_2thermometer_8cpp-example.
 <div class="line">    $(RM) $(TARGET) $(OBJS)</div>
 </div><!-- fragment --><p>The code shows a simple delegate function that is called each time the control system wants to read the temperature.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="nds_8h.html">nds3/nds.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"></div>
 <div class="line"><span class="comment">// This class declares our device in the contructor and supplies the functionalities to support it</span></div>
 <div class="line"><span class="comment"></span><span class="keyword">class </span>Thermometer</div>
 <div class="line">{</div>
+<div class="line"><span class="keyword">private</span>:</div>
+<div class="line">    <a name="_a0"></a><a class="code" href="classnds_1_1_p_v_delegate_in.html">nds::PVDelegateIn&lt;double&gt;</a> m_thermometerPiniPV;</div>
+<div class="line"></div>
 <div class="line"><span class="keyword">public</span>:</div>
 <div class="line"></div>
 <div class="line">    <span class="comment">// Constructor. Here we setup the device structure</span></div>
-<div class="line"><span class="comment"></span>    Thermometer(<a name="_a0"></a><a class="code" href="classnds_1_1_factory.html">nds::Factory</a> &amp;factory,</div>
+<div class="line"><span class="comment"></span>    Thermometer(<a name="_a1"></a><a class="code" href="classnds_1_1_factory.html">nds::Factory</a> &amp;factory,</div>
 <div class="line">                <span class="keyword">const</span> std::string &amp;deviceName,</div>
-<div class="line">                <span class="keyword">const</span> <a class="code" href="namespacends.html#a1623ccf32bf1883cc75d22e2471c535b">nds::namedParameters_t</a> &amp;parameters)</div>
+<div class="line">                <span class="keyword">const</span> <a class="code" href="namespacends.html#a1623ccf32bf1883cc75d22e2471c535b">nds::namedParameters_t</a> &amp;parameters) :</div>
+<div class="line">    m_thermometerPiniPV(<a class="code" href="classnds_1_1_p_v_delegate_in.html">nds::PVDelegateIn&lt;double&gt;</a>(<span class="stringliteral">&quot;TemperaturePINI&quot;</span>, std::bind(&amp;Thermometer::getTempRandom, </div>
+<div class="line">                                                                             <span class="keyword">this</span>, </div>
+<div class="line">                                                                             std::placeholders::_1, </div>
+<div class="line">                                                                             std::placeholders::_2)))</div>
 <div class="line">    {</div>
-<div class="line">        <a name="_a1"></a><a class="code" href="classnds_1_1_port.html">nds::Port</a> rootNode(deviceName);</div>
-<div class="line">        rootNode.<a name="a2"></a><a class="code" href="classnds_1_1_node.html#a6081d6501b51914293d4f22b5db74697">addChild</a>(<a name="_a3"></a><a class="code" href="classnds_1_1_p_v_delegate_in.html">nds::PVDelegateIn&lt;double&gt;</a>(<span class="stringliteral">&quot;Temperature&quot;</span>, std::bind(&amp;Thermometer::getTemperature, </div>
+<div class="line">        <a name="_a2"></a><a class="code" href="classnds_1_1_port.html">nds::Port</a> rootNode(deviceName);</div>
+<div class="line">        rootNode.<a name="a3"></a><a class="code" href="classnds_1_1_node.html#a6081d6501b51914293d4f22b5db74697">addChild</a>(<a class="code" href="classnds_1_1_p_v_delegate_in.html">nds::PVDelegateIn&lt;double&gt;</a>(<span class="stringliteral">&quot;Temperature&quot;</span>, std::bind(&amp;Thermometer::getTemperature, </div>
 <div class="line">                                                                             <span class="keyword">this</span>, </div>
 <div class="line">                                                                             std::placeholders::_1, </div>
 <div class="line">                                                                             std::placeholders::_2)));</div>
+<div class="line"></div>
+<div class="line">    m_thermometerPiniPV.processAtInit(1);</div>
+<div class="line">    rootNode.<a class="code" href="classnds_1_1_node.html#a6081d6501b51914293d4f22b5db74697">addChild</a>(m_thermometerPiniPV);</div>
 <div class="line"></div>
 <div class="line">        rootNode.<a name="a4"></a><a class="code" href="classnds_1_1_node.html#aa0f76a85dcc4fcea84187453fffdbe94">initialize</a>(<span class="keyword">this</span>, factory);</div>
 <div class="line">    }</div>
@@ -156,6 +167,13 @@ $(document).ready(function(){initNavTree('thermometer_2thermometer_8cpp-example.
 <div class="line">    <span class="keywordtype">void</span> getTemperature(timespec* pTimestamp, <span class="keywordtype">double</span>* pValue)</div>
 <div class="line">    {</div>
 <div class="line">        *pValue = 10; <span class="comment">// It is always cold in here</span></div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Temperature #1: &quot;</span> &lt;&lt; *pValue &lt;&lt; std::endl;</div>
+<div class="line">    }</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordtype">void</span> getTempRandom(timespec* pTimestamp, <span class="keywordtype">double</span>* pValue)</div>
+<div class="line">    {</div>
+<div class="line">        *pValue = 35; <span class="comment">// It is always hot right there</span></div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Temperature #2 (pini): &quot;</span> &lt;&lt; *pValue &lt;&lt; std::endl;</div>
 <div class="line">    }</div>
 <div class="line">};</div>
 <div class="line"></div>
@@ -169,7 +187,7 @@ $(document).ready(function(){initNavTree('thermometer_2thermometer_8cpp-example.
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Jul 15 2018 22:41:35 for NDS3 by
+    <li class="footer">Generated on Mon Jul 16 2018 20:21:55 for NDS3 by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>

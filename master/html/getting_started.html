@@ -146,16 +146,24 @@ A simple Device Support: a thermometer</h1>
 The source code</h2>
 <p>Let's put this in C++ form: </p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="nds_8h.html">nds3/nds.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"></div>
 <div class="line"><span class="comment">// This class declares our device in the contructor and supplies the functionalities to support it</span></div>
 <div class="line"><span class="comment"></span><span class="keyword">class </span>Thermometer</div>
 <div class="line">{</div>
+<div class="line"><span class="keyword">private</span>:</div>
+<div class="line">    <a class="code" href="classnds_1_1_p_v_delegate_in.html">nds::PVDelegateIn&lt;double&gt;</a> m_thermometerPiniPV;</div>
+<div class="line"></div>
 <div class="line"><span class="keyword">public</span>:</div>
 <div class="line"></div>
 <div class="line">    <span class="comment">// Constructor. Here we setup the device structure</span></div>
 <div class="line"><span class="comment"></span>    Thermometer(<a class="code" href="classnds_1_1_factory.html">nds::Factory</a> &amp;factory,</div>
 <div class="line">                <span class="keyword">const</span> std::string &amp;deviceName,</div>
-<div class="line">                <span class="keyword">const</span> <a class="code" href="namespacends.html#a1623ccf32bf1883cc75d22e2471c535b">nds::namedParameters_t</a> &amp;parameters)</div>
+<div class="line">                <span class="keyword">const</span> <a class="code" href="namespacends.html#a1623ccf32bf1883cc75d22e2471c535b">nds::namedParameters_t</a> &amp;parameters) :</div>
+<div class="line">    m_thermometerPiniPV(nds::PVDelegateIn&lt;double&gt;(<span class="stringliteral">&quot;TemperaturePINI&quot;</span>, std::bind(&amp;Thermometer::getTempRandom, </div>
+<div class="line">                                                                             this, </div>
+<div class="line">                                                                             std::placeholders::_1, </div>
+<div class="line">                                                                             std::placeholders::_2)))</div>
 <div class="line">    {</div>
 <div class="line">        <a class="code" href="classnds_1_1_port.html">nds::Port</a> rootNode(deviceName);</div>
 <div class="line">        rootNode.addChild(<a class="code" href="classnds_1_1_p_v_delegate_in.html">nds::PVDelegateIn&lt;double&gt;</a>(<span class="stringliteral">&quot;Temperature&quot;</span>, std::bind(&amp;Thermometer::getTemperature, </div>
@@ -163,12 +171,22 @@ The source code</h2>
 <div class="line">                                                                             std::placeholders::_1, </div>
 <div class="line">                                                                             std::placeholders::_2)));</div>
 <div class="line"></div>
+<div class="line">    m_thermometerPiniPV.processAtInit(1);</div>
+<div class="line">    rootNode.addChild(m_thermometerPiniPV);</div>
+<div class="line"></div>
 <div class="line">        rootNode.initialize(<span class="keyword">this</span>, factory);</div>
 <div class="line">    }</div>
 <div class="line"></div>
 <div class="line">    <span class="keywordtype">void</span> getTemperature(timespec* pTimestamp, <span class="keywordtype">double</span>* pValue)</div>
 <div class="line">    {</div>
 <div class="line">        *pValue = 10; <span class="comment">// It is always cold in here</span></div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Temperature #1: &quot;</span> &lt;&lt; *pValue &lt;&lt; std::endl;</div>
+<div class="line">    }</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordtype">void</span> getTempRandom(timespec* pTimestamp, <span class="keywordtype">double</span>* pValue)</div>
+<div class="line">    {</div>
+<div class="line">        *pValue = 35; <span class="comment">// It is always hot right there</span></div>
+<div class="line">    std::cout &lt;&lt; <span class="stringliteral">&quot;Temperature #2 (pini): &quot;</span> &lt;&lt; *pValue &lt;&lt; std::endl;</div>
 <div class="line">    }</div>
 <div class="line">};</div>
 <div class="line"></div>
@@ -239,7 +257,7 @@ epics&gt; dbgf testDevice-Temperature
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Jul 15 2018 22:41:35 for NDS3 by
+    <li class="footer">Generated on Mon Jul 16 2018 20:21:55 for NDS3 by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.6 </li>
   </ul>
