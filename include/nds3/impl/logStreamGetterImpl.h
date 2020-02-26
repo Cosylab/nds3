@@ -12,6 +12,11 @@
 
 #include <ostream>
 #include <array>
+
+#ifdef _WIN32
+#include <pthread.h>
+#endif
+
 #include "nds3/definitions.h"
 
 namespace nds
