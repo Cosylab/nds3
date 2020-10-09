@@ -8,8 +8,6 @@
  */
 
 #include <cstdlib>
-#include <link.h>
-#include <elf.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <sstream>
@@ -494,6 +492,9 @@ NdsFactoryImpl::fileNames_t NdsFactoryImpl::separateFoldersList(const char* fold
     return folders;
 }
 
+#ifndef RTLD_NODELETE
+#define RTLD_NODELETE 0
+#endif
 
 DynamicModule::DynamicModule(const std::string& libraryName):
     m_moduleHandle(dlopen(libraryName.c_str(), RTLD_NOW | RTLD_GLOBAL | RTLD_NODELETE))

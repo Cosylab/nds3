@@ -27,6 +27,23 @@
 #include <vector>
 #include <map>
 
+#ifdef _WIN32
+#include <pthread.h>
+
+#include <windows.h>
+ // https://github.com/esa/pykep/issues/47
+#define CLOCK_REALTIME 0
+static int clock_gettime(int, struct timespec *spec)      //C-file part
+{
+	__int64 wintime; GetSystemTimeAsFileTime((FILETIME*)&wintime);
+	wintime -= 116444736000000000i64;  //1jan1601 to 1jan1970
+	spec->tv_sec = wintime / 10000000i64;           //seconds
+	spec->tv_nsec = wintime % 10000000i64 * 100;      //nano-seconds
+	return 0;
+}
+
+#endif
+
 namespace nds
 {
 
@@ -300,19 +317,19 @@ typedef std::list<std::string> enumerationStrings_t;
 #define NDS_DEFINE_DRIVER(driverName, className)\
 extern "C" \
 { \
-void* allocateDevice(nds::Factory& factory, const std::string& device, const nds::namedParameters_t& parameters) \
+NDS3_API void* allocateDevice(nds::Factory& factory, const std::string& device, const nds::namedParameters_t& parameters) \
 { \
     return new className(factory, device, parameters); \
 } \
-void deallocateDevice(void* device) \
+NDS3_API void deallocateDevice(void* device) \
 { \
     delete (className*)device; \
 } \
-const char* getDeviceName() \
+NDS3_API const char* getDeviceName() \
 { \
     return #driverName; \
 } \
-nds::RegisterDevice<className> registerDevice##driverName(#driverName); \
+NDS3_API nds::RegisterDevice<className> registerDevice##driverName(#driverName); \
 } // extern "C"
 
 // Generic helper definitions for shared library support

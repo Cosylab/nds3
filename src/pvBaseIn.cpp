@@ -44,26 +44,26 @@ void PVBaseIn::replicateFrom(const std::string &sourceInputPVName)
     std::static_pointer_cast<PVBaseInImpl>(m_pImplementation)->replicateFrom(sourceInputPVName);
 }
 
-template void PVBaseIn::read<std::int32_t>(timespec*, std::int32_t*) const;
-template void PVBaseIn::push<std::int32_t>(const timespec&, const std::int32_t&);
+template void NDS3_API PVBaseIn::read<std::int32_t>(timespec*, std::int32_t*) const;
+template void NDS3_API PVBaseIn::push<std::int32_t>(const timespec&, const std::int32_t&);
 
-template void PVBaseIn::read<double>(timespec*, double*) const;
-template void PVBaseIn::push<double>(const timespec&, const double&);
+template void NDS3_API PVBaseIn::read<double>(timespec*, double*) const;
+template void NDS3_API PVBaseIn::push<double>(const timespec&, const double&);
 
-template void PVBaseIn::read<std::vector<std::int8_t> >(timespec*, std::vector<std::int8_t>*) const;
-template void PVBaseIn::push<std::vector<std::int8_t> >(const timespec&, const std::vector<std::int8_t>&);
+template void NDS3_API PVBaseIn::read<std::vector<std::int8_t> >(timespec*, std::vector<std::int8_t>*) const;
+template void NDS3_API PVBaseIn::push<std::vector<std::int8_t> >(const timespec&, const std::vector<std::int8_t>&);
 
-template void PVBaseIn::read<std::vector<std::uint8_t> >(timespec*, std::vector<std::uint8_t>*) const;
-template void PVBaseIn::push<std::vector<std::uint8_t> >(const timespec&, const std::vector<std::uint8_t>&);
+template void NDS3_API PVBaseIn::read<std::vector<std::uint8_t> >(timespec*, std::vector<std::uint8_t>*) const;
+template void NDS3_API PVBaseIn::push<std::vector<std::uint8_t> >(const timespec&, const std::vector<std::uint8_t>&);
 
-template void PVBaseIn::read<std::vector<std::int32_t> >(timespec*, std::vector<std::int32_t>*) const;
-template void PVBaseIn::push<std::vector<std::int32_t> >(const timespec&, const std::vector<std::int32_t>&);
+template void NDS3_API PVBaseIn::read<std::vector<std::int32_t> >(timespec*, std::vector<std::int32_t>*) const;
+template void NDS3_API PVBaseIn::push<std::vector<std::int32_t> >(const timespec&, const std::vector<std::int32_t>&);
 
-template void PVBaseIn::read<std::vector<double> >(timespec*, std::vector<double>*) const;
-template void PVBaseIn::push<std::vector<double> >(const timespec&, const std::vector<double>&);
+template void NDS3_API PVBaseIn::read<std::vector<double> >(timespec*, std::vector<double>*) const;
+template void NDS3_API PVBaseIn::push<std::vector<double> >(const timespec&, const std::vector<double>&);
 
-template void PVBaseIn::read<std::string >(timespec*, std::string*) const;
-template void PVBaseIn::push<std::string >(const timespec&, const std::string&);
+template void NDS3_API PVBaseIn::read<std::string >(timespec*, std::string*) const;
+template void NDS3_API PVBaseIn::push<std::string >(const timespec&, const std::string&);
 
 }
 
